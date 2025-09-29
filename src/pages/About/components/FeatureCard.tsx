@@ -1,0 +1,71 @@
+import React from "react";
+import { Box, Typography } from "@mui/material";
+import { useTheme } from "../../../theme/ThemeProvider";
+
+interface FeatureCardProps {
+  icon: string;
+  title: string;
+  text: string;
+}
+
+const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, text }) => {
+  const { theme } = useTheme();
+
+  return (
+    <Box
+      sx={{
+        textAlign: "center",
+        borderRadius: 3,
+        ml:4,
+        py: 6,
+        px: 3,
+        transition: "0.3s",
+        "&:hover": { transform: "translateY(-6px)" },
+        
+      }}
+    >
+      <Box
+        sx={{
+          width: 60,
+          height: 60,
+          mx: "auto",
+          mb: 2,
+          borderRadius: "50%",
+          bgcolor: "gray",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          boxShadow:
+            "0px 8px 16px rgba(128,128,128,0.5), 0px 4px 8px rgba(0,0,0,0.2)",
+        }}
+      >
+        <Box
+          sx={{
+            width: 40,
+            height: 40,
+            borderRadius: "50%",
+            bgcolor: theme.Text1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Box component="img" src={icon} sx={{ width: 25 }} />
+        </Box>
+      </Box>
+      <Typography
+        sx={{
+          fontWeight: 700,
+          fontSize: 15,
+          mb: 1,
+          textTransform: "uppercase",
+        }}
+      >
+        {title}
+      </Typography>
+      <Typography sx={{ color: theme.Text1, fontSize: 14 }}>{text}</Typography>
+    </Box>
+  );
+};
+
+export default FeatureCard;
