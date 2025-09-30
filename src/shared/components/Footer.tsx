@@ -190,6 +190,7 @@ const Footer: React.FC = () => {
                   (Icon, i) => (
                     <IconButton
                     size="large"
+                    fontSize= "90px"  
                       key={i}
                       sx={{
                         color: theme.primary1,

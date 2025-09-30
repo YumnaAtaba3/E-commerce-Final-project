@@ -117,13 +117,22 @@ const Header: React.FC = () => {
 
             {/* Icons - show on all screens */}
             <IconButton>
-              <FavoriteBorderIcon sx={{ color: theme.ButtonCard }} />
+              <FavoriteBorderIcon
+                fontSize={!isMobile ? "large" : "medium"}
+                sx={{ color: theme.ButtonCard }}
+              />
             </IconButton>
             <IconButton>
-              <ShoppingCartOutlinedIcon sx={{ color: theme.ButtonCard }} />
+              <ShoppingCartOutlinedIcon
+                fontSize={!isMobile ? "large" : "medium"}
+                sx={{ color: theme.ButtonCard }}
+              />
             </IconButton>
             <IconButton>
-              <PersonOutlineIcon sx={{ color: theme.ButtonCard }} />
+              <PersonOutlineIcon
+                fontSize={!isMobile ? "large" : "medium"}
+                sx={{ color: theme.ButtonCard }}
+              />
             </IconButton>
 
             {/* Mobile Search Icon */}

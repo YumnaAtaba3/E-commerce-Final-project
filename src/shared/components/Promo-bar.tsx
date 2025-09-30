@@ -51,14 +51,15 @@ const PromoBar: React.FC<PromoBarProps> = ({
       position="static"
       sx={{
         bgcolor: theme.ButtonCard,
-        height: isMobile ? 36 : 40,
+        height: isMobile ? 50 : 40,
         justifyContent: "center",
         boxShadow: "none",
       }}
     >
       <Box
         sx={{
-          px: isMobile ? 1.5 : 2,
+          px: isMobile ? 0.5 : 2,
+
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -73,8 +74,8 @@ const PromoBar: React.FC<PromoBarProps> = ({
         <Typography
           sx={{
             flex: 1,
-            fontSize: isMobile ? "12px" : "14px",
-            fontWeight: 400,
+            fontSize: isMobile ? "9px" : "14px",
+            fontWeight: isMobile ? 300 : 400,
             fontFamily: "'Inter', sans-serif",
             color: theme.bgColor,
             textAlign: "center",
