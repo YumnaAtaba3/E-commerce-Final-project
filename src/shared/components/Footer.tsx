@@ -25,7 +25,7 @@ const Footer: React.FC = () => {
   return (
     <>
       {/* Main Footer */}
-      <Box sx={{ bgcolor: theme.Text1, color: theme.primary1, pt: 8, pb: 6, pl: 4 }}>
+      <Box sx={{ bgcolor: theme.ButtonCard, color: theme.secound1, pt: 8, pb: 6, pl: 4 }}>
         <Container maxWidth="xl">
           <Grid
             container
@@ -70,9 +70,8 @@ const Footer: React.FC = () => {
                 sx={{
                   mt: 2,
                   width: "100%",
-                  bgcolor: theme.Text1,
-                  borderRadius: 1,
-                  input: { color: theme.primary1, fontSize: 14, p: 1.2 },
+                  bgcolor: theme.ButtonCard,
+                  input: { color: theme.secound1, fontSize: 14, p: 1.2 },
                   "& fieldset": { borderColor: theme.borderColor },
                   "&:hover fieldset": { borderColor: theme.borderColor},
                 }}
@@ -115,7 +114,7 @@ const Footer: React.FC = () => {
                     key={txt}
                     href="#"
                     underline="hover"
-                    sx={{ color: theme.primary1, fontSize: 14 }}
+                    sx={{ color: theme.secound1, fontSize: 14 }}
                   >
                     {txt}
                   </Link>
@@ -137,7 +136,7 @@ const Footer: React.FC = () => {
                       key={txt}
                       href="#"
                       underline="hover"
-                      sx={{ color: theme.primary1, fontSize: 14 }}
+                      sx={{ color: theme.secound1, fontSize: 14 }}
                     >
                       {txt}
                     </Link>
@@ -193,7 +192,7 @@ const Footer: React.FC = () => {
                     fontSize= "90px"  
                       key={i}
                       sx={{
-                        color: theme.primary1,
+                        color: theme.secound1,
                         p: 1,
                         "&:hover": { color: theme.HoverButton},
                        

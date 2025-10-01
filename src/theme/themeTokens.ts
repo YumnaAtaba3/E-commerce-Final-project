@@ -85,7 +85,7 @@ export const darkTheme: Theme = {
   Text1: "#FFFFFF",
   Text2: "#000000",
   ButtonCard: "#000000",
-  secound1: "#0000008F",
+  secound1: "#FAFAFA",
   secound2: "#DB4444",
   secoundCard: "#3A3A3A",
    Button1: "#00FF66",

@@ -9,7 +9,7 @@ import Breadcrumb from "./components/Breadcrumb";
 import OurStory from "./components/OurStory";
 import StatCard from "./components/StatCard";
 import StaffCard from "./components/StaffCard";
-import FeatureCard from "./components/FeatureCard";
+import FeatureCard from "../../shared/components/FeatureCard";
 
 import { useTheme } from "../../theme/ThemeProvider";
 
@@ -25,7 +25,6 @@ import IconShop from "../../assets/About/shop.svg";
 import IconSale from "../../assets/About/Icon-Sale.svg";
 import IconMoneybag from "../../assets/About/Icon-Moneybag.svg";
 import Icon_Shopping_bag from "../../assets/About/Icon-Shoppingbag.svg";
-
 
 const AboutPage: React.FC = () => {
   const { theme } = useTheme();
@@ -52,7 +51,11 @@ const AboutPage: React.FC = () => {
               text: "Sellers active on our site",
             },
             { icon: IconSale, value: "33k", text: "Monthly Product Sale" },
-            { icon: Icon_Shopping_bag, value: "45.5k", text: "Customers active" },
+            {
+              icon: Icon_Shopping_bag,
+              value: "45.5k",
+              text: "Customers active",
+            },
             { icon: IconMoneybag, value: "25k", text: "Annual gross sale" },
           ].map((item, i) => (
             <Grid item xs={12} sm={6} md={3} key={i}>

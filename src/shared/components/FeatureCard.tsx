@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { useTheme } from "../../../theme/ThemeProvider";
+import { useTheme } from "../../theme/ThemeProvider";
 
 interface FeatureCardProps {
   icon: string;
@@ -16,12 +16,11 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, text }) => {
       sx={{
         textAlign: "center",
         borderRadius: 3,
-        ml:4,
+        ml: 4,
         py: 6,
         px: 3,
         transition: "0.3s",
         "&:hover": { transform: "translateY(-6px)" },
-        
       }}
     >
       <Box
