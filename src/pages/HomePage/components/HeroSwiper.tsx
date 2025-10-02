@@ -3,7 +3,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-import { Box, Typography, Link } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Link,
+  useTheme as useMuiTheme,
+  useMediaQuery,
+} from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
 
 import heroImg from "../../../assets/Homepage/hero_endframe__cvklg0xk3w6e_large 2.svg";
@@ -32,6 +38,8 @@ const slides = [
 
 const HeroSwiper: React.FC = () => {
   const { theme } = useTheme();
+  const muiTheme = useMuiTheme();
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
 
   return (
     <Swiper
@@ -39,11 +47,10 @@ const HeroSwiper: React.FC = () => {
       slidesPerView={1}
       loop
       autoplay={{ delay: 4000 }}
-      pagination={{
-        clickable: true,
-      }}
+      pagination={{ clickable: true }}
       modules={[Autoplay, Pagination]}
-      style={{ maxWidth: "1000px", height: "400px" }}
+      style={{ width: "100%", height: isMobile ? 300 : 400, maxWidth:"1020px",marginLeft:isMobile?0:40 }}
+      
       className="custom-swiper"
     >
       {slides.map((slide) => (
@@ -51,12 +58,13 @@ const HeroSwiper: React.FC = () => {
           <Box
             sx={{
               display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
               justifyContent: "space-between",
               alignItems: "center",
               bgcolor: "black",
               borderRadius: 3,
-              px: 6,
-              py: 4,
+              px: { xs: 3, sm: 6 },
+              py: { xs: 3, sm: 4 },
               height: "100%",
               color: "white",
               position: "relative",
@@ -66,26 +74,44 @@ const HeroSwiper: React.FC = () => {
             <Box
               sx={{
                 flex: 1,
-                maxWidth: "50%",
+                maxWidth: { xs: "100%", sm: "50%" },
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "flex-start",
+                alignItems: { xs: "center", sm: "flex-start" },
                 justifyContent: "flex-start",
                 height: "100%",
-                pt: 2,
+                pt: { xs: 0, sm: 2 },
+                textAlign: { xs: "center", sm: "left" },
+                mb: { xs: 2, sm: 0 },
               }}
             >
               {/* Logo and Title */}
-              <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  mb: 2,
+                  flexDirection: { xs: "column", sm: "row" },
+                }}
+              >
                 <Box
                   component="img"
                   src={appleLogo}
                   alt="Logo"
-                  sx={{ width: 40, height: 40, mr: 3 }}
+                  sx={{
+                    width: { xs: 30, sm: 40 },
+                    height: { xs: 30, sm: 40 },
+                    mr: { xs: 0, sm: 3 },
+                    mb: { xs: 1, sm: 0 },
+                  }}
                 />
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: 400, textTransform: "uppercase" }}
+                  sx={{
+                    fontWeight: 400,
+                    textTransform: "uppercase",
+                    fontSize: { xs: 14, sm: 16 },
+                  }}
                 >
                   {slide.title}
                 </Typography>
@@ -96,7 +122,7 @@ const HeroSwiper: React.FC = () => {
                 variant="body1"
                 sx={{
                   mb: 3,
-                  fontSize: 43,
+                  fontSize: { xs: 24, sm: 36, md: 43 },
                   fontWeight: 500,
                   textTransform: "uppercase",
                   lineHeight: 1.2,
@@ -105,15 +131,14 @@ const HeroSwiper: React.FC = () => {
                 {slide.subtitle}
               </Typography>
 
-              {/* Shop Now Link with solid white underline */}
+              {/* Shop Now Link */}
               <Link
                 href="#"
                 sx={{
-                  pt: 5,
-                  
+                  pt: 2,
                   color: theme.secound1,
                   fontWeight: 400,
-                  fontSize: "16px",
+                  fontSize: { xs: 14, sm: 16 },
                   cursor: "pointer",
                   display: "inline-flex",
                   alignItems: "center",
@@ -133,8 +158,8 @@ const HeroSwiper: React.FC = () => {
               alt={slide.title}
               sx={{
                 flex: 1,
-                maxWidth: "45%",
-                height: "100%",
+                maxWidth: { xs: "100%", sm: "45%" },
+                height: { xs: 150, sm: "100%" },
                 objectFit: "contain",
               }}
             />
@@ -142,7 +167,7 @@ const HeroSwiper: React.FC = () => {
         </SwiperSlide>
       ))}
 
-      {/* Custom pagination styles */}
+      {/* Custom pagination */}
       <style>
         {`
           .custom-swiper .swiper-pagination-bullet {

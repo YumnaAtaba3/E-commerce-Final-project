@@ -211,7 +211,7 @@ const Footer: React.FC = () => {
       {/* Bottom Bar */}
       <Box
         sx={{
-          bgcolor: theme.Text1,
+          bgcolor: theme.ButtonCard,
           borderTop: "0.5px solid rgba(255,255,255,0.2)",
           py: 2,
           textAlign: "center",

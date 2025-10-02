@@ -55,10 +55,11 @@ const Header: React.FC = () => {
             src={logo}
             alt="Logo"
             sx={{
-              color:theme.Text1,
+              
               height: { xs: 20, md: 22 }, // smaller logo on all screens
               cursor: "pointer",
               ml: !isMobile ? 10 : 0,
+               color:"red"
             }}
           />
 

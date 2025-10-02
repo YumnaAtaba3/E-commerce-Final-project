@@ -19,7 +19,7 @@ const FilterSidebar: React.FC = () => {
   const { theme } = useTheme();
 
   return (
-    <Box sx={{ width: 240, pr: 2, ml:8, borderRight: "1px solid #eee" }}>
+    <Box sx={{bgcolor:theme.primary1,color:theme.Text1, width: 240, pr: 2, ml:8, borderRight: "1px solid #eee" }}>
       <List disablePadding>
         {categories.map((cat, index) => (
           <ListItemButton
@@ -34,7 +34,7 @@ const FilterSidebar: React.FC = () => {
               borderRadius: 0,
               fontSize: 15,
               fontWeight: active === cat ? 600 : 400,
-              color: active === cat ? theme.Button2 : "text.primary",
+              color: active === cat ? theme.Button2 : theme.Text1,
               "&:hover": {
                 bgcolor: "transparent",
                 color: theme.Button2,
@@ -48,7 +48,7 @@ const FilterSidebar: React.FC = () => {
               <ArrowForwardIosIcon
                 sx={{
                   fontSize: 14,
-                  color: active === cat ? theme.Button2 : "text.secondary",
+                  color: active === cat ? theme.Button2 :theme.Text1,
                 }}
               />
             )}

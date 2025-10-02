@@ -43,13 +43,13 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, text }) => {
             width: 40,
             height: 40,
             borderRadius: "50%",
-            bgcolor: theme.Text1,
+            bgcolor:"black",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <Box component="img" src={icon} sx={{ width: 25 }} />
+          <Box component="img" src={icon} sx={{ width: 25,bgcolor:"black", borderRadius:"50%" }} />
         </Box>
       </Box>
       <Typography
@@ -58,11 +58,12 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, text }) => {
           fontSize: 15,
           mb: 1,
           textTransform: "uppercase",
+          color:theme.Text1
         }}
       >
         {title}
       </Typography>
-      <Typography sx={{ color: theme.Text1, fontSize: 14 }}>{text}</Typography>
+      <Typography sx={{ color:theme.Text1, fontSize: 14 }}>{text}</Typography>
     </Box>
   );
 };

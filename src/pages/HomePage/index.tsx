@@ -1,10 +1,11 @@
 import React from "react";
-import {  Container, Grid, Stack } from "@mui/material";
+import { Container, Grid, Stack } from "@mui/material";
 import FilterSidebar from "./components/FilterSidebar";
 import HeroSwiper from "./components/HeroSwiper";
 import FlashSales from "./components/FlashSales";
 import Categories from "./components/Categories";
 import BestSelling from "./components/BestSelling";
+import PromoBanner from "./components/PromoBanner";
 import ExploreProducts from "./components/ExploreProducts";
 import NewArrival from "./components/NewArrival";
 import FeatureCard from "../../shared/components/FeatureCard";
@@ -12,26 +13,35 @@ import FeatureCard from "../../shared/components/FeatureCard";
 import IconDelivery from "../../assets/About/icon-delivery.svg";
 import IconCustomer from "../../assets/About/Icon-Customerservice.svg";
 import IconSecure from "../../assets/About/Icon-secure.svg";
+import { useTheme } from "../../theme/ThemeProvider";
+
 const Homepage: React.FC = () => {
+  const{theme}=useTheme()
   return (
-    <Stack sx={{ bgcolor: "#fff" }}>
+    <Stack sx={{ bgcolor:theme.primary1 }}>
       <Container maxWidth="xl">
         {/* Hero Section */}
-        <Grid container spacing={3} sx={{ mt: 4 }}>
-          <Grid>
+        <Grid container spacing={2} sx={{ mt: 4, alignItems: "flex-start" }}>
+          {/* Sidebar */}
+          <Grid item xs={12} md={3}>
             <FilterSidebar />
           </Grid>
-          <Grid >
+
+          {/* Slider */}
+          <Grid item xs={12} md={9}>
             <HeroSwiper />
           </Grid>
         </Grid>
 
-        {/* Sections */}
+        {/* Other Sections */}
         <FlashSales />
         <Categories />
         <BestSelling />
+        <PromoBanner />
         <ExploreProducts />
         <NewArrival />
+
+        {/* Feature Cards */}
         <Container
           maxWidth="lg"
           sx={{

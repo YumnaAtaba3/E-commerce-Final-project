@@ -1,13 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
-  Card,
-  CardContent,
-  CardMedia,
   Button,
-  IconButton,
-  Rating,
   useMediaQuery,
   useTheme as useMuiTheme,
 } from "@mui/material";
@@ -15,15 +10,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-
 import palystation from "../../../assets/Homepage/playstation.png";
 import { useTheme } from "../../../theme/ThemeProvider";
+import ArrowNavigation from "../../../shared/components/ArrowNavigation";
+import ProductCard from "./ProductCard";
 
 // Demo Products
 const flashProducts = [
@@ -175,8 +165,6 @@ const FlashSales: React.FC = () => {
       flexWrap="wrap"
       mt={isMobile ? 1 : 0}
       mb={isMobile ? 1 : 0}
-    
-
     >
       {[
         { label: "Days", value: timeLeft.days },
@@ -186,17 +174,22 @@ const FlashSales: React.FC = () => {
       ].map((t, idx, arr) => (
         <React.Fragment key={idx}>
           <Box textAlign="center" minWidth={50}>
-            <Typography sx={{ fontSize: 12, color: "gray" }}>
+            <Typography sx={{ fontSize: { xs: 10, md: 12, lg: 14, xl: 14 }, color: "gray" }}>
               {t.label}
             </Typography>
-            <Typography sx={{ fontWeight: 700, fontSize: 22 }}>
+            <Typography
+              sx={{
+                fontWeight: 700,
+                fontSize: { xs: 10, md: 12, lg: 22, xl: 22 },
+              }}
+            >
               {String(t.value).padStart(2, "0")}
             </Typography>
           </Box>
           {idx < arr.length - 1 && (
             <Typography
               sx={{
-                fontSize: 24,
+                fontSize: { xs: 4, md: 4, lg: 4, xl: 20 },
                 fontWeight: 700,
                 color: theme.Button2,
                 mx: 0.5,
@@ -211,7 +204,14 @@ const FlashSales: React.FC = () => {
   );
 
   return (
-    <Box sx={{ mt: 8, color: theme.Text1, bgcolor: theme.primary1 }}>
+    <Box
+      sx={{
+        mt: 8,
+        color: theme.Text1,
+        bgcolor: theme.primary1,
+        pl: isMobile ? 1 : 8,
+      }}
+    >
       {/* Row 1 - Today's */}
       <Box display="flex" alignItems="center" gap={1} mb={2}>
         <Box
@@ -251,46 +251,11 @@ const FlashSales: React.FC = () => {
           {/* Timer below on mobile, inline on desktop */}
           {!isMobile && Timer}
           {!isMobile && <Typography sx={{ width: "50%" }} />}
-          {/* Arrows */}{" "}
-          <Box display="flex" gap={1}>
-            {" "}
-            <IconButton
-              className="flash-prev"
-              sx={{
-                border: "1px solid gray",
-                borderRadius: "50%",
-                width: 40,
-                height: 40,
-                bgcolor: "#f5f5f5",
-                "&:hover": {
-                  bgcolor: theme.Button2,
-                  color: "white",
-                  borderColor: theme.Button2,
-                },
-              }}
-            >
-              {" "}
-              <ArrowBackIcon fontSize="large" />{" "}
-            </IconButton>{" "}
-            <IconButton
-              className="flash-next"
-              sx={{
-                border: "1px solid gray",
-                borderRadius: "50%",
-                width: 40,
-                height: 40,
-                bgcolor: "#f5f5f5",
-                "&:hover": {
-                  bgcolor: theme.Button2,
-                  color: "white",
-                  borderColor: theme.Button2,
-                },
-              }}
-            >
-              {" "}
-              <ArrowForwardIcon fontSize="large" />{" "}
-            </IconButton>{" "}
-          </Box>{" "}
+          <ArrowNavigation
+            prevClass="flash-prev"
+            nextClass="flash-next"
+            isMobile={isMobile}
+          />
         </Box>
       </Box>
 
@@ -299,168 +264,27 @@ const FlashSales: React.FC = () => {
       {/* Swiper Carousel */}
       <Swiper
         spaceBetween={0}
-        slidesPerView={isMobile ? 1.4: 4.1} 
+        slidesPerView={isMobile ? 1.1 : 4.1}
         breakpoints={{
           1200: { slidesPerView: 4.1, spaceBetween: 0 },
-          900: { slidesPerView: 3, spaceBetween: 0 },
-          600: { slidesPerView: 2, spaceBetween: 0 },
-          0: { slidesPerView: 1.4, spaceBetween: 0 },
+          900: { slidesPerView: 3.1, spaceBetween: 0 },
+          600: { slidesPerView: 2.1, spaceBetween: 0 },
+          0: { slidesPerView: 1.1, spaceBetween: 0 },
         }}
         navigation={{ nextEl: ".flash-next", prevEl: ".flash-prev" }}
         modules={[Navigation]}
       >
         {flashProducts.map((item) => (
           <SwiperSlide key={item.id}>
-            <Card
-              sx={{
-                alignItems: "center",
-                width: 330,
-                height: 350,
-                borderRadius: 2,
-                boxShadow: 1,
-                overflow: "hidden",
-                position: "relative",
-                "&:hover .hoverOverlay": { opacity: 1, bottom: 0 },
-              }}
-            >
-              {/* Discount Badge */}
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: 15,
-                  left: 15,
-                  bgcolor: theme.Button2,
-                  color: "#fff",
-                  px: 1.2,
-                  py: 0.3,
-                  borderRadius: 1,
-                  fontSize: 14,
-                  textAlign: "center",
-                  height: "20px",
-                  zIndex: 2,
-                }}
-              >
-                {item.discount}
-              </Box>
-
-              {/* Icons */}
-              <Box
-                sx={{
-                  position: "absolute",
-                  top: 10,
-                  right: 10,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 1,
-                  zIndex: 2,
-                }}
-              >
-                <IconButton
-                  sx={{
-                    bgcolor: "white",
-                    "&:hover": { bgcolor: theme.Button2, color: "white" },
-                    width: 42,
-                    height: 42,
-                  }}
-                >
-                  <FavoriteBorderIcon fontSize="large" />
-                </IconButton>
-                <IconButton
-                  sx={{
-                    bgcolor: "white",
-                    "&:hover": { bgcolor: theme.Button2, color: "white" },
-                    width: 42,
-                    height: 42,
-                  }}
-                >
-                  <VisibilityOutlinedIcon fontSize="large" />
-                </IconButton>
-              </Box>
-
-              {/* Product Image */}
-              <Box
-                sx={{
-                  bgcolor: "#f5f5f5",
-                  p: 2,
-                  textAlign: "center",
-                  position: "relative",
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  height="180"
-                  image={item.img}
-                  alt={item.name}
-                  sx={{ objectFit: "contain", mx: "auto" }}
-                />
-
-                <Box
-                  className="hoverOverlay"
-                  sx={{
-                    position: "absolute",
-                    bottom: "-100%",
-                    left: 0,
-                    width: "100%",
-                    bgcolor: "black",
-                    color: "#fff",
-                    py: 1,
-                    textAlign: "center",
-                    transition: "all 0.3s ease",
-                  }}
-                >
-                  <Button
-                    fullWidth
-                    sx={{
-                      bgcolor: "black",
-                      color: "white",
-                      fontSize: 16,
-                      fontWeight: 500,
-                      "&:hover": { bgcolor: "#222" },
-                    }}
-                    startIcon={<ShoppingCartOutlinedIcon />}
-                  >
-                    Add To Cart
-                  </Button>
-                </Box>
-              </Box>
-
-              {/* Product Info */}
-              <CardContent sx={{ bgcolor: "white", textAlign: "left" }}>
-                <Typography
-                  sx={{ fontSize: 16, fontWeight: 600, mb: 1 }}
-                  noWrap
-                >
-                  {item.name}
-                </Typography>
-                <Box display="flex" alignItems="center" gap={1} mb={1}>
-                  <Typography
-                    sx={{ fontSize: 16, color: theme.Button2, fontWeight: 600 }}
-                  >
-                    {item.price}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      fontSize: 14,
-                      color: "gray",
-                      textDecoration: "line-through",
-                    }}
-                  >
-                    {item.oldPrice}
-                  </Typography>
-                </Box>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <Rating
-                    value={item.rating}
-                    precision={0.5}
-                    readOnly
-                    size="large"
-                  />
-                  <Typography sx={{ fontSize: 14, color: "gray" }}>
-                    ({item.rating})
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
+            <ProductCard
+              id={item.id}
+              name={item.name}
+              price={item.price}
+              oldPrice={item.oldPrice}
+              discount={item.discount}
+              rating={item.rating}
+              img={item.img}
+            />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -470,11 +294,12 @@ const FlashSales: React.FC = () => {
         <Button
           variant="contained"
           sx={{
-            px: 4,
+            px: 6,
             py: 1.5,
             mt: 2,
-            fontSize: 16,
-            borderRadius: 2,
+            fontSize: 15,
+            textTransform: "none",
+            borderRadius: 1,
             bgcolor: theme.Button2,
             "&:hover": { bgcolor: "#cc0000" },
           }}
