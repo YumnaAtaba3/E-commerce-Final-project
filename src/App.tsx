@@ -1,4 +1,5 @@
 
+import Box from '@mui/material/Box';
 import AboutPage from './pages/About';
 import About from './pages/About';
 import CartPage from './pages/Cart';
@@ -13,21 +14,19 @@ import AuthLayout from './shared/layouts/Auth-layout';
 
 function App() {
 
- 
+
   return (
     <>
-    
       <PromoBar />
       <Header />
-      {/* <NotFoundPage /> */}
-      {/* <AuthLayout /> */}
-      {/* <AboutPage /> */}
-      {/* <Contact/> */}
-      {/* <CartPage /> */}
-      {/* <CheckOut/> */}
-      <Homepage/>
+
+      {/* Spacer to avoid content hiding under fixed bars */}
+      <Box sx={{ height: { xs: 50 + 64, sm: 40 + 64 } }} />
+
+      <Homepage />
       <Footer />
     </>
+
   );
 }
 

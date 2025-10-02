@@ -66,6 +66,15 @@ const exploreProducts = [
     rating: 4.5,
     img: palystation,
   },
+  {
+    id: 6,
+    name: "Breed Dry Dog Food",
+    price: "$100",
+    oldPrice: "$120",
+    discount: "-20%",
+    rating: 4.5,
+    img: palystation,
+  },
 ];
 
 const ExploreProducts: React.FC = () => {
@@ -110,9 +119,9 @@ const ExploreProducts: React.FC = () => {
         <Typography
           variant="h3"
           sx={{
-            fontWeight: 800,
+            fontWeight: 500,
             mt: isMobile ? 1 : 0,
-            fontSize: isMobile ? "1.5rem" : "2rem",
+            fontSize: isMobile ? "1.5rem" : "2.8rem",
           }}
         >
           Explore Our Products

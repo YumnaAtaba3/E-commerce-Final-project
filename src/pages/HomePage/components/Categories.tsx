@@ -59,10 +59,10 @@ const Categories: React.FC = () => {
         <Typography
           variant={isMobile ? "h4" : "h3"}
           sx={{
-            fontWeight: 800,
+            fontWeight: 500,
             color: theme.Text1,
             mt: isMobile ? 1 : 0,
-            fontSize: isMobile ? "1.5rem" : "2rem",
+            fontSize: isMobile ? "1.5rem" : "2.7rem",
           }}
         >
           Browse By Category

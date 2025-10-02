@@ -3,13 +3,8 @@ import {
   AppBar,
   Toolbar,
   Box,
-  TextField,
   Link,
   IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemText,
   InputBase,
   useMediaQuery,
 } from "@mui/material";
@@ -23,7 +18,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 
-
 import logo from "../../assets/Header/Logo.svg";
 
 const Header: React.FC = () => {
@@ -31,7 +25,7 @@ const Header: React.FC = () => {
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
 
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
   const navLinks = ["Home", "Contact", "About", "Sign Up"];
@@ -39,31 +33,29 @@ const Header: React.FC = () => {
   return (
     <>
       <AppBar
-        position="static"
-        color="transparent"
-        elevation={0}
+        position="fixed"
         sx={{
+          top: { xs: 50, sm: 40 }, // push below PromoBar
           bgcolor: theme.primary1,
           color: theme.ButtonCard,
           borderBottom: `1px solid ${theme.Text2}`,
+          zIndex: 1300,
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between", gap: 2 }}>
-          {/* Logo - smaller size */}
+          {/* Logo */}
           <Box
             component="img"
             src={logo}
             alt="Logo"
             sx={{
-              
-              height: { xs: 20, md: 22 }, // smaller logo on all screens
+              height: { xs: 20, md: 22 },
               cursor: "pointer",
               ml: !isMobile ? 10 : 0,
-               color:"red"
             }}
           />
 
-          {/* Nav Links (desktop) */}
+          {/* Nav Links (desktop only) */}
           {!isMobile && (
             <Box sx={{ display: "flex", gap: 4 }}>
               {navLinks.map((item) => (
@@ -72,7 +64,7 @@ const Header: React.FC = () => {
                   href="#"
                   underline="none"
                   sx={{
-                    color: item === "Sign Up" ? theme.Text1 : theme.Text1,
+                    color: theme.Text1,
                     fontSize: 14,
                     fontWeight: 500,
                     fontFamily: theme.font,
@@ -85,9 +77,8 @@ const Header: React.FC = () => {
             </Box>
           )}
 
-          {/* Search + Icons + Menu */}
+          {/* Icons + Menu */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-            {/* Desktop Search (no border, flat style) */}
             {!isMobile && (
               <Box
                 sx={{
@@ -117,7 +108,6 @@ const Header: React.FC = () => {
               </Box>
             )}
 
-            {/* Icons - show on all screens */}
             <IconButton>
               <FavoriteBorderIcon
                 fontSize={!isMobile ? "large" : "medium"}
@@ -137,7 +127,7 @@ const Header: React.FC = () => {
               />
             </IconButton>
 
-            {/* Mobile Search Icon */}
+            {/* Mobile Search */}
             {isMobile && (
               <IconButton onClick={() => setSearchOpen((p) => !p)}>
                 {searchOpen ? (
@@ -148,85 +138,128 @@ const Header: React.FC = () => {
               </IconButton>
             )}
 
-            {/* Mobile Menu Icon */}
+            {/* Mobile Menu */}
             {isMobile && (
-              <IconButton onClick={() => setDrawerOpen(true)}>
-                <MenuIcon sx={{ color: theme.ButtonCard }} />
+              <IconButton onClick={() => setMenuOpen((p) => !p)}>
+                {menuOpen ? (
+                  <CloseIcon sx={{ color: theme.ButtonCard }} />
+                ) : (
+                  <MenuIcon sx={{ color: theme.ButtonCard }} />
+                )}
               </IconButton>
             )}
           </Box>
         </Toolbar>
       </AppBar>
 
-      {/* Mobile Search Overlay */}
+      {/* Mobile Search as Modal */}
       {isMobile && searchOpen && (
         <Box
           sx={{
-            bgcolor: theme.primary1,
-            borderBottom: `1px solid ${theme.Text2}`,
-            px: 2,
-            py: 1,
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            bgcolor: "rgba(0,0,0,0.4)",
             display: "flex",
+            justifyContent: "center",
             alignItems: "center",
+            zIndex: 1400,
           }}
+          onClick={() => setSearchOpen(false)}
         >
-          <InputBase
-            autoFocus
-            placeholder="What are you looking for?"
+          <Box
             sx={{
-              flex: 1,
-              fontSize: 14,
-              color: theme.ButtonCard,
-              fontFamily: theme.font,
+              bgcolor: theme.primary1,
+              borderRadius: 2,
+              width: "80%",
+              maxWidth: 300,
+              p: 3,
+              display: "flex",
+              alignItems: "center",
+              gap: 1.5,
+              position: "relative",
             }}
-          />
+            onClick={(e) => e.stopPropagation()}
+          >
+            <InputBase
+              autoFocus
+              placeholder="What are you looking for?"
+              sx={{
+                flex: 1,
+                fontSize: 14,
+                color: theme.ButtonCard,
+                fontFamily: theme.font,
+              }}
+            />
+            <IconButton onClick={() => setSearchOpen(false)}>
+              <CloseIcon sx={{ color: theme.ButtonCard }} />
+            </IconButton>
+          </Box>
         </Box>
       )}
 
-      {/* Drawer / Slider for Mobile Nav */}
-      <Drawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
-        PaperProps={{
-          sx: {
-            width: 250,
-            bgcolor: theme.primary1,
-            color: theme.ButtonCard,
-          },
-        }}
-      >
+      {/* Mobile Menu as Centered Card */}
+      {isMobile && menuOpen && (
         <Box
           sx={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            bgcolor: "rgba(0,0,0,0.4)",
             display: "flex",
-            justifyContent: "flex-end",
-            p: 2,
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1400,
           }}
+          onClick={() => setMenuOpen(false)}
         >
-          <IconButton onClick={() => setDrawerOpen(false)}>
-            <CloseIcon sx={{ color: theme.ButtonCard }} />
-          </IconButton>
-        </Box>
-        <List>
-          {navLinks.map((item) => (
-            <ListItem
-              button
-              key={item}
-              onClick={() => setDrawerOpen(false)}
-              sx={{ "&:hover": { bgcolor: theme.borderColor } }}
+          <Box
+            sx={{
+              bgcolor: theme.primary1,
+              borderRadius: 2,
+              width: "80%",
+              maxWidth: 300,
+              p: 4,
+              display: "flex",
+              flexDirection: "column",
+              gap: 3,
+              boxShadow: 24,
+              position: "relative",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <IconButton
+              sx={{ position: "absolute", top: 8, right: 8 }}
+              onClick={() => setMenuOpen(false)}
             >
-              <ListItemText
-                primary={item}
-                primaryTypographyProps={{
+              <CloseIcon sx={{ color: theme.ButtonCard }} />
+            </IconButton>
+
+            {navLinks.map((item) => (
+              <Link
+                key={item}
+                href="#"
+                underline="none"
+                sx={{
+                  color: theme.Text1,
                   fontSize: 16,
                   fontWeight: 500,
                   fontFamily: theme.font,
+                  textAlign: "center",
+                  "&:hover": { color: theme.ButtonCard },
                 }}
-              />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
+                onClick={() => setMenuOpen(false)}
+              >
+                {item}
+              </Link>
+            ))}
+          </Box>
+        </Box>
+      )}
     </>
   );
 };

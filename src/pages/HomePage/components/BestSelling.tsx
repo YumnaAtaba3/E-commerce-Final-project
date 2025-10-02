@@ -83,10 +83,11 @@ const BestSelling: React.FC = () => {
         <Typography
           variant={isMobile ? "h3" : "h2"}
           sx={{
-            fontWeight: 700,
+            fontWeight: 500,
             color: theme.Text1,
             mt: isMobile ? 1 : 0,
-            fontSize: isMobile ? "1.5rem" : "2rem",
+            fontSize: isMobile ? "1.5rem" : "2.7rem",
+           
           }}
         >
           Best Selling Products

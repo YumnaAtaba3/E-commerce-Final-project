@@ -42,11 +42,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
         width: 280,
         height: 350,
         borderRadius: 2,
-        boxShadow: 1,
+        boxShadow: "none", 
+        border: "none !important", 
+        outline: "none",
         overflow: "hidden",
         position: "relative",
         "&:hover .hoverOverlay": { opacity: 1, bottom: 0 },
-        bgcolor: theme.primary1
+        bgcolor: theme.primary1,
       }}
     >
       {/* Discount Badge */}

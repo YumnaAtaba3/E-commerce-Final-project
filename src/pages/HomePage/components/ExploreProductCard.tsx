@@ -17,8 +17,6 @@ interface ExploreProductCardProps {
   id: number;
   name: string;
   price: string;
-  oldPrice?: string;
-  discount?: string;
   rating: number;
   img: string;
   isNew?: boolean;
@@ -28,7 +26,6 @@ interface ExploreProductCardProps {
 const ExploreProductCard: React.FC<ExploreProductCardProps> = ({
   name,
   price,
-  oldPrice,
   rating,
   img,
   isNew,
@@ -43,34 +40,36 @@ const ExploreProductCard: React.FC<ExploreProductCardProps> = ({
         width: 280,
         height: 350,
         borderRadius: 2,
-        boxShadow: 1,
+       
         overflow: "hidden",
         position: "relative",
         "&:hover .hoverOverlay": { opacity: 1, bottom: 0 },
-bgcolor:theme.primary1
+        bgcolor: theme.primary1,
+        mt: 5,
+        boxShadow: "none", 
+        border: "none !important", 
+        outline: "none",
       }}
     >
       {/* NEW Badge */}
-  
-  <Box
-           sx={{
-             position: "absolute",
-             top: 15,
-             left: 15,
-             bgcolor: theme.Button1,
-             color: "#fff",
-             px: 1.2,
-             py: 0.3,
-             borderRadius: 1,
-             fontSize: 14,
-             zIndex: 2,
-           }}
-         >
-           New
-         </Box>
-
-
-    
+      {isNew && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 15,
+            left: 15,
+            bgcolor: theme.Button1,
+            color: "#fff",
+            px: 1.2,
+            py: 0.3,
+            borderRadius: 1,
+            fontSize: 14,
+            zIndex: 2,
+          }}
+        >
+          New
+        </Box>
+      )}
 
       {/* Icons */}
       <Box
@@ -154,40 +153,29 @@ bgcolor:theme.primary1
       </Box>
 
       {/* Product Info */}
-      <CardContent sx={{ bgcolor: theme.primary1,color:theme.Text1, textAlign: "left" }}>
+      <CardContent
+        sx={{
+          bgcolor: theme.primary1,
+          color: theme.Text1,
+          textAlign: "left",
+        }}
+      >
         <Typography sx={{ fontSize: 16, fontWeight: 600, mb: 1 }} noWrap>
           {name}
         </Typography>
 
-        {/* Price */}
+        {/* Price + Rating */}
         <Box display="flex" alignItems="center" gap={1} mb={1}>
           <Typography
             sx={{ fontSize: 16, color: theme.Button2, fontWeight: 600 }}
           >
             {price}
           </Typography>
-          {oldPrice && (
-            <Typography
-              sx={{
-                fontSize: 14,
-                color: "gray",
-                textDecoration: "line-through",
-              }}
-            >
-              {oldPrice}
-            </Typography>
-          )}
+          <Rating value={rating} precision={0.5} readOnly size="large" />
+          <Typography sx={{ fontSize: 14, color: "gray" }}>
+            ({rating})
+          </Typography>
         </Box>
-
-        {/* Rating */}
-        {rating && (
-          <Box display="flex" alignItems="center" gap={1}>
-            <Rating value={rating} precision={0.5} readOnly size="large" />
-            <Typography sx={{ fontSize: 14, color: "gray" }}>
-              ({rating})
-            </Typography>
-          </Box>
-        )}
 
         {/* Colors */}
         {colors && colors.length > 0 && (
@@ -196,11 +184,10 @@ bgcolor:theme.primary1
               <Box
                 key={i}
                 sx={{
-                  width: 15,
-                  height: 15,
+                  width: 18,
+                  height: 18,
                   borderRadius: "50%",
                   bgcolor: color,
-                  border: "1px solid #ccc",
                   cursor: "pointer",
                 }}
               />

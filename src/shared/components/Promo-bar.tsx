@@ -8,30 +8,21 @@ import {
   Menu,
   MenuItem,
   useMediaQuery,
-
 } from "@mui/material";
 import { useTheme as useMuiTheme, type Theme } from "@mui/material/styles";
 import { useTheme } from "../../theme/ThemeProvider";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
 interface PromoBarProps {
-  /** main promo text */
   message?: string;
-  /** call-to-action link text */
   actionText?: string;
-  /** call-to-action link URL */
   actionHref?: string;
-  /** list of languages */
   languages?: string[];
 }
 
-/**
- * Reusable top promo bar with optional language selector.
- * Works on desktop & mobile.
- */
 const PromoBar: React.FC<PromoBarProps> = ({
   message = "Summer Sale For All Swim Suits And Free Express Delivery – OFF 50%!",
-  actionText = "ShopNow",
+  actionText = "Shop Now",
   actionHref = "#",
   languages = ["English", "Arabic", "French"],
 }) => {
@@ -48,10 +39,15 @@ const PromoBar: React.FC<PromoBarProps> = ({
 
   return (
     <AppBar
-      position="static"
+      position="fixed"
       sx={{
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1301, // higher than header
         bgcolor: theme.ButtonCard,
         height: isMobile ? 50 : 40,
+        display: "flex",
         justifyContent: "center",
         boxShadow: "none",
       }}
@@ -59,18 +55,16 @@ const PromoBar: React.FC<PromoBarProps> = ({
       <Box
         sx={{
           px: isMobile ? 0.5 : 2,
-
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           maxWidth: "lg",
           mx: "auto",
           width: "100%",
-          flexWrap: "wrap", // allow wrap on very small screens
+          flexWrap: "wrap",
           rowGap: isMobile ? 0.5 : 0,
         }}
       >
-        {/* Promo Text */}
         <Typography
           sx={{
             flex: 1,
@@ -96,7 +90,6 @@ const PromoBar: React.FC<PromoBarProps> = ({
           </Link>
         </Typography>
 
-        {/* Language Selector */}
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <IconButton
             onClick={handleClick}
