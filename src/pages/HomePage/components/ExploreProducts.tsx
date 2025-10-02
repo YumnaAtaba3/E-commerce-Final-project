@@ -134,7 +134,8 @@ const ExploreProducts: React.FC = () => {
         grid={{ rows: 2, fill: "row" }}
         breakpoints={{
           1200: { slidesPerView: 4 },
-          900: { slidesPerView: 3 },
+          1000:{slidesPerView: 3.1 },
+          900: { slidesPerView: 2.4 },
           600: { slidesPerView: 1.3 },
           0: { slidesPerView: 1.1 },
         }}

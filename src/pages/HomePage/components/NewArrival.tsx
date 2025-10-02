@@ -112,6 +112,7 @@ const NewArrival: React.FC = () => {
         {subtitle && (
           <Typography
             sx={{
+              maxWidth:300,
               fontWeight: 400,
               fontSize: { xs: 12, md: 16 },
               color: "rgba(255,255,255,0.8)",

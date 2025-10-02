@@ -122,10 +122,11 @@ const BestSelling: React.FC = () => {
         spaceBetween={0}
         slidesPerView={isMobile ? 1.1 : 4.1}
         breakpoints={{
-          1200: { slidesPerView: 4.1, spaceBetween: 0 },
-          900: { slidesPerView: 3.1, spaceBetween: 0 },
-          600: { slidesPerView: 2.1, spaceBetween: 0 },
-          0: { slidesPerView: 1.1, spaceBetween: 0 },
+          1200: { slidesPerView: 4 },
+          1000: { slidesPerView: 3.1 },
+          900: { slidesPerView: 2.4 },
+          600: { slidesPerView: 1.3 },
+          0: { slidesPerView: 1.1 },
         }}
         navigation={{ nextEl: ".best-next", prevEl: ".best-prev" }}
         modules={[Navigation]}
