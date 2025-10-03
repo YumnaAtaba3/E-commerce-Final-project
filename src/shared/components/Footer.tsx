@@ -8,6 +8,8 @@ import {
   Link,
   InputAdornment,
   IconButton,
+  useMediaQuery,
+  useTheme as useMuiTheme,
 } from "@mui/material";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import TwitterIcon from "@mui/icons-material/Twitter";
@@ -21,20 +23,31 @@ import appStore from "../../assets/Footer/AppStore.svg";
 import { useTheme } from "../../theme/ThemeProvider";
 
 const Footer: React.FC = () => {
-  const{theme}=useTheme()
+  const { theme } = useTheme();
+  const muiTheme = useMuiTheme();
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
+
   return (
     <>
       {/* Main Footer */}
-      <Box sx={{ bgcolor: theme.ButtonCard, color: theme.secound1, pt: 8, pb: 6, pl: 4 }}>
-        <Container maxWidth="xl">
+      <Box
+        sx={{
+          width: "108%",
+          bgcolor: theme.ButtonCard,
+          color: theme.secound1,
+          pt: 8,
+          pb: 6,
+          px: { xs: 2, md: 4 }, // padding on both sides
+          overflowX: "hidden", // prevent horizontal scroll
+        }}
+      >
+        <Container maxWidth="xl" disableGutters={isMobile}>
           <Grid
             container
-            spacing={6}
-            columnSpacing={{
-              xs: 6,
-              md: 16,
-            }}
-            rowSpacing={{ xs: 4, md: 6 }} 
+            spacing={4}
+            columnSpacing={{ xs: 2, md: 16 }}
+            rowSpacing={{ xs: 4, md: 6 }}
+            justifyContent={isMobile ? "center" : "flex-start"} // center on mobile
           >
             {/* Exclusive */}
             <Grid item xs={12} sm={6} md={3}>
@@ -73,7 +86,7 @@ const Footer: React.FC = () => {
                   bgcolor: theme.ButtonCard,
                   input: { color: theme.secound1, fontSize: 14, p: 1.2 },
                   "& fieldset": { borderColor: theme.borderColor },
-                  "&:hover fieldset": { borderColor: theme.borderColor},
+                  "&:hover fieldset": { borderColor: theme.borderColor },
                 }}
               />
             </Grid>
@@ -160,6 +173,8 @@ const Footer: React.FC = () => {
                   display: "flex",
                   gap: 2,
                   alignItems: "flex-start",
+                  flexWrap: isMobile ? "wrap" : "nowrap",
+                  justifyContent: isMobile ? "center" : "flex-start",
                 }}
               >
                 <Box
@@ -184,18 +199,24 @@ const Footer: React.FC = () => {
                 </Box>
               </Box>
 
-              <Box sx={{ display: "flex", gap: 2, mt: 4 , }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                  mt: 4,
+                  justifyContent: isMobile ? "center" : "flex-start",
+                }}
+              >
                 {[FacebookIcon, TwitterIcon, InstagramIcon, LinkedInIcon].map(
                   (Icon, i) => (
                     <IconButton
-                    size="large"
-                    fontSize= "90px"  
+                      size="large"
+                      fontSize="90px"
                       key={i}
                       sx={{
                         color: theme.secound1,
                         p: 1,
-                        "&:hover": { color: theme.HoverButton},
-                       
+                        "&:hover": { color: theme.HoverButton },
                       }}
                     >
                       <Icon />
@@ -215,6 +236,10 @@ const Footer: React.FC = () => {
           borderTop: "0.5px solid rgba(255,255,255,0.2)",
           py: 2,
           textAlign: "center",
+          width: "108%", // full viewport width
+          position: "relative",
+          left: 0,
+          overflowX: "hidden",
         }}
       >
         <Typography sx={{ color: "rgba(255,255,255,0.7)", fontSize: 14 }}>

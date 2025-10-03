@@ -23,6 +23,7 @@ interface ProductCardProps {
   discount?: string;
   rating?: number;
   img: string;
+  isNew?: boolean; // 🔹 added
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -33,6 +34,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   discount,
   rating,
   img,
+  isNew,
 }) => {
   const { theme } = useTheme();
   const [favorite, setFavorite] = useState(false);
@@ -53,22 +55,47 @@ const ProductCard: React.FC<ProductCardProps> = ({
         bgcolor: theme.primary1,
       }}
     >
-      {discount && (
+      {/* 🔹 Badge logic (Discount first, else New) */}
+      {(discount || isNew) && (
         <Box
           sx={{
             position: "absolute",
             top: 15,
             left: 15,
-            bgcolor: theme.Button2,
-            color: "#fff",
-            px: 1.2,
-            py: 0.3,
-            borderRadius: 1,
-            fontSize: 14,
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
             zIndex: 2,
           }}
         >
-          {discount}
+          {discount && (
+            <Box
+              sx={{
+                bgcolor: theme.Button2,
+                color: "#fff",
+                px: 1.2,
+                py: 0.3,
+                borderRadius: 1,
+                fontSize: 14,
+              }}
+            >
+              {discount}
+            </Box>
+          )}
+          {isNew && (
+            <Box
+              sx={{
+                bgcolor: theme.Button1,
+                color: "#fff",
+                px: 1.2,
+                py: 0.3,
+                borderRadius: 1,
+                fontSize: 14,
+              }}
+            >
+              New
+            </Box>
+          )}
         </Box>
       )}
 
