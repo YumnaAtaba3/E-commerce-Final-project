@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Container, Grid, Typography } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
 
@@ -11,13 +11,22 @@ interface OurStoryProps {
 const OurStory: React.FC<OurStoryProps> = ({ image, title, paragraphs }) => {
   const { theme } = useTheme();
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo({ top: -4, behavior: "smooth" });
+  }, []);
+
   return (
     <Container maxWidth="lg" sx={{ py: 8 }}>
       <Grid container spacing={6} alignItems="center">
         <Grid item xs={12} md={6}>
           <Typography
             variant="h4"
-            sx={{ fontWeight: 700, fontSize: { xs: 28, md: 36 }, mb: 3 }}
+            sx={{
+              fontWeight: 700,
+              fontSize: { xs: 28, md: 36 },
+              mb: { xs: 3, md: 6 },
+            }}
           >
             {title}
           </Typography>
@@ -27,7 +36,7 @@ const OurStory: React.FC<OurStoryProps> = ({ image, title, paragraphs }) => {
               maxWidth={500}
               sx={{
                 mb: 2,
-                fontSize: i === 0 ? 11 : 16,
+                fontSize: 16,
                 lineHeight: 1.8,
                 color: theme.Text1,
               }}

@@ -5,9 +5,9 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useTheme } from "../../theme/ThemeProvider";
 
 interface ArrowNavigationProps {
-  prevClass: string; // class name for swiper prev
-  nextClass: string; // class name for swiper next
-  isMobile?: boolean; // for responsive padding
+  prevClass: string; 
+  nextClass: string; 
+  isMobile?: boolean; 
 }
 
 const ArrowNavigation: React.FC<ArrowNavigationProps> = ({

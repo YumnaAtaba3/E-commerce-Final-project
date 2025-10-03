@@ -1,5 +1,7 @@
 import React from "react";
-import { Box, Grid, TextField, Button } from "@mui/material";
+import { Box, Grid, TextField, Button   ,useTheme as useMuiTheme,
+  useMediaQuery,
+} from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
 
 interface ContactFormProps {
@@ -14,17 +16,34 @@ const ContactForm: React.FC<ContactFormProps> = ({
   isMobile,
 }) => {
   const { theme } = useTheme();
-
-  const inputStyle = {
-    bgcolor: theme.bgColor,
-    borderRadius: 1,
-    "& .MuiOutlinedInput-root": {
-      "& fieldset": { borderColor: "#F5F5F5" },
-      "&:hover fieldset": { borderColor: theme.Button2 },
-      "&.Mui-focused fieldset": { borderColor: theme.Button2 },
+    const muiTheme = useMuiTheme();
+    const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md"));
+ const labelFontSize = isMobile ? 12: isTablet ? 13 : 14;
+const inputStyle = {
+  bgcolor: theme.bgColor,
+  borderRadius: 1,
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": { borderColor: "#F5F5F5" },
+    "&:hover fieldset": { borderColor: theme.Button2 },
+    "&.Mui-focused fieldset": {
+      borderColor: theme.Button2, // only the input border changes
+      borderWidth: "2px",
     },
-    "& label.Mui-focused": { color: theme.Button2 },
-  };
+    "& .MuiOutlinedInput-notchedOutline legend": {
+      display: "none", // this removes the small notch that appears around the floating label
+    },
+  },
+  "& label.Mui-focused": {
+    color: theme.Button2,
+    background: theme.bgColor, // prevents overlap with border
+    padding: "0 4px", // optional: give small padding around label
+  },
+  "& label": {
+    fontSize: labelFontSize,
+  },
+};
+
+
 
   return (
     <Box
@@ -41,7 +60,7 @@ const ContactForm: React.FC<ContactFormProps> = ({
       <Grid
         container
         spacing={3}
-        sx={{ flexWrap: isMobile ? "wrap" : "nowrap", maxWidth: 800 }}
+        sx={{ flexWrap: isMobile ? "wrap" : "nowrap", minWidth: 800 }}
       >
         {["name", "email", "phone"].map((field) => (
           <Grid item xs={12} md key={field}>

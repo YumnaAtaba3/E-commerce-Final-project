@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Box, Container, Grid, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Container,
+  Grid,
+  useMediaQuery,
+  useTheme as useMuiTheme,
+} from "@mui/material";
 import { useTheme } from "../../theme/ThemeProvider";
 
 import phoneIcon from "../../assets/Contact/phoneIcon.svg";
@@ -11,7 +17,11 @@ import ContactForm from "./components/ContactForm";
 
 const Contact: React.FC = () => {
   const { theme } = useTheme();
-  const isMobile = useMediaQuery("(max-width:900px)");
+  const muiTheme = useMuiTheme();
+
+  // Responsive breakpoints
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm")); // mobile <600px
+  const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md")); // tablet 600-900px
 
   const [form, setForm] = useState({
     name: "",
@@ -33,12 +43,16 @@ const Contact: React.FC = () => {
         sx={{
           display: "flex",
           justifyContent: "center",
-          py: { xs: 6, md: 10 },
+          py: { xs: 6, sm: 8, md: 10 },
         }}
       >
-        <Grid container spacing={isMobile ? 4 : 8} gap={4}>
+        <Grid
+          container
+          spacing={isMobile ? 4 : isTablet ? 6 : 8}
+          sx={{ display: "flex", alignItems: "stretch" }} // Stretch both columns
+        >
           {/* Left Info Section */}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} sm={6} md={4}>
             <Box
               sx={{
                 border: "1px solid #e0e0e0",
@@ -46,10 +60,10 @@ const Contact: React.FC = () => {
                 p: 3,
                 bgcolor: theme.primary1,
                 boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.08)",
-                maxWidth: 340,
-                mx: "auto",
-                transition: "0.3s",
-                "&:hover": { transform: "translateY(-6px)" },
+                height: "100%", // Stretch height
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
               }}
             >
               <InfoCard
@@ -77,12 +91,14 @@ const Contact: React.FC = () => {
           </Grid>
 
           {/* Right Form Section */}
-          <Grid item xs={12} md={8}>
-            <ContactForm
-              form={form}
-              handleChange={handleChange}
-              isMobile={isMobile}
-            />
+          <Grid item xs={12} sm={6} md={8}>
+            <Box sx={{ height: "100%" }}>
+              <ContactForm
+                form={form}
+                handleChange={handleChange}
+                isMobile={isMobile || isTablet}
+              />
+            </Box>
           </Grid>
         </Grid>
       </Container>

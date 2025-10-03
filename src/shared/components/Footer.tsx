@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Box,
-  Container,
   Grid,
   Typography,
   TextField,
@@ -27,41 +26,43 @@ const Footer: React.FC = () => {
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
 
+  const maxContentWidth = "1200px";
+
   return (
     <>
       {/* Main Footer */}
       <Box
         sx={{
-          width: "108%",
           bgcolor: theme.ButtonCard,
           color: theme.secound1,
           pt: 8,
           pb: 6,
-          px: { xs: 2, md: 4 }, // padding on both sides
-          overflowX: "hidden", // prevent horizontal scroll
+          overflowX: "hidden",
         }}
       >
-        <Container maxWidth="xl" disableGutters={isMobile}>
+        <Box
+          sx={{
+            maxWidth: maxContentWidth,
+            mx: "auto",
+            px: { xs: 2, md: 6 },
+          }}
+        >
           <Grid
             container
-            spacing={4}
-            columnSpacing={{ xs: 2, md: 16 }}
-            rowSpacing={{ xs: 4, md: 6 }}
-            justifyContent={isMobile ? "center" : "flex-start"} // center on mobile
+            spacing={ isMobile?5:13}
+            justifyContent={isMobile ? "center" : "flex-start"}
           >
             {/* Exclusive */}
             <Grid item xs={12} sm={6} md={3}>
               <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
                 Exclusive
               </Typography>
-
               <Typography sx={{ mt: 3, fontSize: 14, fontWeight: 500 }}>
                 Subscribe
               </Typography>
               <Typography sx={{ mt: 2, fontSize: 14 }}>
                 Get 10% off your first order
               </Typography>
-
               <TextField
                 placeholder="Enter your email"
                 size="small"
@@ -159,7 +160,17 @@ const Footer: React.FC = () => {
             </Grid>
 
             {/* Download App */}
-            <Grid item xs={12} sm={6} md={2}>
+            <Grid
+              item
+              xs={12}
+              sm={12} // take full width on small screens
+              md={2}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: isMobile ? "flex-start" : "flex-start",
+              }}
+            >
               <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
                 Download App
               </Typography>
@@ -211,7 +222,6 @@ const Footer: React.FC = () => {
                   (Icon, i) => (
                     <IconButton
                       size="large"
-                      fontSize="90px"
                       key={i}
                       sx={{
                         color: theme.secound1,
@@ -226,7 +236,7 @@ const Footer: React.FC = () => {
               </Box>
             </Grid>
           </Grid>
-        </Container>
+        </Box>
       </Box>
 
       {/* Bottom Bar */}
@@ -235,16 +245,21 @@ const Footer: React.FC = () => {
           bgcolor: theme.ButtonCard,
           borderTop: "0.5px solid rgba(255,255,255,0.2)",
           py: 2,
-          textAlign: "center",
-          width: "108%", // full viewport width
-          position: "relative",
-          left: 0,
           overflowX: "hidden",
         }}
       >
-        <Typography sx={{ color: "rgba(255,255,255,0.7)", fontSize: 14 }}>
-          © Copyright Rimel 2022. All rights reserved.
-        </Typography>
+        <Box
+          sx={{
+            maxWidth: maxContentWidth,
+            mx: "auto",
+            px: { xs: 2, md: 6 },
+            textAlign: "center",
+          }}
+        >
+          <Typography sx={{ color: "rgba(255,255,255,0.7)", fontSize: 14 }}>
+            © Copyright Rimel 2022. All rights reserved.
+          </Typography>
+        </Box>
       </Box>
     </>
   );

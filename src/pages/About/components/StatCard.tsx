@@ -18,7 +18,7 @@ const StatCard: React.FC<StatCardProps> = ({ icon, value, text }) => {
         p: 4,
         width: 250,
         borderRadius: 0, 
-        bgcolor: theme.bgColor,
+        bgcolor: theme.primary1,
         boxShadow: "2px 4px 10px rgba(0,0,0,0.1)",
         cursor: "pointer",
         transition: "0.3s",

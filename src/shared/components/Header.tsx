@@ -11,6 +11,8 @@ import {
 import { useTheme as useMuiTheme } from "@mui/material/styles";
 import { useTheme } from "../../theme/ThemeProvider";
 
+import { Link as RouterLink } from "react-router";
+
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
@@ -19,6 +21,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 
 import logo from "../../assets/Header/Logo.svg";
+import { appRoutes } from "../../routes";
 
 const Header: React.FC = () => {
   const { theme } = useTheme();
@@ -28,14 +31,21 @@ const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
-  const navLinks = ["Home", "Contact", "About", "Sign Up"];
+  const navLinks = [
+    { label: "Home", path: appRoutes.home },
+    { label: "About", path: appRoutes.about },
+    { label: "Contact", path: appRoutes.contact }, 
+    { label: "Sign Up", path: appRoutes.auth.signUp },
+  ];
 
   return (
     <>
       <AppBar
         position="fixed"
+        
         sx={{
-          top: { xs: 50, sm: 40 }, // push below PromoBar
+          
+          top: { xs: 50, sm: 40 },
           bgcolor: theme.primary1,
           color: theme.ButtonCard,
           borderBottom: `1px solid ${theme.Text2}`,
@@ -45,23 +55,30 @@ const Header: React.FC = () => {
         <Toolbar sx={{ justifyContent: "space-between", gap: 2 }}>
           {/* Logo */}
           <Box
-            component="img"
-            src={logo}
-            alt="Logo"
+            component={RouterLink}
+            to={appRoutes.home}
             sx={{
               height: { xs: 20, md: 22 },
               cursor: "pointer",
               ml: !isMobile ? 10 : 0,
             }}
-          />
+          >
+            <Box
+              component="img"
+              src={logo}
+              alt="Logo"
+              sx={{ height: "100%" }}
+            />
+          </Box>
 
           {/* Nav Links (desktop only) */}
           {!isMobile && (
             <Box sx={{ display: "flex", gap: 4 }}>
               {navLinks.map((item) => (
                 <Link
-                  key={item}
-                  href="#"
+                  key={item.label}
+                  component={RouterLink}
+                  to={item.path}
                   underline="none"
                   sx={{
                     color: theme.Text1,
@@ -71,7 +88,7 @@ const Header: React.FC = () => {
                     "&:hover": { color: theme.ButtonCard },
                   }}
                 >
-                  {item}
+                  {item.label}
                 </Link>
               ))}
             </Box>
@@ -108,19 +125,19 @@ const Header: React.FC = () => {
               </Box>
             )}
 
-            <IconButton>
+            <IconButton component={RouterLink} to={appRoutes.wishlist}>
               <FavoriteBorderIcon
                 fontSize={!isMobile ? "large" : "medium"}
                 sx={{ color: theme.ButtonCard }}
               />
             </IconButton>
-            <IconButton>
+            <IconButton component={RouterLink} to={appRoutes.cart}>
               <ShoppingCartOutlinedIcon
                 fontSize={!isMobile ? "large" : "medium"}
                 sx={{ color: theme.ButtonCard }}
               />
             </IconButton>
-            <IconButton>
+            <IconButton component={RouterLink} to={appRoutes.auth.login}>
               <PersonOutlineIcon
                 fontSize={!isMobile ? "large" : "medium"}
                 sx={{ color: theme.ButtonCard }}
@@ -152,7 +169,7 @@ const Header: React.FC = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Mobile Search as Modal */}
+      {/* Mobile Search Modal */}
       {isMobile && searchOpen && (
         <Box
           sx={{
@@ -200,7 +217,7 @@ const Header: React.FC = () => {
         </Box>
       )}
 
-      {/* Mobile Menu as Centered Card */}
+      {/* Mobile Menu */}
       {isMobile && menuOpen && (
         <Box
           sx={{
@@ -241,8 +258,9 @@ const Header: React.FC = () => {
 
             {navLinks.map((item) => (
               <Link
-                key={item}
-                href="#"
+                key={item.label}
+                component={RouterLink}
+                to={item.path}
                 underline="none"
                 sx={{
                   color: theme.Text1,
@@ -254,7 +272,7 @@ const Header: React.FC = () => {
                 }}
                 onClick={() => setMenuOpen(false)}
               >
-                {item}
+                {item.label}
               </Link>
             ))}
           </Box>

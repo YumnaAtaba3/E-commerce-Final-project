@@ -30,7 +30,7 @@ const AboutPage: React.FC = () => {
   const { theme } = useTheme();
 
   return (
-    <Box sx={{ bgcolor: theme.bgColor }}>
+    <Box sx={{ bgcolor: theme.primary1,width:"100%" }}>
       <Breadcrumb current="About" />
 
       <OurStory

@@ -11,22 +11,27 @@ import {
 import { useTheme } from "../../../theme/ThemeProvider";
 import ProductItem from "./ProductItem";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
+import { useNavigate } from "react-router"; // ✅ Import useNavigate
+
 // Product images
 import PlayStation from "../../../assets/CheckOut/playstation.png";
 import MasterCard from "../../../assets/CheckOut/masterCard.svg";
 import ChinaLogo from "../../../assets/CheckOut/chinalogo.svg";
 import Bkash from "../../../assets/CheckOut/Bkash.svg";
+import { appRoutes } from "../../../routes";
 
 // Example product list
 const products = [
   { name: "LCD Monitor", price: 650, image: PlayStation },
   { name: "HI Gamepad", price: 1100, image: PlayStation },
 ];
- 
+
 const OrderSummary = () => {
   const { theme } = useTheme();
-    const muiTheme = useMuiTheme();
-const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
+  const muiTheme = useMuiTheme();
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
+  const navigate = useNavigate(); // ✅ Initialize navigator
+
   const subtotal = products.reduce((sum, p) => sum + p.price, 0);
   const shipping = 0;
   const total = subtotal + shipping;
@@ -215,22 +220,22 @@ const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
       <Box
         sx={{
           display: "flex",
-          flexDirection: { xs: "column", md: "row" }, // stack on mobile, row on desktop
+          flexDirection: { xs: "column", md: "row" },
           gap: 2,
           width: "100%",
-          maxWidth:isMobile ?300:500,
+          maxWidth: isMobile ? 300 : 500,
           alignItems: { xs: "stretch", md: "center" },
         }}
       >
         <TextField
           placeholder="Coupon Code"
           variant="outlined"
-          size={isMobile?"small":"medium"}
+          size={isMobile ? "small" : "medium"}
           sx={{
             flexGrow: 1,
             "& .MuiOutlinedInput-root": {
               height: "56px",
-              width:isMobile?"200px":"300px",
+              width: isMobile ? "200px" : "300px",
               fontSize: "16px",
               "& fieldset": { borderColor: "black" },
               "&:hover fieldset": { borderColor: theme.Button2 },
@@ -244,7 +249,7 @@ const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
         <Button
           variant="contained"
           sx={{
-            width:  isMobile ? "190px" : "160px",
+            width: isMobile ? "190px" : "160px",
             height: 56,
             bgcolor: theme.Button2,
             color: "#fff",
@@ -272,6 +277,7 @@ const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
           "&:hover": { bgcolor: theme.error },
           alignSelf: "flex-start",
         }}
+        onClick={() => navigate(appRoutes.home)} 
       >
         Place Order
       </Button>

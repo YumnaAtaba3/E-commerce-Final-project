@@ -1,12 +1,15 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
+import { useNavigate } from "react-router"; 
+import { appRoutes } from "../../../routes";
 
 const CartSummary: React.FC<{ subtotal: number; isMobile: boolean }> = ({
   subtotal,
   isMobile,
 }) => {
   const { theme } = useTheme();
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -17,7 +20,7 @@ const CartSummary: React.FC<{ subtotal: number; isMobile: boolean }> = ({
         boxShadow: "0px 6px 24px rgba(0,0,0,0.08)",
         width: "100%",
         minWidth: isMobile ? { xs: "100%", md: 400 } : { xs: "100%", md: 500 },
-        transition: "box-shadow 0.3s", // smooth transition
+        transition: "box-shadow 0.3s",
         "&:hover": {
           boxShadow: `0px 8px 30px ${theme.Button2}50`,
           transform: "translateY(-6px)",
@@ -76,6 +79,7 @@ const CartSummary: React.FC<{ subtotal: number; isMobile: boolean }> = ({
           py: { xs: 1, md: 1.5 },
           "&:hover": { bgcolor: theme.Button2 },
         }}
+        onClick={() => navigate(appRoutes.checkout)} 
       >
         Proceed to checkout
       </Button>

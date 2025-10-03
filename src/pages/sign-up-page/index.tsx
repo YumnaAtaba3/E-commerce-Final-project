@@ -1,9 +1,11 @@
 import React from "react";
 import { Box, Button, TextField, Typography, Link } from "@mui/material";
 import { useTheme } from "../../theme/ThemeProvider";
+import { Link as RouterLink } from "react-router";
 
 
 import GoogleSvg from "../../assets/Sign-up/Icon-Google.svg";
+import { appRoutes } from "../../routes";
 
 const SignUpForm: React.FC = () => {
   const { theme } = useTheme();
@@ -192,7 +194,8 @@ const SignUpForm: React.FC = () => {
         >
           Already have an account?{" "}
           <Link
-            href="#"
+            component={RouterLink}
+            to={appRoutes.auth.login} // this points to your login route
             underline="hover"
             sx={{
               color: theme.primaryText,
