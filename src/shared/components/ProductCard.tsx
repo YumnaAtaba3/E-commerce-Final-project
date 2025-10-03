@@ -1,37 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
-  Typography,
-  IconButton,
-  Rating,
-  Button,
   Card,
-  CardMedia,
   CardContent,
+  CardMedia,
+  IconButton,
+  Typography,
+  Button,
+  Rating,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import { useTheme } from "../../../theme/ThemeProvider";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import { useTheme } from "../../theme/ThemeProvider";
 
-interface ExploreProductCardProps {
+interface ProductCardProps {
   id: number;
   name: string;
   price: string;
-  rating: number;
+  oldPrice?: string;
+  discount?: string;
+  rating?: number;
   img: string;
-  isNew?: boolean;
-  colors?: string[];
 }
 
-const ExploreProductCard: React.FC<ExploreProductCardProps> = ({
+const ProductCard: React.FC<ProductCardProps> = ({
+  id,
   name,
   price,
+  oldPrice,
+  discount,
   rating,
   img,
-  isNew,
-  colors,
 }) => {
   const { theme } = useTheme();
+  const [favorite, setFavorite] = useState(false);
 
   return (
     <Card
@@ -40,25 +44,22 @@ const ExploreProductCard: React.FC<ExploreProductCardProps> = ({
         width: 280,
         height: 350,
         borderRadius: 2,
-       
+        boxShadow: "none",
+        border: "none !important",
+        outline: "none",
         overflow: "hidden",
         position: "relative",
         "&:hover .hoverOverlay": { opacity: 1, bottom: 0 },
         bgcolor: theme.primary1,
-        mt: 5,
-        boxShadow: "none", 
-        border: "none !important", 
-        outline: "none",
       }}
     >
-      {/* NEW Badge */}
-      {isNew && (
+      {discount && (
         <Box
           sx={{
             position: "absolute",
             top: 15,
             left: 15,
-            bgcolor: theme.Button1,
+            bgcolor: theme.Button2,
             color: "#fff",
             px: 1.2,
             py: 0.3,
@@ -67,7 +68,7 @@ const ExploreProductCard: React.FC<ExploreProductCardProps> = ({
             zIndex: 2,
           }}
         >
-          New
+          {discount}
         </Box>
       )}
 
@@ -84,14 +85,20 @@ const ExploreProductCard: React.FC<ExploreProductCardProps> = ({
         }}
       >
         <IconButton
+          onClick={() => setFavorite(!favorite)}
           sx={{
             bgcolor: "white",
             "&:hover": { bgcolor: theme.Button2, color: "white" },
             width: 42,
             height: 42,
+            color: favorite ? theme.Button2 : "black",
           }}
         >
-          <FavoriteBorderIcon fontSize="large" />
+          {favorite ? (
+            <FavoriteIcon fontSize="large" />
+          ) : (
+            <FavoriteBorderIcon fontSize="large" />
+          )}
         </IconButton>
         <IconButton
           sx={{
@@ -105,7 +112,6 @@ const ExploreProductCard: React.FC<ExploreProductCardProps> = ({
         </IconButton>
       </Box>
 
-      {/* Product Image */}
       <Box
         sx={{
           bgcolor: "#f5f5f5",
@@ -121,8 +127,6 @@ const ExploreProductCard: React.FC<ExploreProductCardProps> = ({
           alt={name}
           sx={{ objectFit: "contain", mx: "auto" }}
         />
-
-        {/* Add To Cart Overlay */}
         <Box
           className="hoverOverlay"
           sx={{
@@ -146,52 +150,43 @@ const ExploreProductCard: React.FC<ExploreProductCardProps> = ({
               fontWeight: 500,
               "&:hover": { bgcolor: "#222" },
             }}
+            startIcon={<ShoppingCartOutlinedIcon />}
           >
             Add To Cart
           </Button>
         </Box>
       </Box>
 
-      {/* Product Info */}
       <CardContent
-        sx={{
-          bgcolor: theme.primary1,
-          color: theme.Text1,
-          textAlign: "left",
-        }}
+        sx={{ bgcolor: theme.primary1, color: theme.Text1, textAlign: "left" }}
       >
         <Typography sx={{ fontSize: 16, fontWeight: 600, mb: 1 }} noWrap>
           {name}
         </Typography>
-
-        {/* Price + Rating */}
         <Box display="flex" alignItems="center" gap={1} mb={1}>
           <Typography
             sx={{ fontSize: 16, color: theme.Button2, fontWeight: 600 }}
           >
             {price}
           </Typography>
-          <Rating value={rating} precision={0.5} readOnly size="large" />
-          <Typography sx={{ fontSize: 14, color: "gray" }}>
-            ({rating})
-          </Typography>
+          {oldPrice && (
+            <Typography
+              sx={{
+                fontSize: 14,
+                color: "gray",
+                textDecoration: "line-through",
+              }}
+            >
+              {oldPrice}
+            </Typography>
+          )}
         </Box>
-
-        {/* Colors */}
-        {colors && colors.length > 0 && (
-          <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
-            {colors.map((color, i) => (
-              <Box
-                key={i}
-                sx={{
-                  width: 18,
-                  height: 18,
-                  borderRadius: "50%",
-                  bgcolor: color,
-                  cursor: "pointer",
-                }}
-              />
-            ))}
+        {rating && (
+          <Box display="flex" alignItems="center" gap={1}>
+            <Rating value={rating} precision={0.5} readOnly size="large" />
+            <Typography sx={{ fontSize: 14, color: "gray" }}>
+              ({rating})
+            </Typography>
           </Box>
         )}
       </CardContent>
@@ -199,4 +194,4 @@ const ExploreProductCard: React.FC<ExploreProductCardProps> = ({
   );
 };
 
-export default ExploreProductCard;
+export default ProductCard;

@@ -10,10 +10,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import palystation from "../../../assets/Homepage/playstation.png";
+import palystation from "../../../assets/Home-page/playstation.png";
 import { useTheme } from "../../../theme/ThemeProvider";
-import ArrowNavigation from "../../../shared/components/ArrowNavigation";
-import ProductCard from "./ProductCard";
+import ArrowNavigation from "../../../shared/components/Arrow-navigation";
+import ProductCard from "../../../shared/components/ProductCard";
 
 // Demo Products
 const flashProducts = [
@@ -147,8 +147,6 @@ const FlashSales: React.FC = () => {
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
 
- 
-
   useEffect(() => {
     const timer = setInterval(
       () => setTimeLeft(calculateTimeLeft(endDate)),
@@ -174,7 +172,12 @@ const FlashSales: React.FC = () => {
       ].map((t, idx, arr) => (
         <React.Fragment key={idx}>
           <Box textAlign="center" minWidth={50}>
-            <Typography sx={{ fontSize: { xs: 10, md: 12, lg: 14, xl: 14 }, color: "gray" }}>
+            <Typography
+              sx={{
+                fontSize: { xs: 10, md: 12, lg: 14, xl: 14 },
+                color: "gray",
+              }}
+            >
               {t.label}
             </Typography>
             <Typography

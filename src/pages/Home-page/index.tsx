@@ -8,7 +8,7 @@ import BestSelling from "./components/BestSelling";
 import PromoBanner from "./components/PromoBanner";
 import ExploreProducts from "./components/ExploreProducts";
 import NewArrival from "./components/NewArrival";
-import FeatureCard from "../../shared/components/FeatureCard";
+import FeatureCard from "../../shared/components/Feature-card";
 
 import IconDelivery from "../../assets/About/icon-delivery.svg";
 import IconCustomer from "../../assets/About/Icon-Customerservice.svg";
@@ -16,9 +16,9 @@ import IconSecure from "../../assets/About/Icon-secure.svg";
 import { useTheme } from "../../theme/ThemeProvider";
 
 const Homepage: React.FC = () => {
-  const{theme}=useTheme()
+  const { theme } = useTheme();
   return (
-    <Stack sx={{ bgcolor:theme.primary1 }}>
+    <Stack sx={{ bgcolor: theme.primary1 }}>
       <Container maxWidth="xl">
         {/* Hero Section */}
         <Grid container spacing={2} sx={{ mt: 4, alignItems: "flex-start" }}>

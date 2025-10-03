@@ -11,7 +11,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-import ProductCard from "./ProductCard";
+import ProductCard from "../../../shared/components/ProductCard";
 import { useTheme } from "../../../theme/ThemeProvider";
 
 const bestProducts = [
@@ -87,7 +87,6 @@ const BestSelling: React.FC = () => {
             color: theme.Text1,
             mt: isMobile ? 1 : 0,
             fontSize: isMobile ? "1.5rem" : "2.7rem",
-           
           }}
         >
           Best Selling Products

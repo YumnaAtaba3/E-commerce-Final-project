@@ -5,7 +5,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { useMediaQuery, useTheme as useMuiTheme } from "@mui/material";
-import ArrowNavigation from "../../../shared/components/ArrowNavigation";
+import ArrowNavigation from "../../../shared/components/Arrow-navigation";
 
 import { useTheme } from "../../../theme/ThemeProvider";
 
@@ -68,7 +68,7 @@ const Categories: React.FC = () => {
           Browse By Category
         </Typography>
 
-        <Box >
+        <Box>
           <ArrowNavigation prevClass="cat-prev" nextClass="cat-next" />
         </Box>
       </Box>

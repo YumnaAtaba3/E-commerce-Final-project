@@ -9,7 +9,7 @@ import Breadcrumb from "./components/Breadcrumb";
 import OurStory from "./components/OurStory";
 import StatCard from "./components/StatCard";
 import StaffCard from "./components/StaffCard";
-import FeatureCard from "../../shared/components/FeatureCard";
+import FeatureCard from "../../shared/components/Feature-card";
 
 import { useTheme } from "../../theme/ThemeProvider";
 

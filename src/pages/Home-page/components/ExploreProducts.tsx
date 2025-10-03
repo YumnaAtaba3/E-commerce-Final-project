@@ -14,8 +14,8 @@ import "swiper/css/grid";
 import { useTheme } from "../../../theme/ThemeProvider";
 import ExploreProductCard from "./ExploreProductCard";
 
-import palystation from "../../../assets/Homepage/playstation.png";
-import ArrowNavigation from "../../../shared/components/ArrowNavigation";
+import palystation from "../../../assets/Home-page/playstation.png";
+import ArrowNavigation from "../../../shared/components/Arrow-navigation";
 
 const exploreProducts = [
   {
@@ -143,7 +143,7 @@ const ExploreProducts: React.FC = () => {
         grid={{ rows: 2, fill: "row" }}
         breakpoints={{
           1200: { slidesPerView: 4 },
-          1000:{slidesPerView: 3.1 },
+          1000: { slidesPerView: 3.1 },
           900: { slidesPerView: 2.4 },
           600: { slidesPerView: 1.3 },
           0: { slidesPerView: 1.1 },

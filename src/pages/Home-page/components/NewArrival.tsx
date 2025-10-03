@@ -8,10 +8,10 @@ import {
 } from "@mui/material";
 
 // ✅ Import images
-import ps5Img from "../../../assets/Homepage/NewArrival/ps5-slim-goedkope-playstation_large1.png.png";
-import womanImg from "../../../assets/Homepage/NewArrival/attractive-woman-wearing-hat-posing-black-background 1.png";
-import speakersImg from "../../../assets/Homepage/NewArrival/speakers.png";
-import perfumeImg from "../../../assets/Homepage/NewArrival/cucci.png";
+import ps5Img from "../../../assets/Home-page/NewArrival/ps5-slim-goedkope-playstation_large1.png.png";
+import womanImg from "../../../assets/Home-page/NewArrival/attractive-woman-wearing-hat-posing-black-background 1.png";
+import speakersImg from "../../../assets/Home-page/NewArrival/speakers.png";
+import perfumeImg from "../../../assets/Home-page/NewArrival/cucci.png";
 
 import { useTheme } from "../../../theme/ThemeProvider";
 

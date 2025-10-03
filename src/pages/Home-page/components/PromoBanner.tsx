@@ -9,7 +9,7 @@ import {
   useTheme as useMuiTheme,
 } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
-import SpeakerImg from "../../../assets/Homepage/speaker.svg";
+import SpeakerImg from "../../../assets/Home-page/speaker.svg";
 
 const PromoBanner: React.FC = () => {
   const { theme } = useTheme();

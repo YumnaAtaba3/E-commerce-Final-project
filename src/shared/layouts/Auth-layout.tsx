@@ -2,8 +2,8 @@ import React from "react";
 import { Box, Grid, } from "@mui/material";
 import { useTheme } from "../../theme/ThemeProvider";
 import shoppingImage from "../../assets/Sign-up/shopping-image.jpg";
-import SignUpForm from "../../pages/sign-up";
-import LoginForm from "../../pages/log-in";
+import SignUpForm from "../../pages/sign-up-page";
+import LoginForm from "../../pages/log-in-page";
 const AuthLayout: React.FC = () => {
   const { theme } = useTheme();
 

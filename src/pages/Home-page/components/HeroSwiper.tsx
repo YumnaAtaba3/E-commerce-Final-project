@@ -12,8 +12,8 @@ import {
 } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
 
-import heroImg from "../../../assets/Homepage/hero_endframe__cvklg0xk3w6e_large 2.svg";
-import appleLogo from "../../../assets/Homepage/1200px-Apple_gray_logo 1.svg";
+import heroImg from "../../../assets/Home-page/hero_endframe__cvklg0xk3w6e_large 2.svg";
+import appleLogo from "../../../assets/Home-page/1200px-Apple_gray_logo 1.svg";
 
 const slides = [
   {
