@@ -60,7 +60,7 @@ const inputStyle = {
       <Grid
         container
         spacing={3}
-        sx={{ flexWrap: isMobile ? "wrap" : "nowrap", minWidth: 800 }}
+        sx={{ flexWrap: isMobile ? "wrap" : "nowrap", minWidth:isMobile?0:800 }}
       >
         {["name", "email", "phone"].map((field) => (
           <Grid item xs={12} md key={field}>

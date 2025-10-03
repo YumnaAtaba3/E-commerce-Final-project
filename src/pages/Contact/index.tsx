@@ -19,9 +19,8 @@ const Contact: React.FC = () => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
 
-  // Responsive breakpoints
-  const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm")); // mobile <600px
-  const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md")); // tablet 600-900px
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm")); // <600px
+  const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md")); // 600-900px
 
   const [form, setForm] = useState({
     name: "",
@@ -49,18 +48,34 @@ const Contact: React.FC = () => {
         <Grid
           container
           spacing={isMobile ? 4 : isTablet ? 6 : 8}
-          sx={{ display: "flex", alignItems: "stretch" }} // Stretch both columns
+          sx={{
+            flexDirection: isMobile ? "column" : "row",
+            justifyContent: isMobile ? "center" : "flex-start",
+            alignItems: "flex-start",
+          }}
         >
           {/* Left Info Section */}
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            sx={{
+              width: isMobile ? "100%" : "auto",
+              maxWidth: isMobile ? 450 : "none",
+              display: "flex",
+              justifyContent: "center",
+              mb: isMobile ? 4 : 0,
+            }}
+          >
             <Box
               sx={{
+                width: "100%",
                 border: "1px solid #e0e0e0",
                 borderRadius: 2,
                 p: 3,
                 bgcolor: theme.primary1,
                 boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.08)",
-                height: "100%", // Stretch height
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
@@ -91,8 +106,19 @@ const Contact: React.FC = () => {
           </Grid>
 
           {/* Right Form Section */}
-          <Grid item xs={12} sm={6} md={8}>
-            <Box sx={{ height: "100%" }}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={8}
+            sx={{
+              width: isMobile ? "100%" : "auto",
+              maxWidth: isMobile ? 450 : "none",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Box sx={{ width: "100%" }}>
               <ContactForm
                 form={form}
                 handleChange={handleChange}

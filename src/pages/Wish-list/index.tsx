@@ -1,11 +1,24 @@
 import React, { useState } from "react";
-import { Box, Typography, Grid, Button } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Grid,
+  Button,
+  useMediaQuery,
+  useTheme as useMuiTheme,
+} from "@mui/material";
+import { useNavigate } from "react-router"; 
 import WishlistCard from "./components/WishlistCard";
-import ProductCard from "../../shared/components/ProductCard"; // reuse Related design
+import ProductCard from "../../shared/components/ProductCard";
 import { useTheme } from "../../theme/ThemeProvider";
+import { appRoutes } from "../../routes/index"; 
 
 const WishlistPage: React.FC = () => {
   const { theme } = useTheme();
+  const muiTheme = useMuiTheme();
+  const navigate = useNavigate(); // ✅ initialize navigate
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm")); // <600px
+  const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md")); // 600px-900px
 
   const [wishlist, setWishlist] = useState([
     {
@@ -15,7 +28,6 @@ const WishlistPage: React.FC = () => {
       oldPrice: "$1160",
       discount: "-35%",
       img: "/bag.png",
-      
     },
     {
       id: 2,
@@ -29,12 +41,7 @@ const WishlistPage: React.FC = () => {
       price: "$550",
       img: "/gamepad.png",
     },
-    {
-      id: 4,
-      name: "Quilted Satin Jacket",
-      price: "$750",
-      img: "/jacket.png",
-    },
+    { id: 4, name: "Quilted Satin Jacket", price: "$750", img: "/jacket.png" },
   ]);
 
   const justForYou = [
@@ -72,19 +79,18 @@ const WishlistPage: React.FC = () => {
     },
   ];
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: number) =>
     setWishlist((prev) => prev.filter((item) => item.id !== id));
-  };
 
-  // 🔹 Common Button Style (black border + black text + white bg)
+  // Responsive button style
   const buttonStyle = {
     borderColor: theme.Text1,
     color: theme.Text1,
     bgcolor: theme.primary1,
-    px: 5,
-    py: 1.2,
+    px: isMobile ? 2 : isTablet ? 3 : 5,
+    py: isMobile ? 0.8 : 1.2,
     borderRadius: 0,
-    fontSize: 14,
+    fontSize: isMobile ? 12 : isTablet ? 13 : 14,
     fontWeight: 500,
     textTransform: "none" as const,
     boxShadow: "none",
@@ -96,11 +102,13 @@ const WishlistPage: React.FC = () => {
     },
   };
 
+  const headingFont = isMobile ? 18 : isTablet ? 22 : 24;
+
   return (
     <Box
       sx={{
         px: { xs: 2, md: 4 },
-        py: 6,
+        py: 4,
         bgcolor: theme.primary1,
         display: "flex",
         justifyContent: "center",
@@ -111,36 +119,71 @@ const WishlistPage: React.FC = () => {
         {/* Header */}
         <Box
           display="flex"
+          flexDirection={isMobile ? "column" : "row"}
           justifyContent="space-between"
-          alignItems="center"
-          mb={4}
+          alignItems={isMobile ? "flex-start" : "center"}
+          mb={3}
+          gap={isMobile ? 2 : 0}
         >
-          <Typography variant="h4" sx={{ fontWeight: 300, color: theme.Text1 }}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: 300, color: theme.Text1, fontSize: headingFont }}
+          >
             Wishlist ({wishlist.length})
           </Typography>
-          <Button variant="outlined"  sx={buttonStyle}>
-            Move All To Bag
-          </Button>
+          {wishlist.length > 0 && (
+            <Button
+              variant="outlined"
+              sx={buttonStyle}
+              onClick={() => navigate(appRoutes.cart)} 
+            >
+              Move All To Bag
+            </Button>
+          )}
         </Box>
 
-        {/* Wishlist Grid */}
-        <Grid container spacing={3} mb={8}>
-          {wishlist.map((item) => (
-            <Grid item key={item.id} xs={12} sm={6} md={3}>
-              <WishlistCard {...item} onDelete={handleDelete} />
-            </Grid>
-          ))}
-        </Grid>
+        {/* Wishlist Grid OR Empty State */}
+        {wishlist.length > 0 ? (
+          <Grid
+            container
+            spacing={isMobile ? 2 : 3}
+            mb={6}
+            justifyContent={isMobile ? "center" : "flex-start"}
+          >
+            {wishlist.map((item) => (
+              <Grid  key={item.id}>
+                <WishlistCard {...item} onDelete={handleDelete} />
+              </Grid>
+            ))}
+          </Grid>
+        ) : (
+          <Box
+            sx={{
+              textAlign: "center",
+              py: 6,
+              color: theme.Text1,
+            }}
+          >
+            <Typography variant="h6" sx={{ fontWeight: 400, fontSize: 18 }}>
+              Your wishlist is empty 🛒
+            </Typography>
+            <Typography variant="body2" sx={{ mt: 1, color: theme.secound1 }}>
+              Start adding items you love!
+            </Typography>
+          </Box>
+        )}
 
         {/* Just For You Section */}
         <Box>
           <Box
             display="flex"
+            flexDirection={isMobile ? "column" : "row"}
             justifyContent="space-between"
-            alignItems="center"
+            alignItems={isMobile ? "flex-start" : "center"}
             mb={2}
+            gap={isMobile ? 1 : 0}
           >
-            <Box display="flex" alignItems="center" gap={2}>
+            <Box display="flex" alignItems="center" gap={1.5}>
               <Box
                 sx={{
                   width: 20,
@@ -150,22 +193,33 @@ const WishlistPage: React.FC = () => {
                 }}
               />
               <Typography
-                variant="h4"
-                sx={{ fontWeight: 300, color: theme.Text1 }}
+                variant="h5"
+                sx={{
+                  fontWeight: 300,
+                  color: theme.Text1,
+                  fontSize: headingFont,
+                }}
               >
                 Just For You
               </Typography>
             </Box>
 
-            {/* 🔹 "View All" button aligned right */}
-            <Button variant="outlined" sx={buttonStyle}>
+            <Button
+              variant="outlined"
+              sx={buttonStyle}
+              onClick={() => navigate(appRoutes.products.list)} 
+            >
               See All
             </Button>
           </Box>
 
-          <Grid container spacing={3}>
+          <Grid
+            container
+            spacing={isMobile ? 2 : 3}
+            justifyContent={isMobile ? "center" : "flex-start"}
+          >
             {justForYou.map((item) => (
-              <Grid item key={item.id} xs={12} sm={6} md={3}>
+              <Grid  key={item.id} >
                 <ProductCard {...item} />
               </Grid>
             ))}

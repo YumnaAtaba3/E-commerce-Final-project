@@ -9,9 +9,9 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
-import { useTheme } from "../../theme/ThemeProvider";
+import { useTheme } from "../../../theme/ThemeProvider";
 
-import { Link as RouterLink } from "react-router";
+import { Link as RouterLink, useLocation } from "react-router";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -20,8 +20,8 @@ import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 
-import logo from "../../assets/Header/Logo.svg";
-import { appRoutes } from "../../routes";
+import logo from "../../../assets/Header/Logo.svg";
+import { appRoutes } from "../../../routes";
 
 const Header: React.FC = () => {
   const { theme } = useTheme();
@@ -31,10 +31,12 @@ const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
+  const location = useLocation();
+
   const navLinks = [
     { label: "Home", path: appRoutes.home },
     { label: "About", path: appRoutes.about },
-    { label: "Contact", path: appRoutes.contact }, 
+    { label: "Contact", path: appRoutes.contact },
     { label: "Sign Up", path: appRoutes.auth.signUp },
   ];
 
@@ -42,9 +44,7 @@ const Header: React.FC = () => {
     <>
       <AppBar
         position="fixed"
-        
         sx={{
-          
           top: { xs: 50, sm: 40 },
           bgcolor: theme.primary1,
           color: theme.ButtonCard,
@@ -73,24 +73,46 @@ const Header: React.FC = () => {
 
           {/* Nav Links (desktop only) */}
           {!isMobile && (
-            <Box sx={{ display: "flex", gap: 4 }}>
-              {navLinks.map((item) => (
-                <Link
-                  key={item.label}
-                  component={RouterLink}
-                  to={item.path}
-                  underline="none"
-                  sx={{
-                    color: theme.Text1,
-                    fontSize: 14,
-                    fontWeight: 500,
-                    fontFamily: theme.font,
-                    "&:hover": { color: theme.ButtonCard },
-                  }}
-                >
-                  {item.label}
-                </Link>
-              ))}
+            <Box sx={{ display: "flex", gap: 4, position: "relative" }}>
+              {navLinks.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <Box key={item.label} sx={{ position: "relative" }}>
+                    <Link
+                      component={RouterLink}
+                      to={item.path}
+                      underline="none"
+                      sx={{
+                        fontSize: 14,
+                        fontWeight: 500,
+                        fontFamily: theme.font,
+                        cursor: "pointer",
+                        color: isActive ? theme.ButtonCard : theme.Text1,
+                        transition: "color 0.2s, transform 0.2s",
+                        "&:hover": {
+                          color: theme.ButtonCard,
+                          transform: "scale(1.1)",
+                        },
+                      }}
+                    >
+                      {item.label}
+                    </Link>
+                    {isActive && (
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          bottom: -4,
+                          left: 0,
+                          height: 2,
+                          width: "100%",
+                          backgroundColor: theme.ButtonCard,
+                          borderRadius: 1,
+                        }}
+                      />
+                    )}
+                  </Box>
+                );
+              })}
             </Box>
           )}
 
@@ -256,25 +278,33 @@ const Header: React.FC = () => {
               <CloseIcon sx={{ color: theme.ButtonCard }} />
             </IconButton>
 
-            {navLinks.map((item) => (
-              <Link
-                key={item.label}
-                component={RouterLink}
-                to={item.path}
-                underline="none"
-                sx={{
-                  color: theme.Text1,
-                  fontSize: 16,
-                  fontWeight: 500,
-                  fontFamily: theme.font,
-                  textAlign: "center",
-                  "&:hover": { color: theme.ButtonCard },
-                }}
-                onClick={() => setMenuOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {navLinks.map((item) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.label}
+                  component={RouterLink}
+                  to={item.path}
+                  underline="none"
+                  sx={{
+                    color: isActive ? theme.ButtonCard : theme.Text1,
+                    fontSize: 16,
+                    fontWeight: 500,
+                    fontFamily: theme.font,
+                    textAlign: "center",
+                    cursor: "pointer",
+                    transition: "color 0.2s, transform 0.2s",
+                    "&:hover": {
+                      color: theme.ButtonCard,
+                      transform: "scale(1.05)",
+                    },
+                  }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           </Box>
         </Box>
       )}
