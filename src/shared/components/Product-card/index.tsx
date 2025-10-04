@@ -13,7 +13,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import { useTheme } from "../../theme/ThemeProvider";
+import { useTheme } from "../../../theme/ThemeProvider";
 
 interface ProductCardProps {
   id: number;
@@ -23,11 +23,10 @@ interface ProductCardProps {
   discount?: string;
   rating?: number;
   img: string;
-  isNew?: boolean; // 🔹 added
+  isNew?: boolean; 
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
-  id,
   name,
   price,
   oldPrice,
@@ -55,7 +54,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         bgcolor: theme.primary1,
       }}
     >
-      {/* 🔹 Badge logic (Discount first, else New) */}
+    
       {(discount || isNew) && (
         <Box
           sx={{

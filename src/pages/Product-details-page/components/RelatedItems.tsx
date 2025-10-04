@@ -7,7 +7,7 @@ import {
   useTheme as useMuiTheme,
 } from "@mui/material";
 
-import ProductCard from "../../../shared/components/ProductCard";
+import ProductCard from "../../../shared/components/Product-card";
 import { useTheme } from "../../../theme/ThemeProvider";
 
 interface RelatedItem {
@@ -25,8 +25,8 @@ interface RelatedItemsProps {
 }
 
 const RelatedItems: React.FC<RelatedItemsProps> = ({ items }) => {
-  const {theme} = useTheme();
-    const muiTheme = useMuiTheme();
+  const { theme } = useTheme();
+  const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm")); // xs & sm screens
 
   return (
@@ -41,10 +41,7 @@ const RelatedItems: React.FC<RelatedItemsProps> = ({ items }) => {
             borderRadius: 1,
           }}
         />
-        <Typography
-          variant="h5"
-          sx={{ fontWeight: 700, color: theme.Button2 }}
-        >
+        <Typography variant="h5" sx={{ fontWeight: 700, color: theme.Button2 }}>
           Related Items
         </Typography>
       </Box>

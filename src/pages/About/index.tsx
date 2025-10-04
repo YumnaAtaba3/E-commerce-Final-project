@@ -30,7 +30,7 @@ const AboutPage: React.FC = () => {
   const { theme } = useTheme();
 
   return (
-    <Box sx={{ bgcolor: theme.primary1,width:"100%" }}>
+    <Box sx={{ bgcolor: theme.primary1, width:"100%" }}>
       <Breadcrumb current="About" />
 
       <OurStory
@@ -58,7 +58,7 @@ const AboutPage: React.FC = () => {
             },
             { icon: IconMoneybag, value: "25k", text: "Annual gross sale" },
           ].map((item, i) => (
-            <Grid item xs={12} sm={6} md={3} key={i}>
+            <Grid key={i}>
               <StatCard {...item} />
             </Grid>
           ))}
@@ -139,7 +139,7 @@ const AboutPage: React.FC = () => {
               text: "We return money within 30 days",
             },
           ].map((f, i) => (
-            <Grid item xs={12} md={4} key={i}>
+            <Grid  key={i}>
               <FeatureCard {...f} />
             </Grid>
           ))}

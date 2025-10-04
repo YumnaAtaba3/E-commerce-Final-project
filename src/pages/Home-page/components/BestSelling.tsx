@@ -11,7 +11,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-import ProductCard from "../../../shared/components/ProductCard";
+import ProductCard from "../../../shared/components/Product-card";
 import { useTheme } from "../../../theme/ThemeProvider";
 
 const bestProducts = [

@@ -9,7 +9,7 @@ import {
   useMediaQuery,
   useTheme as useMuiTheme,
 } from "@mui/material";
-import ProductCard from "../../shared/components/ProductCard";
+import ProductCard from "../../shared/components/Product-card";
 import { useTheme } from "../../theme/ThemeProvider";
 
 interface Product {
@@ -93,11 +93,9 @@ const ProductPage: React.FC = () => {
           {loading
             ? Array.from({ length: itemsPerPage }).map((_, i) => (
                 <Grid
-                  item
+                  
                   key={i}
-                  xs={10} // full width mobile
-                  sm={6} // 2 per row tablet
-                  md={3} // 4 per row desktop
+                 
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
                   <Skeleton variant="rectangular" height={250} width="100%" />
@@ -107,11 +105,8 @@ const ProductPage: React.FC = () => {
               ))
             : displayedProducts.map((product) => (
                 <Grid
-                  item
-                  key={product.id}
-                  xs={10} // full width mobile
-                  sm={6} // 2 per row tablet
-                  md={3} // 4 per row desktop
+                  
+                 
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
                   <ProductCard {...product} />

@@ -6,7 +6,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useTheme } from "../../theme/ThemeProvider";
+import { useTheme } from "../../../theme/ThemeProvider";
 
 const NotFoundPage: React.FC = () => {
   const { theme } = useTheme();
@@ -16,8 +16,8 @@ const NotFoundPage: React.FC = () => {
     <Container
       maxWidth="xl"
       sx={{
-        padding:0,
-         minHeight: "70vh",
+        padding: 0,
+        minHeight: "70vh",
         bgcolor: theme.bgColor,
         display: "flex",
         flexDirection: "column",
@@ -35,9 +35,8 @@ const NotFoundPage: React.FC = () => {
           alignSelf: "flex-start",
           mb: { xs: 2, md: 4 },
           color: theme.Text2,
-          marginTop:"-80px",
+          marginTop: "-80px",
           fontFamily: theme.font,
-        
         }}
       >
         Home / 404 Error
@@ -45,10 +44,11 @@ const NotFoundPage: React.FC = () => {
 
       {/* 404 Title */}
       <Typography
-        variant={isSmall ? "h3" : "h2"}
+        variant={isSmall ? "h3" : "h1"}
         sx={{
-          fontFamily: theme.headingFont,
-          fontWeight: 600,
+          fontSize: 90,
+          fontFamily: `'Roboto', Arial, sans-serif`,
+         
           color: theme.ButtonCard,
         }}
       >
@@ -57,7 +57,7 @@ const NotFoundPage: React.FC = () => {
 
       {/* Subtitle */}
       <Typography
-        variant="body1"
+        variant="h5"
         sx={{
           color: theme.ButtonCard,
           fontFamily: theme.font,
@@ -73,12 +73,12 @@ const NotFoundPage: React.FC = () => {
         sx={{
           mt: 3,
           bgcolor: theme.Button2,
-          fontFamily: theme.font,
+          fontSize: 12,
           fontWeight: 500,
           textTransform: "none",
-          px: 4,
+          px: 5,
           py: 1.5,
-          borderRadius: 2,
+
           "&:hover": { bgcolor: theme.HoverButton },
         }}
       >

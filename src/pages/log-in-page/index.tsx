@@ -2,22 +2,78 @@ import React from "react";
 import {
   Box,
   Button,
-  TextField,
   Typography,
-  Link,
   useMediaQuery,
   useTheme as useMuiTheme,
+  styled,
+  Link,
 } from "@mui/material";
 import { useTheme } from "../../theme/ThemeProvider";
-import { Link as RouterLink } from "react-router";
-
-import GoogleSvg from "../../assets/Sign-up/Icon-Google.svg";
+import { Link as RouterLink, useNavigate } from "react-router";
 import { appRoutes } from "../../routes";
+import LoginFormFields from "./components/LoginFormFields";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { loginFormSchemaValidation,type LoginFormValues } from "./config";
+import { useLoginMutation } from "./services/mutations";
+import { userStorage } from "../../storage/inedx";
+import { toast } from "react-toastify";
+
+
+// Styled Components
+const Container = styled(Box)({
+  maxWidth: 370,
+  width: "100%",
+});
+
+const Heading = styled(Typography)({
+  fontFamily: "'Inter', sans-serif",
+  fontWeight: 600,
+});
+
+const SubHeading = styled(Typography)({
+  fontFamily: "'Inter', sans-serif",
+  fontWeight: 400,
+  marginBottom: "32px",
+});
+
+const LoginButton = styled(Button)({
+  fontFamily: "'Inter', sans-serif",
+  fontWeight: 500,
+  textTransform: "none",
+  py: 1.2,
+});
 
 const LoginForm: React.FC = () => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
+  const navigate = useNavigate();
+
+  // React Hook Form setup
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: yupResolver(loginFormSchemaValidation),
+  });
+
+  // React Query login mutation
+  const { mutateAsync: login, isPending } = useLoginMutation();
+
+  // Submit handler
+  const onSubmit = handleSubmit(async (values) => {
+    try {
+      const response = await login(values);
+      userStorage.set(response.token);
+      toast.success("Login successful!");
+      navigate(appRoutes.home);
+    } catch (error) {
+      console.error(error);
+      toast.error("Login failed. Please check your credentials.");
+    }
+  });
 
   // Responsive font sizes
   const headingFont = isMobile ? "24px" : "32px";
@@ -28,139 +84,64 @@ const LoginForm: React.FC = () => {
   const linkFont = isMobile ? "12px" : "14px";
 
   return (
-    <Box
-      sx={{
-        maxWidth: 370,
-        width: "100%",
-        mx: isMobile ? 5 : 0, // center horizontally on mobile
-      }}
-    >
-      {/* Heading */}
-      <Typography
-        sx={{
-          fontSize: headingFont,
-          fontFamily: "'Inter', sans-serif",
-          fontWeight: 600,
-          color: theme.Text1,
-        }}
-        gutterBottom
-      >
+    <Container sx={{ mx: isMobile ? 5 : 0 }}>
+      <Heading sx={{ fontSize: headingFont, color: theme.Text1 }}>
         Log in to Exclusive
-      </Typography>
-
-      <Typography
-        sx={{
-          mb: 4,
-          fontSize: subHeadingFont,
-          fontFamily: "'Inter', sans-serif",
-          fontWeight: 400,
-          color: theme.Text1,
-        }}
-      >
+      </Heading>
+      <SubHeading sx={{ fontSize: subHeadingFont, color: theme.Text1 }}>
         Enter your details below
-      </Typography>
+      </SubHeading>
 
-      {/* Form Fields */}
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        {["Email or Phone Number", "Password"].map((label) => (
-          <TextField
-            key={label}
-            label={label}
-            type={label === "Password" ? "password" : "text"}
-            variant="standard"
-            fullWidth
-            InputLabelProps={{
-              sx: {
-                fontSize: labelFont,
-                fontFamily: "'Inter', sans-serif",
-                color: theme.disabledText,
-                "&.Mui-focused": {
-                  color: theme.Button2,
-                },
-              },
-            }}
-            inputProps={{
-              style: {
-                fontSize: inputFont,
-                fontFamily: "'Inter', sans-serif",
-              },
-            }}
+      <form onSubmit={onSubmit}>
+        <LoginFormFields
+          inputFont={inputFont}
+          labelFont={labelFont}
+          register={register}
+          errors={errors}
+        />
+
+        <Box
+          sx={{
+            mt: 4,
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row",
+            alignItems: isMobile ? "stretch" : "center",
+            justifyContent: "space-between",
+            gap: isMobile ? 2 : 0,
+          }}
+        >
+          <LoginButton
+            type="submit"
+            fullWidth={isMobile}
+            variant="contained"
             sx={{
-              "& .MuiInput-underline:before": {
-                borderBottomColor: theme.disabledText,
-              },
-              "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
-                borderBottomColor: theme.Text1,
-              },
-              "& .MuiInput-underline:after": {
-                borderBottomColor: theme.Button2,
-              },
+              fontSize: buttonFont,
+              backgroundColor: theme.Button2,
+              color: "#fff",
+              "&:hover": { backgroundColor: theme.Button2 },
+              px: 5,
             }}
-          />
-        ))}
+            disabled={isPending}
+          >
+            {isPending ? "Loading..." : "Log In"}
+          </LoginButton>
 
-        {/* Login Button */}
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{
-            mt: 1,
-            bgcolor: theme.Button2,
-            fontSize: buttonFont,
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 500,
-            textTransform: "none",
-            py: 1.2,
-            "&:hover": { bgcolor: theme.Button2 },
-          }}
-        >
-          Log In
-        </Button>
-
-        {/* Google Login Button */}
-        <Button
-          variant="outlined"
-          fullWidth
-          startIcon={
-            <Box
-              component="img"
-              src={GoogleSvg}
-              alt="Google"
-              sx={{ width: 20, height: 20 }}
-            />
-          }
-          sx={{
-            textTransform: "none",
-            color: theme.secondaryText,
-            borderColor: theme.borderColor,
-            fontSize: buttonFont,
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 500,
-            py: 1.2,
-            mt: 1,
-            "&:hover": { borderColor: theme.primaryText },
-          }}
-        >
-          Log in with Google
-        </Button>
-
-        {/* Forgot Password */}
-        <Box mt={1} textAlign="center">
           <Link
             component={RouterLink}
-            to={appRoutes.home} // make sure you have a forgot password route
+            to={appRoutes.home}
             underline="hover"
             sx={{
               fontSize: linkFont,
-              fontFamily: "'Inter', sans-serif",
               color: theme.Button2,
+              textAlign: isMobile ? "center" : "left",
+              mt: isMobile ? 1 : 0,
             }}
           >
             Forgot Password?
           </Link>
         </Box>
-      </Box>
-    </Box>
+      </form>
+    </Container>
   );
 };
 

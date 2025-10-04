@@ -23,12 +23,12 @@ const Homepage: React.FC = () => {
         {/* Hero Section */}
         <Grid container spacing={2} sx={{ mt: 4, alignItems: "flex-start" }}>
           {/* Sidebar */}
-          <Grid item xs={12} md={3}>
+          <Grid >
             <FilterSidebar />
           </Grid>
 
           {/* Slider */}
-          <Grid item xs={12} md={9}>
+          <Grid >
             <HeroSwiper />
           </Grid>
         </Grid>
@@ -69,7 +69,7 @@ const Homepage: React.FC = () => {
                 text: "We return money within 30 days",
               },
             ].map((f, i) => (
-              <Grid item xs={12} md={4} key={i}>
+              <Grid  key={i}>
                 <FeatureCard {...f} />
               </Grid>
             ))}

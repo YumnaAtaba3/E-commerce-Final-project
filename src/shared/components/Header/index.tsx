@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
 import { useTheme } from "../../../theme/ThemeProvider";
-
 import { Link as RouterLink, useLocation } from "react-router";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -19,9 +18,15 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import HomeIcon from "@mui/icons-material/Home";
+import InfoIcon from "@mui/icons-material/Info";
+import ContactMailIcon from "@mui/icons-material/ContactMail";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+
+import { motion } from "framer-motion";
 
 import logo from "../../../assets/Header/Logo.svg";
-import { appRoutes } from "../../../routes";
+import { appRoutes } from "../../../routes/index";
 
 const Header: React.FC = () => {
   const { theme } = useTheme();
@@ -34,11 +39,26 @@ const Header: React.FC = () => {
   const location = useLocation();
 
   const navLinks = [
-    { label: "Home", path: appRoutes.home },
-    { label: "About", path: appRoutes.about },
-    { label: "Contact", path: appRoutes.contact },
-    { label: "Sign Up", path: appRoutes.auth.signUp },
+    { label: "Home", path: appRoutes.home, icon: <HomeIcon /> },
+    { label: "About", path: appRoutes.about, icon: <InfoIcon /> },
+    { label: "Contact", path: appRoutes.contact, icon: <ContactMailIcon /> },
+    { label: "Sign Up", path: appRoutes.auth.signUp, icon: <PersonAddIcon /> },
   ];
+
+  // Nav link animation (no need to import Variants)
+  const navLinkVariants = {
+    initial: { scale: 1, color: "#000" },
+    hover: {
+      scale: 1.2,
+      color: "#000",
+      transition: { type: "spring", stiffness: 300 },
+    },
+    active: {
+      scale: 1.2,
+      color: "#000",
+      transition: { type: "spring", stiffness: 300 },
+    },
+  };
 
   return (
     <>
@@ -47,7 +67,7 @@ const Header: React.FC = () => {
         sx={{
           top: { xs: 50, sm: 40 },
           bgcolor: theme.primary1,
-          color: theme.ButtonCard,
+          color: "#000",
           borderBottom: `1px solid ${theme.Text2}`,
           zIndex: 1300,
         }}
@@ -71,13 +91,20 @@ const Header: React.FC = () => {
             />
           </Box>
 
-          {/* Nav Links (desktop only) */}
+          {/* Desktop Nav Links */}
           {!isMobile && (
             <Box sx={{ display: "flex", gap: 4, position: "relative" }}>
               {navLinks.map((item) => {
                 const isActive = location.pathname === item.path;
                 return (
-                  <Box key={item.label} sx={{ position: "relative" }}>
+                  <motion.div
+                    key={item.label}
+                    initial="initial"
+                    animate={isActive ? "active" : "initial"}
+                    whileHover="hover"
+                    variants={navLinkVariants}
+                    style={{ position: "relative" }}
+                  >
                     <Link
                       component={RouterLink}
                       to={item.path}
@@ -87,36 +114,32 @@ const Header: React.FC = () => {
                         fontWeight: 500,
                         fontFamily: theme.font,
                         cursor: "pointer",
-                        color: isActive ? theme.ButtonCard : theme.Text1,
-                        transition: "color 0.2s, transform 0.2s",
-                        "&:hover": {
-                          color: theme.ButtonCard,
-                          transform: "scale(1.1)",
-                        },
+                        color: "#000",
                       }}
                     >
                       {item.label}
                     </Link>
                     {isActive && (
-                      <Box
-                        sx={{
+                      <motion.div
+                        layoutId="underline"
+                        style={{
                           position: "absolute",
                           bottom: -4,
                           left: 0,
                           height: 2,
                           width: "100%",
-                          backgroundColor: theme.ButtonCard,
+                          backgroundColor: "#000",
                           borderRadius: 1,
                         }}
                       />
                     )}
-                  </Box>
+                  </motion.div>
                 );
               })}
             </Box>
           )}
 
-          {/* Icons + Menu */}
+          {/* Icons + Mobile Menu */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             {!isMobile && (
               <Box
@@ -135,57 +158,42 @@ const Header: React.FC = () => {
                   sx={{
                     flex: 1,
                     fontSize: 14,
-                    color: theme.ButtonCard,
+                    color: "#000",
                     fontFamily: theme.font,
-                    "& input::placeholder": {
-                      color: theme.ButtonCard,
-                      opacity: 0.7,
-                    },
+                    "& input::placeholder": { color: "#000", opacity: 0.7 },
                   }}
                 />
-                <SearchIcon sx={{ color: theme.ButtonCard, fontSize: 20 }} />
+                <SearchIcon sx={{ color: "#000", fontSize: 20 }} />
               </Box>
             )}
 
             <IconButton component={RouterLink} to={appRoutes.wishlist}>
-              <FavoriteBorderIcon
-                fontSize={!isMobile ? "large" : "medium"}
-                sx={{ color: theme.ButtonCard }}
-              />
+              <FavoriteBorderIcon sx={{ color: "#000" }} />
             </IconButton>
             <IconButton component={RouterLink} to={appRoutes.cart}>
-              <ShoppingCartOutlinedIcon
-                fontSize={!isMobile ? "large" : "medium"}
-                sx={{ color: theme.ButtonCard }}
-              />
+              <ShoppingCartOutlinedIcon sx={{ color: "#000" }} />
             </IconButton>
             <IconButton component={RouterLink} to={appRoutes.auth.login}>
-              <PersonOutlineIcon
-                fontSize={!isMobile ? "large" : "medium"}
-                sx={{ color: theme.ButtonCard }}
-              />
+              <PersonOutlineIcon sx={{ color: "#000" }} />
             </IconButton>
 
-            {/* Mobile Search */}
             {isMobile && (
-              <IconButton onClick={() => setSearchOpen((p) => !p)}>
-                {searchOpen ? (
-                  <CloseIcon sx={{ color: theme.ButtonCard }} />
-                ) : (
-                  <SearchIcon sx={{ color: theme.ButtonCard }} />
-                )}
-              </IconButton>
-            )}
-
-            {/* Mobile Menu */}
-            {isMobile && (
-              <IconButton onClick={() => setMenuOpen((p) => !p)}>
-                {menuOpen ? (
-                  <CloseIcon sx={{ color: theme.ButtonCard }} />
-                ) : (
-                  <MenuIcon sx={{ color: theme.ButtonCard }} />
-                )}
-              </IconButton>
+              <>
+                <IconButton onClick={() => setSearchOpen((p) => !p)}>
+                  {searchOpen ? (
+                    <CloseIcon sx={{ color: "#000" }} />
+                  ) : (
+                    <SearchIcon sx={{ color: "#000" }} />
+                  )}
+                </IconButton>
+                <IconButton onClick={() => setMenuOpen((p) => !p)}>
+                  {menuOpen ? (
+                    <CloseIcon sx={{ color: "#000" }} />
+                  ) : (
+                    <MenuIcon sx={{ color: "#000" }} />
+                  )}
+                </IconButton>
+              </>
             )}
           </Box>
         </Toolbar>
@@ -217,8 +225,8 @@ const Header: React.FC = () => {
               p: 3,
               display: "flex",
               alignItems: "center",
+              justifyContent: "center",
               gap: 1.5,
-              position: "relative",
             }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -228,18 +236,18 @@ const Header: React.FC = () => {
               sx={{
                 flex: 1,
                 fontSize: 14,
-                color: theme.ButtonCard,
+                color: "#000",
                 fontFamily: theme.font,
               }}
             />
             <IconButton onClick={() => setSearchOpen(false)}>
-              <CloseIcon sx={{ color: theme.ButtonCard }} />
+              <CloseIcon sx={{ color: "#000" }} />
             </IconButton>
           </Box>
         </Box>
       )}
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Modal */}
       {isMobile && menuOpen && (
         <Box
           sx={{
@@ -265,46 +273,31 @@ const Header: React.FC = () => {
               p: 4,
               display: "flex",
               flexDirection: "column",
+              alignItems: "center",
               gap: 3,
-              boxShadow: 24,
-              position: "relative",
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <IconButton
-              sx={{ position: "absolute", top: 8, right: 8 }}
-              onClick={() => setMenuOpen(false)}
-            >
-              <CloseIcon sx={{ color: theme.ButtonCard }} />
-            </IconButton>
-
-            {navLinks.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <Link
-                  key={item.label}
-                  component={RouterLink}
-                  to={item.path}
-                  underline="none"
-                  sx={{
-                    color: isActive ? theme.ButtonCard : theme.Text1,
-                    fontSize: 16,
-                    fontWeight: 500,
-                    fontFamily: theme.font,
-                    textAlign: "center",
-                    cursor: "pointer",
-                    transition: "color 0.2s, transform 0.2s",
-                    "&:hover": {
-                      color: theme.ButtonCard,
-                      transform: "scale(1.05)",
-                    },
-                  }}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+            {navLinks.map((item) => (
+              <Link
+                key={item.label}
+                component={RouterLink}
+                to={item.path}
+                underline="none"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  color: "#000",
+                  fontSize: 16,
+                  fontWeight: 500,
+                  cursor: "pointer",
+                }}
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.icon} {item.label}
+              </Link>
+            ))}
           </Box>
         </Box>
       )}

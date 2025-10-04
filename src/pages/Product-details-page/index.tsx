@@ -117,15 +117,13 @@ const ProductDetailsPage: React.FC = () => {
           sx={{ flexDirection: { xs: "column", md: "row" } }}
         >
           {/* Images */}
-          <Grid item xs={12} md={6}>
+          <Grid >
             <ProductImages thumbnails={thumbnails} mainImage={MainImage} />
           </Grid>
 
           {/* Product Details */}
           <Grid
-            item
-            xs={12}
-            md={6}
+           
             sx={{
               display: "flex",
               flexDirection: "column",

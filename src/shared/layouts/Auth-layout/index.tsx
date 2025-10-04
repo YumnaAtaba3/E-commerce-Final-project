@@ -12,7 +12,7 @@ import { Outlet } from "react-router";
 const AuthLayout: React.FC = () => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
-  const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm")); // detect mobile screens
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm")); 
 
   return (
     <Grid
@@ -26,9 +26,7 @@ const AuthLayout: React.FC = () => {
       {/* Left side image (hidden on mobile) */}
       {!isMobile && (
         <Grid
-          item
-          xs={12}
-          md={6}
+         
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -40,8 +38,10 @@ const AuthLayout: React.FC = () => {
             src={shoppingImage}
             alt="Shopping illustration"
             sx={{
+              ml:0,
+              pl:0,
               width: "100%",
-              maxWidth: "80rem",
+              maxWidth: "50rem",
               height: "auto",
               borderRadius: 2,
               objectFit: "cover",
@@ -52,9 +52,7 @@ const AuthLayout: React.FC = () => {
 
       {/* Right side form */}
       <Grid
-        item
-        xs={12}
-        md={6}
+       
         sx={{
           display: "flex",
           justifyContent: "center",

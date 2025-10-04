@@ -2,24 +2,79 @@ import React from "react";
 import {
   Box,
   Button,
-  TextField,
   Typography,
   Link,
   useMediaQuery,
   useTheme as useMuiTheme,
+  styled,
 } from "@mui/material";
 import { useTheme } from "../../theme/ThemeProvider";
 import { Link as RouterLink } from "react-router";
-
 import GoogleSvg from "../../assets/Sign-up/Icon-Google.svg";
 import { appRoutes } from "../../routes";
+import FormFields from "./components/FormFields";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { signUpFormSchemaValidation, type SignUpFormValues } from "./config";
+import { useSignUpMutation } from "./services/mutations";
+import { toast } from "react-toastify";
+
+const Container = styled(Box)({ maxWidth: 370, width: "100%" });
+const Heading = styled(Typography)({
+  fontFamily: "'Inter', sans-serif",
+  fontWeight: 600,
+});
+const SubHeading = styled(Typography)({
+  fontFamily: "'Inter', sans-serif",
+  fontWeight: 400,
+  marginBottom: "32px",
+});
+const PrimaryButton = styled(Button)({
+  marginTop: "24px",
+  fontFamily: "'Inter', sans-serif",
+  fontWeight: 500,
+  textTransform: "none",
+  padding: "10px 0",
+});
+const GoogleButton = styled(Button)({
+  marginTop: "16px",
+  textTransform: "none",
+  fontFamily: "'Inter', sans-serif",
+  fontWeight: 500,
+  padding: "10px 0",
+});
+const FooterText = styled(Typography)({
+  marginTop: "16px",
+  fontFamily: "'Inter', sans-serif",
+  textAlign: "center",
+});
 
 const SignUpForm: React.FC = () => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
 
-  // Responsive font sizes
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpFormValues>({
+    resolver: yupResolver(signUpFormSchemaValidation),
+  });
+
+  const { mutateAsync: signUp, isLoading } = useSignUpMutation();
+
+  const onSubmit = handleSubmit(async (values) => {
+    try {
+      await signUp(values);
+      toast.success("Account created successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error("Sign-up failed. Please try again.");
+    }
+  });
+
+  // Responsive fonts
   const headingFont = isMobile ? "24px" : "32px";
   const subHeadingFont = isMobile ? "14px" : "16px";
   const inputFont = isMobile ? "14px" : "16px";
@@ -28,149 +83,75 @@ const SignUpForm: React.FC = () => {
   const linkFont = isMobile ? "12px" : "14px";
 
   return (
-    <Box
-      sx={{
-        maxWidth: 370,
-        width: "100%",
-        mx: isMobile ? 5 : 0, // center horizontally on mobile
-      }}
-    >
-      {/* Heading */}
-      <Typography
-        sx={{
-          fontSize: headingFont,
-          fontFamily: "'Inter', sans-serif",
-          fontWeight: 600,
-          color: theme.Text1,
-        }}
-        gutterBottom
-      >
+    <Container sx={{ mx: isMobile ? 5 : 0 }}>
+      <Heading sx={{ fontSize: headingFont, color: theme.Text1 }}>
         Create an account
-      </Typography>
+      </Heading>
+      <SubHeading sx={{ fontSize: subHeadingFont, color: theme.Text1 }}>
+        Enter your details below
+      </SubHeading>
 
-      <Typography
+      <form onSubmit={onSubmit}>
+        <FormFields
+          inputFont={inputFont}
+          labelFont={labelFont}
+          register={register}
+          errors={errors}
+        />
+
+        <PrimaryButton
+          fullWidth
+          sx={{
+            fontSize: buttonFont,
+            backgroundColor: theme.Button2,
+            color: "#fff",
+            "&:hover": { backgroundColor: theme.error },
+          }}
+          type="submit"
+          disabled={isLoading}
+        >
+          {isLoading ? "Creating..." : "Create Account"}
+        </PrimaryButton>
+      </form>
+
+      <GoogleButton
+        fullWidth
+        variant="outlined"
+        startIcon={
+          <Box
+            component="img"
+            src={GoogleSvg}
+            alt="Google"
+            sx={{ width: 20, height: 20 }}
+          />
+        }
         sx={{
-          mb: 4,
-          fontSize: subHeadingFont,
-          fontFamily: "'Inter', sans-serif",
-          fontWeight: 400,
-          color: theme.Text1,
+          fontSize: buttonFont,
+          color: theme.secondaryText,
+          borderColor: theme.borderColor,
+          "&:hover": { borderColor: theme.primaryText },
         }}
       >
-        Enter your details below
-      </Typography>
+        Sign up with Google
+      </GoogleButton>
 
-      {/* Form Fields */}
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        {["Name", "Email or Phone Number", "Password"].map((label) => (
-          <TextField
-            key={label}
-            label={label}
-            type={label === "Password" ? "password" : "text"}
-            variant="standard"
-            fullWidth
-            InputLabelProps={{
-              sx: {
-                fontSize: labelFont,
-                fontFamily: "'Inter', sans-serif",
-                color: theme.disabledText,
-                "&.Mui-focused": {
-                  color: theme.Button2,
-                },
-              },
-            }}
-            inputProps={{
-              style: {
-                fontSize: inputFont,
-                fontFamily: "'Inter', sans-serif",
-              },
-            }}
-            sx={{
-              "& .MuiInput-underline:before": {
-                borderBottomColor: theme.disabledText,
-              },
-              "& .MuiInput-underline:hover:not(.Mui-disabled):before": {
-                borderBottomColor: theme.Text1,
-              },
-              "& .MuiInput-underline:after": {
-                borderBottomColor: theme.Button2,
-              },
-            }}
-          />
-        ))}
-
-        {/* Create Account Button */}
-        <Button
-          variant="contained"
-          fullWidth
+      <FooterText sx={{ fontSize: linkFont, color: theme.secondaryText }}>
+        Already have an account?
+        <Link
+          component={RouterLink}
+          to={appRoutes.auth.login}
+          underline="hover"
           sx={{
-            mt: 1,
-            bgcolor: theme.Button2,
-            fontSize: buttonFont,
+            ml: 1,
             fontFamily: "'Inter', sans-serif",
-            fontWeight: 500,
-            textTransform: "none",
-            py: 1.2,
-            "&:hover": { bgcolor: theme.error },
-          }}
-        >
-          Create Account
-        </Button>
-
-        {/* Google Sign Up Button */}
-        <Button
-          variant="outlined"
-          fullWidth
-          startIcon={
-            <Box
-              component="img"
-              src={GoogleSvg}
-              alt="Google"
-              sx={{ width: 20, height: 20 }}
-            />
-          }
-          sx={{
-            textTransform: "none",
-            color: theme.secondaryText,
-            borderColor: theme.borderColor,
-            fontSize: buttonFont,
-            fontFamily: "'Inter', sans-serif",
-            fontWeight: 500,
-            py: 1.2,
-            "&:hover": { borderColor: theme.primaryText },
-          }}
-        >
-          Sign up with Google
-        </Button>
-
-        {/* Already have account */}
-        <Typography
-          variant="body2"
-          align="center"
-          sx={{
-            mt: 1,
             fontSize: linkFont,
-            fontFamily: "'Inter', sans-serif",
-            color: theme.secondaryText,
+            color: theme.primaryText,
           }}
         >
-          Already have an account?{" "}
-          <Link
-            component={RouterLink}
-            to={appRoutes.auth.login}
-            underline="hover"
-            sx={{
-              color: theme.primaryText,
-              fontSize: linkFont,
-              fontFamily: "'Inter', sans-serif",
-              ml: 1,
-            }}
-          >
-            Log in
-          </Link>
-        </Typography>
-      </Box>
-    </Box>
+          Log in
+        </Link>
+      </FooterText>
+    </Container>
   );
 };
 

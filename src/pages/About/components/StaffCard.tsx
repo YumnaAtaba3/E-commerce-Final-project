@@ -18,7 +18,7 @@ const StaffCard: React.FC<StaffCardProps> = ({ img, name, role }) => {
     <Card
       sx={{
         borderRadius: 3,
-        maxWidth: "500px",
+        maxWidth: "400px",
         p: 3,
         boxShadow: "0px 6px 20px rgba(0,0,0,0.15)",
         transition: "0.3s",

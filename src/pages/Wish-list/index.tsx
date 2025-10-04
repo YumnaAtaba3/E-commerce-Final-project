@@ -7,16 +7,16 @@ import {
   useMediaQuery,
   useTheme as useMuiTheme,
 } from "@mui/material";
-import { useNavigate } from "react-router"; 
+import { useNavigate } from "react-router";
 import WishlistCard from "./components/WishlistCard";
-import ProductCard from "../../shared/components/ProductCard";
+import ProductCard from "../../shared/components/Product-card";
 import { useTheme } from "../../theme/ThemeProvider";
-import { appRoutes } from "../../routes/index"; 
+import { appRoutes } from "../../routes/index";
 
 const WishlistPage: React.FC = () => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
-  const navigate = useNavigate(); // ✅ initialize navigate
+  const navigate = useNavigate();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm")); // <600px
   const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md")); // 600px-900px
 
@@ -135,7 +135,7 @@ const WishlistPage: React.FC = () => {
             <Button
               variant="outlined"
               sx={buttonStyle}
-              onClick={() => navigate(appRoutes.cart)} 
+              onClick={() => navigate(appRoutes.cart)}
             >
               Move All To Bag
             </Button>
@@ -151,7 +151,7 @@ const WishlistPage: React.FC = () => {
             justifyContent={isMobile ? "center" : "flex-start"}
           >
             {wishlist.map((item) => (
-              <Grid  key={item.id}>
+              <Grid key={item.id}>
                 <WishlistCard {...item} onDelete={handleDelete} />
               </Grid>
             ))}
@@ -207,7 +207,7 @@ const WishlistPage: React.FC = () => {
             <Button
               variant="outlined"
               sx={buttonStyle}
-              onClick={() => navigate(appRoutes.products.list)} 
+              onClick={() => navigate(appRoutes.products.list)}
             >
               See All
             </Button>
@@ -219,7 +219,7 @@ const WishlistPage: React.FC = () => {
             justifyContent={isMobile ? "center" : "flex-start"}
           >
             {justForYou.map((item) => (
-              <Grid  key={item.id} >
+              <Grid key={item.id}>
                 <ProductCard {...item} />
               </Grid>
             ))}

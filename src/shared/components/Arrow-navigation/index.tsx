@@ -2,12 +2,12 @@ import React from "react";
 import { Box, IconButton } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { useTheme } from "../../theme/ThemeProvider";
+import { useTheme } from "../../../theme/ThemeProvider";
 
 interface ArrowNavigationProps {
-  prevClass: string; 
-  nextClass: string; 
-  isMobile?: boolean; 
+  prevClass: string;
+  nextClass: string;
+  isMobile?: boolean;
 }
 
 const ArrowNavigation: React.FC<ArrowNavigationProps> = ({

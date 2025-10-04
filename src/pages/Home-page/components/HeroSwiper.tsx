@@ -24,14 +24,14 @@ const slides = [
   },
   {
     id: 2,
-    title: "IPHONE 14 SERIES",
-    subtitle: "UP TO 10% OFF VOUCHER",
+    title: "IPHONE 13 SERIES",
+    subtitle: "UP TO 80% OFF VOUCHER",
     img: heroImg,
   },
   {
     id: 3,
-    title: "IPHONE 14 SERIES",
-    subtitle: "UP TO 10% OFF VOUCHER",
+    title: "IPHONE 40 SERIES",
+    subtitle: "UP TO 20% OFF VOUCHER",
     img: heroImg,
   },
 ];

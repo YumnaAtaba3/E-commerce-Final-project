@@ -46,7 +46,7 @@ const CartPage: React.FC = () => {
         </Typography>
 
         <Grid container spacing={4} justifyContent="center">
-          <Grid item xs={12} md={8}>
+          <Grid >
             {!isMobile && (
               <CartHeader gridCols={gridCols} isMobile={isMobile} />
             )}

@@ -13,7 +13,7 @@ import "swiper/css/navigation";
 import palystation from "../../../assets/Home-page/playstation.png";
 import { useTheme } from "../../../theme/ThemeProvider";
 import ArrowNavigation from "../../../shared/components/Arrow-navigation";
-import ProductCard from "../../../shared/components/ProductCard";
+import ProductCard from "../../../shared/components/Product-card";
 
 // Demo Products
 const flashProducts = [

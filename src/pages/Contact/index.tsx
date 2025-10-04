@@ -56,10 +56,7 @@ const Contact: React.FC = () => {
         >
           {/* Left Info Section */}
           <Grid
-            item
-            xs={12}
-            sm={6}
-            md={4}
+            
             sx={{
               width: isMobile ? "100%" : "auto",
               maxWidth: isMobile ? 450 : "none",
@@ -107,10 +104,7 @@ const Contact: React.FC = () => {
 
           {/* Right Form Section */}
           <Grid
-            item
-            xs={12}
-            sm={6}
-            md={8}
+           
             sx={{
               width: isMobile ? "100%" : "auto",
               maxWidth: isMobile ? 450 : "none",

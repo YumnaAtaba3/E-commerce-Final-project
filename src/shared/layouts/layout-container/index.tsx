@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import PromoBar from "../../components/Promo-bar";
