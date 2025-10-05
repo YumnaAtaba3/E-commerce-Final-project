@@ -41,7 +41,7 @@ const AuthLayout: React.FC = () => {
               ml:0,
               pl:0,
               width: "100%",
-              maxWidth: "50rem",
+              maxWidth: "80rem",
               height: "auto",
               borderRadius: 2,
               objectFit: "cover",

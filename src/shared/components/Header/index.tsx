@@ -7,6 +7,7 @@ import {
   IconButton,
   InputBase,
   useMediaQuery,
+  Typography,
 } from "@mui/material";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
 import { useTheme } from "../../../theme/ThemeProvider";
@@ -24,8 +25,6 @@ import ContactMailIcon from "@mui/icons-material/ContactMail";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 import { motion } from "framer-motion";
-
-import logo from "../../../assets/Header/Logo.svg";
 import { appRoutes } from "../../../routes/index";
 
 const Header: React.FC = () => {
@@ -45,17 +44,16 @@ const Header: React.FC = () => {
     { label: "Sign Up", path: appRoutes.auth.signUp, icon: <PersonAddIcon /> },
   ];
 
-  // Nav link animation (no need to import Variants)
   const navLinkVariants = {
-    initial: { scale: 1, color: "#000" },
+    initial: { scale: 1, color: theme.Text1 },
     hover: {
       scale: 1.2,
-      color: "#000",
+      color: theme.Text1,
       transition: { type: "spring", stiffness: 300 },
     },
     active: {
       scale: 1.2,
-      color: "#000",
+      color: theme.Text1,
       transition: { type: "spring", stiffness: 300 },
     },
   };
@@ -67,29 +65,37 @@ const Header: React.FC = () => {
         sx={{
           top: { xs: 50, sm: 40 },
           bgcolor: theme.primary1,
-          color: "#000",
+          color: theme.Text1,
           borderBottom: `1px solid ${theme.Text2}`,
           zIndex: 1300,
+          boxShadow: "none",
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between", gap: 2 }}>
-          {/* Logo */}
-          <Box
-            component={RouterLink}
-            to={appRoutes.home}
-            sx={{
-              height: { xs: 20, md: 22 },
-              cursor: "pointer",
-              ml: !isMobile ? 10 : 0,
-            }}
+          {/* ✅ Animated Text Logo */}
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.1 }}
+            transition={{ duration: 0.5, type: "spring" }}
           >
-            <Box
-              component="img"
-              src={logo}
-              alt="Logo"
-              sx={{ height: "100%" }}
-            />
-          </Box>
+            <Typography
+              component={RouterLink}
+              to={appRoutes.home}
+              sx={{
+                textDecoration: "none",
+                fontFamily: theme.font,
+                fontWeight: 600,
+                fontSize: isMobile ? 20 : 26,
+                color: theme.Text1,
+                letterSpacing: 1,
+                pl:isMobile?0:10,
+
+              }}
+            >
+              Exclusive
+            </Typography>
+          </motion.div>
 
           {/* Desktop Nav Links */}
           {!isMobile && (
@@ -114,7 +120,9 @@ const Header: React.FC = () => {
                         fontWeight: 500,
                         fontFamily: theme.font,
                         cursor: "pointer",
-                        color: "#000",
+                        color: theme.Text1,
+                        transition: "color 0.3s ease",
+                        "&:hover": { color: theme.HoverButton },
                       }}
                     >
                       {item.label}
@@ -128,7 +136,7 @@ const Header: React.FC = () => {
                           left: 0,
                           height: 2,
                           width: "100%",
-                          backgroundColor: "#000",
+                          backgroundColor: theme.Text1,
                           borderRadius: 1,
                         }}
                       />
@@ -144,7 +152,7 @@ const Header: React.FC = () => {
             {!isMobile && (
               <Box
                 sx={{
-                  bgcolor: "#F6F6F683",
+                  bgcolor: theme.ButtonCard,
                   borderRadius: 1,
                   px: 1.5,
                   py: 0.5,
@@ -158,39 +166,42 @@ const Header: React.FC = () => {
                   sx={{
                     flex: 1,
                     fontSize: 14,
-                    color: "#000",
+                    color: theme.Text1,
                     fontFamily: theme.font,
-                    "& input::placeholder": { color: "#000", opacity: 0.7 },
+                    "& input::placeholder": {
+                      color: theme.Text1,
+                      opacity: 0.7,
+                    },
                   }}
                 />
-                <SearchIcon sx={{ color: "#000", fontSize: 20 }} />
+                <SearchIcon sx={{ color: theme.Text1, fontSize: 20 }} />
               </Box>
             )}
 
             <IconButton component={RouterLink} to={appRoutes.wishlist}>
-              <FavoriteBorderIcon sx={{ color: "#000" }} />
+              <FavoriteBorderIcon sx={{ color: theme.Text1 }} />
             </IconButton>
             <IconButton component={RouterLink} to={appRoutes.cart}>
-              <ShoppingCartOutlinedIcon sx={{ color: "#000" }} />
+              <ShoppingCartOutlinedIcon sx={{ color: theme.Text1 }} />
             </IconButton>
             <IconButton component={RouterLink} to={appRoutes.auth.login}>
-              <PersonOutlineIcon sx={{ color: "#000" }} />
+              <PersonOutlineIcon sx={{ color: theme.Text1 }} />
             </IconButton>
 
             {isMobile && (
               <>
                 <IconButton onClick={() => setSearchOpen((p) => !p)}>
                   {searchOpen ? (
-                    <CloseIcon sx={{ color: "#000" }} />
+                    <CloseIcon sx={{ color: theme.Text1 }} />
                   ) : (
-                    <SearchIcon sx={{ color: "#000" }} />
+                    <SearchIcon sx={{ color: theme.Text1 }} />
                   )}
                 </IconButton>
                 <IconButton onClick={() => setMenuOpen((p) => !p)}>
                   {menuOpen ? (
-                    <CloseIcon sx={{ color: "#000" }} />
+                    <CloseIcon sx={{ color: theme.Text1 }} />
                   ) : (
-                    <MenuIcon sx={{ color: "#000" }} />
+                    <MenuIcon sx={{ color: theme.Text1 }} />
                   )}
                 </IconButton>
               </>
@@ -236,12 +247,12 @@ const Header: React.FC = () => {
               sx={{
                 flex: 1,
                 fontSize: 14,
-                color: "#000",
+                color: theme.Text1,
                 fontFamily: theme.font,
               }}
             />
             <IconButton onClick={() => setSearchOpen(false)}>
-              <CloseIcon sx={{ color: "#000" }} />
+              <CloseIcon sx={{ color: theme.Text1 }} />
             </IconButton>
           </Box>
         </Box>
@@ -288,10 +299,11 @@ const Header: React.FC = () => {
                   display: "flex",
                   alignItems: "center",
                   gap: 1,
-                  color: "#000",
+                  color: theme.Text1,
                   fontSize: 16,
                   fontWeight: 500,
                   cursor: "pointer",
+                  "&:hover": { color: theme.HoverButton },
                 }}
                 onClick={() => setMenuOpen(false)}
               >

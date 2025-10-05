@@ -1,17 +1,19 @@
 import React from "react";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AppRouterProvider } from "./routes/provider";
+import "./index.css";
 
 function App() {
+  
   return (
     <>
       <AppRouterProvider />
+
+
       <ToastContainer
         position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
+        hideProgressBar
         closeOnClick
         pauseOnHover
         draggable

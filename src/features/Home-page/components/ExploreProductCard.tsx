@@ -1,45 +1,40 @@
 import React, { useState } from "react";
 import {
   Box,
-  Card,
-  CardContent,
-  CardMedia,
-  IconButton,
   Typography,
-  Button,
+  IconButton,
   Rating,
+  Button,
+  Card,
+  CardMedia,
+  CardContent,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useTheme } from "../../../theme/ThemeProvider";
-import { useNavigate } from "react-router";
 
-interface ProductCardProps {
+interface ExploreProductCardProps {
   id: number;
   name: string;
   price: string;
-  oldPrice?: string;
-  discount?: string;
-  rating?: number;
+  rating: number;
   img: string;
-  isNew?: boolean; 
+  isNew?: boolean;
+  colors?: string[];
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({
-  id,
+const ExploreProductCard: React.FC<ExploreProductCardProps> = ({
   name,
   price,
-  oldPrice,
-  discount,
   rating,
   img,
   isNew,
+  colors,
 }) => {
   const { theme } = useTheme();
   const [favorite, setFavorite] = useState(false);
- const navigate = useNavigate();
+
   return (
     <Card
       sx={{
@@ -47,55 +42,32 @@ const ProductCard: React.FC<ProductCardProps> = ({
         width: 280,
         height: 350,
         borderRadius: 2,
-        boxShadow: "none",
-        border: "none !important",
-        outline: "none",
         overflow: "hidden",
         position: "relative",
         "&:hover .hoverOverlay": { opacity: 1, bottom: 0 },
         bgcolor: theme.primary1,
+        mt: 5,
+        boxShadow: "none",
+        border: "none !important",
+        outline: "none",
       }}
     >
-      {(discount || isNew) && (
+      {isNew && (
         <Box
           sx={{
             position: "absolute",
             top: 15,
             left: 15,
-            display: "flex",
-            flexDirection: "column",
-            gap: 1,
+            bgcolor: theme.Button1,
+            color: "#fff",
+            px: 1.2,
+            py: 0.3,
+            borderRadius: 1,
+            fontSize: 14,
             zIndex: 2,
           }}
         >
-          {discount && (
-            <Box
-              sx={{
-                bgcolor: theme.Button2,
-                color: "#fff",
-                px: 1.2,
-                py: 0.3,
-                borderRadius: 1,
-                fontSize: 14,
-              }}
-            >
-              {discount}
-            </Box>
-          )}
-          {isNew && (
-            <Box
-              sx={{
-                bgcolor: theme.Button1,
-                color: "#fff",
-                px: 1.2,
-                py: 0.3,
-                borderRadius: 1,
-                fontSize: 14,
-              }}
-            >
-              New
-            </Box>
-          )}
+          New
         </Box>
       )}
 
@@ -128,7 +100,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </IconButton>
         <IconButton
-          onClick={() => navigate(`/products/${id}`)}
           sx={{
             bgcolor: "white",
             "&:hover": { bgcolor: theme.Button2, color: "white" },
@@ -178,7 +149,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
               fontWeight: 500,
               "&:hover": { bgcolor: "#222" },
             }}
-            startIcon={<ShoppingCartOutlinedIcon />}
           >
             Add To Cart
           </Button>
@@ -197,24 +167,25 @@ const ProductCard: React.FC<ProductCardProps> = ({
           >
             {price}
           </Typography>
-          {oldPrice && (
-            <Typography
-              sx={{
-                fontSize: 14,
-                color: "gray",
-                textDecoration: "line-through",
-              }}
-            >
-              {oldPrice}
-            </Typography>
-          )}
+          <Rating value={rating} precision={0.5} readOnly size="medium" />
+          <Typography sx={{ fontSize: 14, color: "gray" }}>
+            ({rating})
+          </Typography>
         </Box>
-        {rating && (
-          <Box display="flex" alignItems="center" gap={1}>
-            <Rating value={rating} precision={0.5} readOnly size="medium" />
-            <Typography sx={{ fontSize: 14, color: "gray" }}>
-              ({rating})
-            </Typography>
+        {colors && colors.length > 0 && (
+          <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
+            {colors.map((color, i) => (
+              <Box
+                key={i}
+                sx={{
+                  width: 18,
+                  height: 18,
+                  borderRadius: "50%",
+                  bgcolor: color,
+                  cursor: "pointer",
+                }}
+              />
+            ))}
           </Box>
         )}
       </CardContent>
@@ -222,4 +193,4 @@ const ProductCard: React.FC<ProductCardProps> = ({
   );
 };
 
-export default ProductCard;
+export default ExploreProductCard;
