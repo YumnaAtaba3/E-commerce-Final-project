@@ -10,49 +10,28 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { useNavigate } from "react-router";
 
 import ProductCard from "../../../shared/components/Product-card";
 import { useTheme } from "../../../theme/ThemeProvider";
-
-const bestProducts = [
-  {
-    id: 1,
-    name: "The north coat",
-    price: "$260",
-    oldPrice: "$360",
-    rating: 4.5,
-    img: "../../../assets/HomePage/jacket.png",
-  },
-  {
-    id: 2,
-    name: "Gucci duffle bag",
-    price: "$960",
-    oldPrice: "$1160",
-    rating: 5,
-    img: "../../../assets/HomePage/jacket.png",
-  },
-  {
-    id: 3,
-    name: "RGB liquid CPU Cooler",
-    price: "$160",
-    oldPrice: "$200",
-    rating: 4,
-    img: "../../../assets/HomePage/jacket.png",
-  },
-  {
-    id: 4,
-    name: "Small bookshelf",
-    price: "$360",
-    oldPrice: "$400",
-    rating: 4.5,
-    img: "../../../assets/HomePage/jacket.png",
-  },
-];
+import { useProductsState } from "../../../store";
+import { appRoutes } from "../../../routes";
 
 const BestSelling: React.FC = () => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
+
+  const { products } = useProductsState();
+  const navigate = useNavigate();
+
+  // first 8 products
+  const bestProducts = products.slice(0, 8);
+
+  const handleViewAll = () => {
+   navigate(appRoutes.products.list);
+
+  };
 
   return (
     <Box sx={{ mt: 8, pl: isMobile ? 1 : 8, pr: isMobile ? 1 : 8 }}>
@@ -71,69 +50,59 @@ const BestSelling: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* Header Row with title and arrows */}
+      {/* Title + View All */}
       <Box
         display="flex"
-        flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
         flexWrap={isMobile ? "wrap" : "nowrap"}
         mb={3}
       >
         <Typography
-          variant={isMobile ? "h3" : "h2"}
           sx={{
             fontWeight: 500,
             color: theme.Text1,
-            mt: isMobile ? 1 : 0,
             fontSize: isMobile ? "1.5rem" : "1.8rem",
           }}
         >
           Best Selling Products
         </Typography>
 
-        <Box mt={isMobile ? 1 : 0} display="flex" alignItems="center" gap={2}>
-          {/* Swiper navigation arrows */}
-          <Box className="best-prev" />
-          <Box className="best-next" />
-
-          {/* Optional View All Button */}
-          {!isMobile && (
-            <Button
-              variant="contained"
-              sx={{
-                px: 6,
-                py: 1.5,
-                fontSize: 14,
-                fontWeight: 400,
-                textTransform: "none",
-                bgcolor: theme.Button2,
-                "&:hover": { bgcolor: "#cc0000" },
-              }}
-            >
-              View All
-            </Button>
-          )}
-        </Box>
+        {!isMobile && (
+          <Button
+            variant="contained"
+            onClick={handleViewAll}
+            sx={{
+              px: 6,
+              py: 1.5,
+              fontSize: 14,
+              textTransform: "none",
+              bgcolor: theme.Button2,
+              "&:hover": { bgcolor: "#cc0000" },
+            }}
+          >
+            View All
+          </Button>
+        )}
       </Box>
 
-      {/* Swiper Carousel */}
+      {/* Swiper */}
       <Swiper
         spaceBetween={0}
         slidesPerView={isMobile ? 1.1 : 4.1}
-        breakpoints={{
-          1200: { slidesPerView: 4 },
-          1000: { slidesPerView: 3.1 },
-          900: { slidesPerView: 2.4 },
-          600: { slidesPerView: 1.3 },
-          0: { slidesPerView: 1.1 },
-        }}
         navigation={{ nextEl: ".best-next", prevEl: ".best-prev" }}
         modules={[Navigation]}
       >
-        {bestProducts.map((item) => (
-          <SwiperSlide key={item.id}>
-            <ProductCard {...item} />
+        {bestProducts.map((p) => (
+          <SwiperSlide key={p.id}>
+            <ProductCard
+              id={p.id}
+              name={p.title}
+              price={`$${p.price}`}
+              discount={p.discount}
+              rating={p.rating}
+              img={p.images?.[0]}
+            />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -143,6 +112,7 @@ const BestSelling: React.FC = () => {
         <Box textAlign="center" mt={2}>
           <Button
             variant="contained"
+            onClick={handleViewAll}
             sx={{
               px: 6,
               py: 1.5,

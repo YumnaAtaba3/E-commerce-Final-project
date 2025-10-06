@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   Box,
   Typography,
@@ -11,76 +11,42 @@ import { Grid as SwiperGrid, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/grid";
+
 import { useTheme } from "../../../theme/ThemeProvider";
-import ExploreProductCard from "./ExploreProductCard";
-
-import palystation from "../../../assets/Home-page/playstation.png";
+import { useProductsState } from "../../../store";
+import ProductCard from "../../../shared/components/Product-card";
 import ArrowNavigation from "../../../shared/components/Arrow-navigation";
+import { useNavigate } from "react-router";
 
-const exploreProducts = [
-  {
-    id: 1,
-    name: "Canon EOS DSLR Camera",
-    price: "$360",
-    oldPrice: "$400",
-    discount: "-10%",
-    rating: 4.8,
-    img: palystation,
-    colors: ["#000", "#555"],
-  },
-  {
-    id: 2,
-    name: "Kids Electric Car",
-    price: "$300",
-    oldPrice: "$350",
-    isNew: true,
-    rating: 4.3,
-    img: "https://via.placeholder.com/200?text=Toy+Car",
-    colors: ["#f00", "#00f", "#000"],
-  },
-  {
-    id: 4,
-    name: "Soccer Cleats",
-    price: "$90",
-    oldPrice: "$120",
-    discount: "-25%",
-    rating: 4.7,
-    img: palystation,
-    isNew: true,
-    colors: ["#0f0", "#ff0"],
-  },
-  {
-    id: 5,
-    name: "Curology Product Set",
-    price: "$50",
-    oldPrice: "$65",
-    rating: 4.0,
-    img: "https://via.placeholder.com/200?text=Cosmetic",
-  },
-  {
-    id: 6,
-    name: "Breed Dry Dog Food",
-    price: "$100",
-    oldPrice: "$120",
-    discount: "-20%",
-    rating: 4.5,
-    img: palystation,
-  },
-  {
-    id: 6,
-    name: "Breed Dry Dog Food",
-    price: "$100",
-    oldPrice: "$120",
-    discount: "-20%",
-    rating: 4.5,
-    img: palystation,
-  },
-];
+// 🔹 Helper: generate random hex colors
+const getRandomColors = (count: number = 3) => {
+  const colors: string[] = [];
+  for (let i = 0; i < count; i++) {
+    const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+    colors.push(color);
+  }
+  return colors;
+};
 
 const ExploreProducts: React.FC = () => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
+  const navigate = useNavigate();
+
+  const { products } = useProductsState();
+
+  // 🔹 Memoize colors so they remain consistent
+  const productsWithColors = useMemo(
+    () =>
+      products.map((p) => ({
+        ...p,
+        colors: p.colors || getRandomColors(3), // keep existing colors if present
+      })),
+    [products]
+  );
+
+  const displayedProducts = productsWithColors.slice(0, 8);
 
   return (
     <Box
@@ -92,7 +58,7 @@ const ExploreProducts: React.FC = () => {
         pr: isMobile ? 1 : 8,
       }}
     >
-      {/* Section Title */}
+      {/* Section Header */}
       <Box display="flex" alignItems="center" gap={1} mb={2}>
         <Box
           sx={{
@@ -107,21 +73,20 @@ const ExploreProducts: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* Heading and Arrow Navigation */}
+      {/* Title + Arrows */}
       <Box
         display="flex"
-        flexDirection="row" // keep row on all screens
         justifyContent="space-between"
         alignItems="center"
-        flexWrap={isMobile ? "wrap" : "nowrap"} // wrap on small screens
+        flexWrap={isMobile ? "wrap" : "nowrap"}
         mb={3}
       >
         <Typography
-          variant="h3"
           sx={{
             fontWeight: 500,
+            color: theme.Text1,
             mt: isMobile ? 1 : 0,
-            fontSize: isMobile ? "1.5rem" : "1.7rem",
+            fontSize: isMobile ? "1.5rem" : "1.8rem",
           }}
         >
           Explore Our Products
@@ -136,7 +101,7 @@ const ExploreProducts: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Swiper with 2 rows */}
+      {/* Swiper Grid */}
       <Swiper
         spaceBetween={0}
         slidesPerView={isMobile ? 2 : 4}
@@ -151,9 +116,21 @@ const ExploreProducts: React.FC = () => {
         navigation={{ nextEl: ".explore-next", prevEl: ".explore-prev" }}
         modules={[Navigation, SwiperGrid]}
       >
-        {exploreProducts.map((item) => (
-          <SwiperSlide key={item.id}>
-            <ExploreProductCard {...item} />
+        {displayedProducts.map((p) => (
+          <SwiperSlide key={p.id}>
+            <ProductCard
+              id={p.id}
+              name={p.title}
+              price={`$${p.price}`}
+              oldPrice={p.oldPrice ?? undefined}
+              discount={p.discount}
+              rating={p.rating ?? 0}
+              img={p.images?.[0] ?? ""}
+              isNew={p.isNew}
+              colors={
+                Array.isArray(p.colors) ? p.colors : undefined
+              }
+            />
           </SwiperSlide>
         ))}
       </Swiper>
@@ -172,6 +149,7 @@ const ExploreProducts: React.FC = () => {
             bgcolor: theme.Button2,
             "&:hover": { bgcolor: "#cc0000" },
           }}
+          onClick={() => navigate("/products?withColors=true")}
         >
           View All Products
         </Button>

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import {
   Box,
-  Card,
-  CardContent,
-  CardMedia,
-  IconButton,
   Typography,
-  Button,
+  IconButton,
   Rating,
+  Button,
+  Card,
+  CardMedia,
+  CardContent,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
@@ -24,7 +24,8 @@ interface ProductCardProps {
   discount?: string;
   rating?: number;
   img: string;
-  isNew?: boolean; 
+  isNew?: boolean;
+  colors?: string[];
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -36,10 +37,29 @@ const ProductCard: React.FC<ProductCardProps> = ({
   rating,
   img,
   isNew,
+  colors,
 }) => {
   const { theme } = useTheme();
   const [favorite, setFavorite] = useState(false);
- const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  // Compute price based on discount
+  let numericPrice = parseFloat(price.replace("$", ""));
+  let finalPrice = numericPrice;
+  let finalOldPrice = oldPrice;
+
+  if (discount) {
+    const discountNum = parseInt(discount.replace("%", "").replace("-", ""));
+    if (!isNaN(discountNum)) {
+      finalOldPrice = `$${numericPrice.toFixed(2)}`;
+      finalPrice = numericPrice * (1 - discountNum / 100);
+    }
+  }
+
+  const displayPrice = `$${finalPrice.toFixed(2)}`;
+  const displayOldPrice =
+    finalOldPrice && finalOldPrice !== displayPrice ? finalOldPrice : undefined;
+
   return (
     <Card
       sx={{
@@ -47,15 +67,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
         width: 280,
         height: 350,
         borderRadius: 2,
-        boxShadow: "none",
-        border: "none !important",
-        outline: "none",
         overflow: "hidden",
         position: "relative",
         "&:hover .hoverOverlay": { opacity: 1, bottom: 0 },
         bgcolor: theme.primary1,
+        mt: 5,
+        boxShadow: "none",
+        border: "none !important",
+        outline: "none",
       }}
     >
+      {/* Top Badges */}
       {(discount || isNew) && (
         <Box
           sx={{
@@ -140,6 +162,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </IconButton>
       </Box>
 
+      {/* Image */}
       <Box
         sx={{
           bgcolor: "#f5f5f5",
@@ -185,19 +208,24 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </Box>
       </Box>
 
+      {/* Content */}
       <CardContent
         sx={{ bgcolor: theme.primary1, color: theme.Text1, textAlign: "left" }}
       >
         <Typography sx={{ fontSize: 16, fontWeight: 600, mb: 1 }} noWrap>
           {name}
         </Typography>
+
+        {/* Price & Rating */}
         <Box display="flex" alignItems="center" gap={1} mb={1}>
           <Typography
             sx={{ fontSize: 16, color: theme.Button2, fontWeight: 600 }}
           >
-            {price}
+            {displayPrice}
           </Typography>
-          {oldPrice && (
+
+          {/* Only show oldPrice if it exists */}
+          {displayOldPrice && (
             <Typography
               sx={{
                 fontSize: 14,
@@ -205,16 +233,52 @@ const ProductCard: React.FC<ProductCardProps> = ({
                 textDecoration: "line-through",
               }}
             >
-              {oldPrice}
+              {displayOldPrice}
             </Typography>
           )}
+
+          {/* Rating next to price if colors exist */}
+          {colors && colors.length > 0 && rating !== undefined && (
+            <Box
+              display="flex"
+              alignItems="center"
+              gap={0.5}
+              ml="auto"
+              sx={{ pr: 9 }}
+            >
+              <Rating value={rating} precision={0.5} readOnly size="medium" />
+              <Typography sx={{ fontSize: 14, color: "gray" }}>
+                ({rating})
+              </Typography>
+            </Box>
+          )}
         </Box>
-        {rating && (
+
+        {/* Rating below price if no colors */}
+        {!colors && rating !== undefined && (
           <Box display="flex" alignItems="center" gap={1}>
             <Rating value={rating} precision={0.5} readOnly size="medium" />
             <Typography sx={{ fontSize: 14, color: "gray" }}>
               ({rating})
             </Typography>
+          </Box>
+        )}
+
+        {/* Optional Colors */}
+        {colors && colors.length > 0 && (
+          <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
+            {colors.map((color, i) => (
+              <Box
+                key={i}
+                sx={{
+                  width: 18,
+                  height: 18,
+                  borderRadius: "50%",
+                  bgcolor: color,
+                  cursor: "pointer",
+                }}
+              />
+            ))}
           </Box>
         )}
       </CardContent>

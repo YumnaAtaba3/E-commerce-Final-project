@@ -1,5 +1,8 @@
+// src/pages/home/Homepage.tsx
 import React from "react";
 import { Container, Grid, Stack } from "@mui/material";
+import { useTheme } from "../../theme/ThemeProvider";
+
 import FilterSidebar from "./components/FilterSidebar";
 import HeroSwiper from "./components/HeroSwiper";
 import FlashSales from "./components/FlashSales";
@@ -13,27 +16,31 @@ import FeatureCard from "../../shared/components/Feature-card";
 import IconDelivery from "../../assets/About/icon-delivery.svg";
 import IconCustomer from "../../assets/About/Icon-Customerservice.svg";
 import IconSecure from "../../assets/About/Icon-secure.svg";
-import { useTheme } from "../../theme/ThemeProvider";
+
+import { useHomepageData } from "./hooks/useHomepageData";
 
 const Homepage: React.FC = () => {
   const { theme } = useTheme();
+  const {  isLoading, isError } = useHomepageData();
+
+  if (isLoading) return <div>Loading products...</div>;
+  if (isError) return <div>Failed to load products.</div>;
+
   return (
     <Stack sx={{ bgcolor: theme.primary1 }}>
       <Container maxWidth="xl">
         {/* Hero Section */}
         <Grid container spacing={2} sx={{ mt: 4, alignItems: "flex-start" }}>
-          {/* Sidebar */}
-          <Grid >
+          <Grid>
             <FilterSidebar />
           </Grid>
 
-          {/* Slider */}
-          <Grid >
+          <Grid>
             <HeroSwiper />
           </Grid>
         </Grid>
 
-        {/* Other Sections */}
+        {/* Product Sections */}
         <FlashSales />
         <Categories />
         <BestSelling />
@@ -69,7 +76,7 @@ const Homepage: React.FC = () => {
                 text: "We return money within 30 days",
               },
             ].map((f, i) => (
-              <Grid  key={i}>
+              <Grid key={i}>
                 <FeatureCard {...f} />
               </Grid>
             ))}

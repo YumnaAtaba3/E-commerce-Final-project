@@ -69,8 +69,10 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
       <Typography
         fontSize={isMobile ? 20 : 24}
         fontWeight={550}
+        maxWidth={350}
         mb={1}
         textAlign={textAlign}
+        color={theme.Text1}
       >
         {product.title}
       </Typography>
@@ -83,6 +85,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         mb={2}
         flexWrap="wrap"
         justifyContent={containerAlign}
+        color={theme.Text1}
       >
         <Rating value={product.rating} readOnly size="medium" />
         <Typography fontSize={14} color="text.secondary">
@@ -101,6 +104,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
       <Typography
         fontSize={isMobile ? 24 : 28}
         sx={{ fontWeight: 500, mb: 2, textAlign }}
+        color={theme.Text1}
       >
         ${product.price}
       </Typography>
@@ -116,7 +120,10 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         {product.description || "No description available."}
       </Typography>
 
-      <Box sx={{ width: "100%", borderBottom: "1px solid #000", mb: 3 }} />
+      <Box
+        sx={{ width: "100%", borderBottom: "1px solid #000", mb: 3 }}
+       
+      />
 
       {/* Product Options */}
       <ProductColors

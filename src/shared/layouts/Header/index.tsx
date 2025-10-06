@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -26,6 +26,7 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 import { motion } from "framer-motion";
 import { appRoutes } from "../../../routes/index";
+import AccountDropdown from "../../components/Account-dropdown"; 
 
 const Header: React.FC = () => {
   const { theme } = useTheme();
@@ -34,8 +35,16 @@ const Header: React.FC = () => {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
 
   const location = useLocation();
+
+  // ✅ Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => setAccountOpen(false);
+    window.addEventListener("click", handleClickOutside);
+    return () => window.removeEventListener("click", handleClickOutside);
+  }, []);
 
   const navLinks = [
     { label: "Home", path: appRoutes.home, icon: <HomeIcon /> },
@@ -89,8 +98,7 @@ const Header: React.FC = () => {
                 fontSize: isMobile ? 20 : 26,
                 color: theme.Text1,
                 letterSpacing: 1,
-                pl:isMobile?0:10,
-
+                pl: isMobile ? 0 : 10,
               }}
             >
               Exclusive
@@ -184,10 +192,26 @@ const Header: React.FC = () => {
             <IconButton component={RouterLink} to={appRoutes.cart}>
               <ShoppingCartOutlinedIcon sx={{ color: theme.Text1 }} />
             </IconButton>
-            <IconButton component={RouterLink} to={appRoutes.auth.login}>
-              <PersonOutlineIcon sx={{ color: theme.Text1 }} />
-            </IconButton>
 
+            {/* ✅ Account Dropdown */}
+            <Box sx={{ position: "relative" }}>
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setAccountOpen((prev) => !prev);
+                }}
+              >
+                <PersonOutlineIcon sx={{ color: theme.Text1 }} />
+              </IconButton>
+
+              <AccountDropdown
+                open={accountOpen}
+                theme={theme}
+                isMobile={isMobile}
+              />
+            </Box>
+
+            {/* ✅ Mobile Menu / Search Icons */}
             {isMobile && (
               <>
                 <IconButton onClick={() => setSearchOpen((p) => !p)}>
@@ -210,7 +234,7 @@ const Header: React.FC = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Mobile Search Modal */}
+      {/* ✅ Mobile Search Modal */}
       {isMobile && searchOpen && (
         <Box
           sx={{
@@ -258,7 +282,7 @@ const Header: React.FC = () => {
         </Box>
       )}
 
-      {/* Mobile Menu Modal */}
+      {/* ✅ Mobile Menu Modal */}
       {isMobile && menuOpen && (
         <Box
           sx={{

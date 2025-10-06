@@ -20,7 +20,7 @@ const ProductSizes: React.FC<ProductSizesProps> = ({
 }) => {
   const { theme } = useTheme();
   return (
-    <Box mb={3} display="flex" alignItems="center" gap={2}>
+    <Box mb={3} display="flex" alignItems="center" gap={2} color={theme.Text1}>
       <Typography fontWeight={600} fontSize={16}>
         Size:
       </Typography>

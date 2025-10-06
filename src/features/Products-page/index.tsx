@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState, useMemo } from "react";
 import {
   Box,
   Typography,
@@ -9,10 +9,19 @@ import {
   useMediaQuery,
   useTheme as useMuiTheme,
 } from "@mui/material";
+import { useLocation } from "react-router";
 import ProductCard from "../../shared/components/Product-card";
 import { useTheme } from "../../theme/ThemeProvider";
 import { useProductsQuery } from "./hooks/useProducts";
 
+const getRandomColors = (count: number = 3) => {
+  const colors: string[] = [];
+  for (let i = 0; i < count; i++) {
+    const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+    colors.push(color);
+  }
+  return colors;
+};
 
 const ProductPage: React.FC = () => {
   const { theme } = useTheme();
@@ -23,15 +32,33 @@ const ProductPage: React.FC = () => {
   const [page, setPage] = useState(1);
   const itemsPerPage = 8;
 
-  // Fetch products via react-query
-  const offset = (page - 1) * itemsPerPage;
-  const { data: products = [], isLoading: loading } = useProductsQuery(
-    offset,
-    itemsPerPage
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const filter = queryParams.get("filter");
+  const withColors = queryParams.get("withColors") === "true"; // check URL
+
+  const { data: allProducts = [], isLoading: loading } = useProductsQuery(
+    0,
+    50
   );
 
-  const pageCount = Math.ceil(products.length / itemsPerPage);
-  const displayedProducts = products.slice(
+  const products =
+    filter === "discount"
+      ? allProducts.filter((p) => !!p.discount)
+      : allProducts;
+
+  // 🔹 Only generate colors if `withColors` is true
+  const productsWithColors = useMemo(
+    () =>
+      products.map((p) => ({
+        ...p,
+        colors: withColors ? getRandomColors(3) : undefined,
+      })),
+    [products, withColors]
+  );
+
+  const pageCount = Math.ceil(productsWithColors.length / itemsPerPage);
+  const displayedProducts = productsWithColors.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
@@ -48,7 +75,7 @@ const ProductPage: React.FC = () => {
           variant={isMobile ? "h5" : "h4"}
           sx={{ fontWeight: 700, color: theme.Text1, mb: 4 }}
         >
-          All Products
+          {filter === "discount" ? "Discounted Products" : "All Products"}
         </Typography>
 
         <Grid
@@ -76,10 +103,12 @@ const ProductPage: React.FC = () => {
                     id={product.id}
                     name={product.title}
                     price={`$${product.price}`}
-                    img={product.images[0]}
-                    rating={product.rating}
+                    oldPrice={product.oldPrice}
                     discount={product.discount}
+                    rating={product.rating}
+                    img={product.images[0]}
                     isNew={product.isNew}
+                    colors={product.colors} // only passed if withColors=true
                   />
                 </Grid>
               ))}
@@ -111,11 +140,6 @@ const ProductPage: React.FC = () => {
                     bgcolor: item.selected ? theme.Button2 : "transparent",
                     transition: "all 0.3s",
                     "&:hover": {
-                      bgcolor: theme.Button2,
-                      color: "white",
-                      borderColor: theme.Button2,
-                    },
-                    "&.Mui-selected": {
                       bgcolor: theme.Button2,
                       color: "white",
                       borderColor: theme.Button2,

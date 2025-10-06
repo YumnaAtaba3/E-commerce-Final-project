@@ -15,9 +15,11 @@ export interface Product {
   slug?: string;
 
   // Frontend-only fields
-  rating?: number;     // e.g., 0 - 5
-  discount?: string;   // e.g., "-15%"
-  isNew?: boolean;     // true if product is new
+  oldPrice:string;
+  colors?:string;
+  rating?: number;     
+  discount?: string;   
+  isNew?: boolean;     
 }
 
 export const productInitState = {

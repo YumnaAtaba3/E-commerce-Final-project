@@ -32,22 +32,23 @@ export function useProductByIdQuery(id: number | undefined) {
     queryFn: async () => {
       if (!id) throw new Error("Product ID is required");
       const product = await ProductServices.getById(id);
-      return enrichProducts([product])[0]; // enrich single product
+      return enrichProducts([product])[0]; 
     },
     enabled: !!id,
   });
 }
 
 // Fetch related products by ID
-
 export function useRelatedProductsQuery(id: number | undefined, limit = 4) {
   return useQuery<Product[], Error>({
     queryKey: ["relatedProducts", id, limit],
     queryFn: async () => {
       if (!id) throw new Error("Product ID is required");
       const all = await ProductServices.getAll();
-      return all.filter((p) => p.id !== id).slice(0, limit);
+      const related = all.filter((p) => p.id !== id).slice(0, limit);
+      return enrichProducts(related); 
     },
     enabled: !!id,
   });
 }
+

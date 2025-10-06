@@ -10,122 +10,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import palystation from "../../../assets/Home-page/playstation.png";
+import { useNavigate } from "react-router";
+
 import { useTheme } from "../../../theme/ThemeProvider";
 import ArrowNavigation from "../../../shared/components/Arrow-navigation";
 import ProductCard from "../../../shared/components/Product-card";
-
-// Demo Products
-const flashProducts = [
-  {
-    id: 1,
-    name: "HAVIT HV-G92 Gamepad",
-    price: "$120",
-    oldPrice: "$160",
-    discount: "-25%",
-    rating: 4.5,
-    img: palystation,
-  },
-  {
-    id: 2,
-    name: "RGB Keyboard",
-    price: "$80",
-    oldPrice: "$120",
-    discount: "-30%",
-    rating: 4.0,
-    img: palystation,
-  },
-  {
-    id: 3,
-    name: "IPS LCD Gaming Monitor",
-    price: "$400",
-    oldPrice: "$500",
-    discount: "-20%",
-    rating: 5,
-    img: palystation,
-  },
-  {
-    id: 1,
-    name: "HAVIT HV-G92 Gamepad",
-    price: "$120",
-    oldPrice: "$160",
-    discount: "-25%",
-    rating: 4.5,
-    img: palystation,
-  },
-  {
-    id: 2,
-    name: "RGB Keyboard",
-    price: "$80",
-    oldPrice: "$120",
-    discount: "-30%",
-    rating: 4.0,
-    img: palystation,
-  },
-  {
-    id: 3,
-    name: "IPS LCD Gaming Monitor",
-    price: "$400",
-    oldPrice: "$500",
-    discount: "-20%",
-    rating: 5,
-    img: palystation,
-  },
-  {
-    id: 1,
-    name: "HAVIT HV-G92 Gamepad",
-    price: "$120",
-    oldPrice: "$160",
-    discount: "-25%",
-    rating: 4.5,
-    img: palystation,
-  },
-  {
-    id: 2,
-    name: "RGB Keyboard",
-    price: "$80",
-    oldPrice: "$120",
-    discount: "-30%",
-    rating: 4.0,
-    img: palystation,
-  },
-  {
-    id: 3,
-    name: "IPS LCD Gaming Monitor",
-    price: "$400",
-    oldPrice: "$500",
-    discount: "-20%",
-    rating: 5,
-    img: palystation,
-  },
-  {
-    id: 1,
-    name: "HAVIT HV-G92 Gamepad",
-    price: "$120",
-    oldPrice: "$160",
-    discount: "-25%",
-    rating: 4.5,
-    img: palystation,
-  },
-  {
-    id: 2,
-    name: "RGB Keyboard",
-    price: "$80",
-    oldPrice: "$120",
-    discount: "-30%",
-    rating: 4.0,
-    img: palystation,
-  },
-  {
-    id: 3,
-    name: "IPS LCD Gaming Monitor",
-    price: "$400",
-    oldPrice: "$500",
-    discount: "-20%",
-    rating: 5,
-    img: palystation,
-  },
-];
+import { useProductsState } from "../../../store";
 
 // Countdown logic
 const calculateTimeLeft = (endDate: Date) => {
@@ -147,11 +37,16 @@ const FlashSales: React.FC = () => {
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
 
+  const { products } = useProductsState();
+  const navigate = useNavigate();
+
+  // 👇 Get only the first 8 products that have a discount
+  const flashProducts = products.filter((p) => p.discount).slice(0, 8);
+
   useEffect(() => {
-    const timer = setInterval(
-      () => setTimeLeft(calculateTimeLeft(endDate)),
-      1000
-    );
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft(endDate));
+    }, 1000);
     return () => clearInterval(timer);
   }, []);
 
@@ -247,15 +142,15 @@ const FlashSales: React.FC = () => {
         >
           <Typography
             variant={isMobile ? "h3" : "h2"}
-          sx={{
-            fontWeight: 500,
-            color: theme.Text1,
-            mt: isMobile ? 1 : 0,
-            fontSize: isMobile ? "1.5rem" : "1.8rem",}}
+            sx={{
+              fontWeight: 500,
+              color: theme.Text1,
+              mt: isMobile ? 1 : 0,
+              fontSize: isMobile ? "1.5rem" : "1.8rem",
+            }}
           >
             Flash Sales
           </Typography>
-          {/* Timer below on mobile, inline on desktop */}
           {!isMobile && Timer}
           {!isMobile && <Typography sx={{ width: "50%" }} />}
           <ArrowNavigation
@@ -282,16 +177,15 @@ const FlashSales: React.FC = () => {
         navigation={{ nextEl: ".flash-next", prevEl: ".flash-prev" }}
         modules={[Navigation]}
       >
-        {flashProducts.map((item) => (
-          <SwiperSlide key={item.id}>
+        {flashProducts.map((p) => (
+          <SwiperSlide key={p.id}>
             <ProductCard
-              id={item.id}
-              name={item.name}
-              price={item.price}
-              oldPrice={item.oldPrice}
-              discount={item.discount}
-              rating={item.rating}
-              img={item.img}
+              id={p.id}
+              name={p.title}
+              price={`$${p.price}`}
+              discount={p.discount}
+              rating={p.rating}
+              img={p.images?.[0]}
             />
           </SwiperSlide>
         ))}
@@ -301,6 +195,7 @@ const FlashSales: React.FC = () => {
       <Box textAlign="center" mt={4}>
         <Button
           variant="contained"
+          onClick={() => navigate("/products?filter=discount")}
           sx={{
             px: 6,
             py: 1.5,
