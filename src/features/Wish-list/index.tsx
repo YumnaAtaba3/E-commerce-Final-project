@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Typography,
@@ -11,78 +11,31 @@ import { useNavigate } from "react-router";
 import WishlistCard from "./components/WishlistCard";
 import ProductCard from "../../shared/components/Product-card";
 import { useTheme } from "../../theme/ThemeProvider";
-import { appRoutes } from "../../routes/index";
+import { useWishlistStore } from "../../store/wishlistStore";
+import { useProductsQuery } from "../../features/Products-page/hooks/useProducts"; // your React Query hook
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 
 const WishlistPage: React.FC = () => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
   const navigate = useNavigate();
-  const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm")); // <600px
-  const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md")); // 600px-900px
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md"));
 
-  const [wishlist, setWishlist] = useState([
-    {
-      id: 1,
-      name: "Gucci duffle bag",
-      price: "$960",
-      oldPrice: "$1160",
-      discount: "-35%",
-      img: "/bag.png",
-    },
-    {
-      id: 2,
-      name: "RGB liquid CPU Cooler",
-      price: "$1960",
-      img: "/cooler.png",
-    },
-    {
-      id: 3,
-      name: "GP11 Shooter USB Gamepad",
-      price: "$550",
-      img: "/gamepad.png",
-    },
-    { id: 4, name: "Quilted Satin Jacket", price: "$750", img: "/jacket.png" },
-  ]);
+  const wishlist = useWishlistStore((state) => state.wishlist);
+  const removeFromWishlist = useWishlistStore(
+    (state) => state.removeFromWishlist
+  );
+  const clearWishlist = useWishlistStore((state) => state.clearWishlist);
 
-  const justForYou = [
-    {
-      id: 5,
-      name: "ASUS FHD Gaming Laptop",
-      price: "$960",
-      oldPrice: "$1160",
-      discount: "-35%",
-      rating: 4.5,
-      img: "/laptop.png",
-      isNew: true,
-    },
-    {
-      id: 6,
-      name: "IPS LCD Gaming Monitor",
-      price: "$1160",
-      rating: 4.5,
-      img: "/monitor.png",
-      isNew: true,
-    },
-    {
-      id: 7,
-      name: "HAVIT HV-G92 Gamepad",
-      price: "$560",
-      rating: 4,
-      img: "/red-gamepad.png",
-    },
-    {
-      id: 8,
-      name: "AK-900 Wired Keyboard",
-      price: "$200",
-      rating: 4.5,
-      img: "/keyboard.png",
-    },
-  ];
+  // Fetch products with React Query
+  const { data: products = [], isLoading, isError } = useProductsQuery();
 
-  const handleDelete = (id: number) =>
-    setWishlist((prev) => prev.filter((item) => item.id !== id));
+  const handleDelete = (id: number) => removeFromWishlist(id);
 
-  // Responsive button style
   const buttonStyle = {
     borderColor: theme.Text1,
     color: theme.Text1,
@@ -103,6 +56,7 @@ const WishlistPage: React.FC = () => {
   };
 
   const headingFont = isMobile ? 18 : isTablet ? 22 : 24;
+  const justForYou = products.slice(0, 8);
 
   return (
     <Box
@@ -135,14 +89,14 @@ const WishlistPage: React.FC = () => {
             <Button
               variant="outlined"
               sx={buttonStyle}
-              onClick={() => navigate(appRoutes.cart)}
+              onClick={() => clearWishlist()}
             >
               Move All To Bag
             </Button>
           )}
         </Box>
 
-        {/* Wishlist Grid OR Empty State */}
+        {/* Wishlist Grid */}
         {wishlist.length > 0 ? (
           <Grid
             container
@@ -152,18 +106,24 @@ const WishlistPage: React.FC = () => {
           >
             {wishlist.map((item) => (
               <Grid key={item.id}>
-                <WishlistCard {...item} onDelete={handleDelete} />
+                <WishlistCard
+                  id={item.id}
+                  name={item.name || item.title || "Unnamed Product"}
+                  price={item.price ?? 0}
+                  oldPrice={item.oldPrice}
+                  discount={item.discount}
+                  images={
+                    item.images?.length
+                      ? item.images
+                      : [item.img || "/placeholder.png"]
+                  }
+                  onDelete={handleDelete}
+                />
               </Grid>
             ))}
           </Grid>
         ) : (
-          <Box
-            sx={{
-              textAlign: "center",
-              py: 6,
-              color: theme.Text1,
-            }}
-          >
+          <Box sx={{ textAlign: "center", py: 6, color: theme.Text1 }}>
             <Typography variant="h6" sx={{ fontWeight: 400, fontSize: 18 }}>
               Your wishlist is empty 🛒
             </Typography>
@@ -203,27 +163,53 @@ const WishlistPage: React.FC = () => {
                 Just For You
               </Typography>
             </Box>
-
             <Button
               variant="outlined"
               sx={buttonStyle}
-              onClick={() => navigate(appRoutes.products.list)}
+              onClick={() => navigate("/products")}
             >
-              See All
+              View All
             </Button>
           </Box>
 
-          <Grid
-            container
-            spacing={isMobile ? 2 : 3}
-            justifyContent={isMobile ? "center" : "flex-start"}
-          >
-            {justForYou.map((item) => (
-              <Grid key={item.id}>
-                <ProductCard {...item} />
-              </Grid>
-            ))}
-          </Grid>
+          {isLoading ? (
+            <Typography sx={{ color: theme.Text1 }}>
+              Loading products...
+            </Typography>
+          ) : isError ? (
+            <Typography sx={{ color: theme.Text1 }}>
+              Failed to load products.
+            </Typography>
+          ) : justForYou.length === 0 ? (
+            <Typography sx={{ color: theme.Text1 }}>
+              No products available.
+            </Typography>
+          ) : (
+            <Swiper
+              spaceBetween={10}
+              slidesPerView={isMobile ? 1.1 : 4.1}
+              navigation={{
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+              }}
+              modules={[Navigation]}
+            >
+              {justForYou.map((product) => (
+                <SwiperSlide key={product.id}>
+                  <ProductCard
+                    id={product.id}
+                    name={product.title}
+                    price={`$${product.price}`}
+                    oldPrice={product.oldPrice}
+                    discount={product.discount}
+                    rating={product.rating}
+                    img={product.images?.[0]|| "/placeholder.png"}
+                    isNew={product.isNew}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
         </Box>
       </Box>
     </Box>

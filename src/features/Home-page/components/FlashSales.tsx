@@ -69,7 +69,7 @@ const FlashSales: React.FC = () => {
           <Box textAlign="center" minWidth={50}>
             <Typography
               sx={{
-                fontSize: { xs: 10, md: 12, lg: 14, xl: 14 },
+                fontSize: { xs: 12, md: 12, lg: 14, xl: 14 },
                 color: "gray",
               }}
             >
@@ -78,7 +78,7 @@ const FlashSales: React.FC = () => {
             <Typography
               sx={{
                 fontWeight: 700,
-                fontSize: { xs: 10, md: 12, lg: 22, xl: 22 },
+                fontSize: { xs: 12, md: 12, lg: 22, xl: 22 },
               }}
             >
               {String(t.value).padStart(2, "0")}
@@ -146,7 +146,7 @@ const FlashSales: React.FC = () => {
               fontWeight: 500,
               color: theme.Text1,
               mt: isMobile ? 1 : 0,
-              fontSize: isMobile ? "1.5rem" : "1.8rem",
+              fontSize: isMobile ? "1.5rem" : "2.1rem",
             }}
           >
             Flash Sales

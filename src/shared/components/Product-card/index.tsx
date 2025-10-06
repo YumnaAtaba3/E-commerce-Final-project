@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Typography,
@@ -15,6 +15,7 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { useNavigate } from "react-router";
+import { useWishlistStore } from "../../../store/wishlistStore";
 
 interface ProductCardProps {
   id: number;
@@ -23,7 +24,7 @@ interface ProductCardProps {
   oldPrice?: string;
   discount?: string;
   rating?: number;
-  img: string;
+  img: string | string[];
   isNew?: boolean;
   colors?: string[];
 }
@@ -40,9 +41,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
   colors,
 }) => {
   const { theme } = useTheme();
-  const [favorite, setFavorite] = useState(false);
   const navigate = useNavigate();
 
+  const addToWishlist = useWishlistStore((state) => state.addToWishlist);
+  const removeFromWishlist = useWishlistStore(
+    (state) => state.removeFromWishlist
+  );
+  const isInWishlist = useWishlistStore((state) => state.isInWishlist);
+
+const favorite = useWishlistStore((state) => state.isInWishlist(id));
   // Compute price based on discount
   let numericPrice = parseFloat(price.replace("$", ""));
   let finalPrice = numericPrice;
@@ -59,6 +66,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const displayPrice = `$${finalPrice.toFixed(2)}`;
   const displayOldPrice =
     finalOldPrice && finalOldPrice !== displayPrice ? finalOldPrice : undefined;
+
+ const toggleWishlist = () => {
+   favorite
+     ? removeFromWishlist(id)
+     : addToWishlist({ id, name, price, oldPrice, discount, img });
+ };
 
   return (
     <Card
@@ -134,7 +147,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         }}
       >
         <IconButton
-          onClick={() => setFavorite(!favorite)}
+          onClick={toggleWishlist}
           sx={{
             bgcolor: "white",
             "&:hover": { bgcolor: theme.Button2, color: "white" },
@@ -149,6 +162,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             <FavoriteBorderIcon fontSize="medium" />
           )}
         </IconButton>
+
         <IconButton
           onClick={() => navigate(`/products/${id}`)}
           sx={{
@@ -223,8 +237,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
           >
             {displayPrice}
           </Typography>
-
-          {/* Only show oldPrice if it exists */}
           {displayOldPrice && (
             <Typography
               sx={{
@@ -237,7 +249,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </Typography>
           )}
 
-          {/* Rating next to price if colors exist */}
           {colors && colors.length > 0 && rating !== undefined && (
             <Box
               display="flex"
@@ -254,7 +265,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </Box>
 
-        {/* Rating below price if no colors */}
         {!colors && rating !== undefined && (
           <Box display="flex" alignItems="center" gap={1}>
             <Rating value={rating} precision={0.5} readOnly size="medium" />
@@ -264,7 +274,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </Box>
         )}
 
-        {/* Optional Colors */}
         {colors && colors.length > 0 && (
           <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
             {colors.map((color, i) => (

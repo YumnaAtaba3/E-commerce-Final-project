@@ -23,6 +23,7 @@ const OurStory: React.FC<OurStoryProps> = ({ image, title, paragraphs }) => {
           <Typography
             variant="h4"
             sx={{
+              color:theme.Text1,
               fontWeight: 700,
               fontSize: { xs: 28, md: 36 },
               mb: { xs: 3, md: 6 },

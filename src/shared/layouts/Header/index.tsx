@@ -26,7 +26,7 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
 import { motion } from "framer-motion";
 import { appRoutes } from "../../../routes/index";
-import AccountDropdown from "../../components/Account-dropdown"; 
+import AccountDropdown from "../../components/Account-dropdown";
 
 const Header: React.FC = () => {
   const { theme } = useTheme();
@@ -39,7 +39,7 @@ const Header: React.FC = () => {
 
   const location = useLocation();
 
-  // ✅ Close dropdown when clicking outside
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = () => setAccountOpen(false);
     window.addEventListener("click", handleClickOutside);
@@ -81,7 +81,7 @@ const Header: React.FC = () => {
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between", gap: 2 }}>
-          {/* ✅ Animated Text Logo */}
+          {/* Animated Text Logo */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -160,7 +160,7 @@ const Header: React.FC = () => {
             {!isMobile && (
               <Box
                 sx={{
-                  bgcolor: theme.ButtonCard,
+                  bgcolor: theme.disabledText,
                   borderRadius: 1,
                   px: 1.5,
                   py: 0.5,
@@ -174,6 +174,7 @@ const Header: React.FC = () => {
                   sx={{
                     flex: 1,
                     fontSize: 14,
+                    bgcolor: theme.disabledText,
                     color: theme.Text1,
                     fontFamily: theme.font,
                     "& input::placeholder": {
@@ -193,7 +194,7 @@ const Header: React.FC = () => {
               <ShoppingCartOutlinedIcon sx={{ color: theme.Text1 }} />
             </IconButton>
 
-            {/* ✅ Account Dropdown */}
+            {/* Account Dropdown */}
             <Box sx={{ position: "relative" }}>
               <IconButton
                 onClick={(e) => {
@@ -211,9 +212,17 @@ const Header: React.FC = () => {
               />
             </Box>
 
-            {/* ✅ Mobile Menu / Search Icons */}
+            {/* Mobile Menu / Search Icons */}
             {isMobile && (
-              <>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "end",
+                  justifyContent: "space-between",
+                  width: 120,
+                }}
+              >
+                {/* Left: Search */}
                 <IconButton onClick={() => setSearchOpen((p) => !p)}>
                   {searchOpen ? (
                     <CloseIcon sx={{ color: theme.Text1 }} />
@@ -221,6 +230,8 @@ const Header: React.FC = () => {
                     <SearchIcon sx={{ color: theme.Text1 }} />
                   )}
                 </IconButton>
+
+                {/* Right: Menu */}
                 <IconButton onClick={() => setMenuOpen((p) => !p)}>
                   {menuOpen ? (
                     <CloseIcon sx={{ color: theme.Text1 }} />
@@ -228,13 +239,13 @@ const Header: React.FC = () => {
                     <MenuIcon sx={{ color: theme.Text1 }} />
                   )}
                 </IconButton>
-              </>
+              </Box>
             )}
           </Box>
         </Toolbar>
       </AppBar>
 
-      {/* ✅ Mobile Search Modal */}
+      {/* Mobile Search Modal */}
       {isMobile && searchOpen && (
         <Box
           sx={{
@@ -253,7 +264,7 @@ const Header: React.FC = () => {
         >
           <Box
             sx={{
-              bgcolor: theme.primary1,
+              bgcolor: "#f0f0f0", // white-grey background
               borderRadius: 2,
               width: "80%",
               maxWidth: 300,
@@ -271,18 +282,17 @@ const Header: React.FC = () => {
               sx={{
                 flex: 1,
                 fontSize: 14,
-                color: theme.Text1,
-                fontFamily: theme.font,
+                color: "#333",
               }}
             />
             <IconButton onClick={() => setSearchOpen(false)}>
-              <CloseIcon sx={{ color: theme.Text1 }} />
+              <CloseIcon sx={{ color: "#333" }} />
             </IconButton>
           </Box>
         </Box>
       )}
 
-      {/* ✅ Mobile Menu Modal */}
+      {/* Mobile Menu Modal */}
       {isMobile && menuOpen && (
         <Box
           sx={{
@@ -300,9 +310,8 @@ const Header: React.FC = () => {
           onClick={() => setMenuOpen(false)}
         >
           <Box
+            className="glass-card" // glass-card background
             sx={{
-              bgcolor: theme.primary1,
-              borderRadius: 2,
               width: "80%",
               maxWidth: 300,
               p: 4,
@@ -310,6 +319,8 @@ const Header: React.FC = () => {
               flexDirection: "column",
               alignItems: "center",
               gap: 3,
+              right: "50%",
+              transform: "translateX(50%)",
             }}
             onClick={(e) => e.stopPropagation()}
           >

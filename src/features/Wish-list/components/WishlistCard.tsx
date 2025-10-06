@@ -10,14 +10,15 @@ import {
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useTheme } from "../../../theme/ThemeProvider";
+import { useWishlistStore } from "../../../store/wishlistStore";
 
 interface WishlistCardProps {
   id: number;
   name: string;
-  price: string;
+  price: number | string;
   oldPrice?: string;
   discount?: string;
-  img: string;
+  images: string[];
   onDelete?: (id: number) => void;
 }
 
@@ -27,10 +28,18 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
   price,
   oldPrice,
   discount,
-  img,
+  images,
   onDelete,
 }) => {
   const { theme } = useTheme();
+  const removeFromWishlist = useWishlistStore(
+    (state) => state.removeFromWishlist
+  );
+
+  const handleDelete = () => {
+    removeFromWishlist(id);
+    if (onDelete) onDelete(id);
+  };
 
   return (
     <Card
@@ -44,7 +53,6 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
         bgcolor: "#fff",
       }}
     >
-      {/* Discount Badge */}
       {discount && (
         <Box
           sx={{
@@ -64,10 +72,9 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
         </Box>
       )}
 
-      {/* Delete Button */}
       <Box sx={{ position: "absolute", top: 10, right: 10, zIndex: 2 }}>
         <IconButton
-          onClick={() => onDelete && onDelete(id)}
+          onClick={handleDelete}
           sx={{
             bgcolor: "white",
             "&:hover": { bgcolor: theme.Button2, color: "white" },
@@ -80,18 +87,16 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
         </IconButton>
       </Box>
 
-      {/* Product Image */}
       <Box sx={{ bgcolor: "#f5f5f5", p: 2, textAlign: "center" }}>
         <CardMedia
           component="img"
           height="180"
-          image={img}
+          image={images?.[0] || "/placeholder.png"} 
           alt={name}
           sx={{ objectFit: "contain", mx: "auto" }}
         />
       </Box>
 
-      {/* Add To Bag Button */}
       <Button
         fullWidth
         sx={{
@@ -107,7 +112,6 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
         Add To Bag
       </Button>
 
-      {/* Product Info */}
       <Box sx={{ p: 2 }}>
         <Typography sx={{ fontSize: 16, fontWeight: 600, mb: 1 }} noWrap>
           {name}
@@ -116,7 +120,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
           <Typography
             sx={{ fontSize: 16, color: theme.Button2, fontWeight: 600 }}
           >
-            {price}
+            ${price}
           </Typography>
           {oldPrice && (
             <Typography

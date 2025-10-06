@@ -1,18 +1,19 @@
 .glass-card {
-    background: rgba(255, 255, 255, 0.09);
+    background: rgba(0, 0, 0, 0.3);
+    /* darker background */
     backdrop-filter: blur(9px);
     -webkit-backdrop-filter: blur(9px);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    /* slightly lighter for contrast */
     box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.5),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-        inset 0 0 34px 17px rgba(255, 255, 255, 0.17);
+        0 8px 32px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+        inset 0 0 34px 17px rgba(255, 255, 255, 0.1);
     position: relative;
     overflow: hidden;
 }
-
 .glass-card::before {
     content: '';
     position: absolute;

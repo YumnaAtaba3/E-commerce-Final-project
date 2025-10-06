@@ -1,16 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Box, Link, Stack } from "@mui/material";
+import { Box, Link } from "@mui/material";
 import { Link as RouterLink } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   AccountCircleOutlined,
-  FavoriteBorder,
   ShoppingBagOutlined,
-  LoginOutlined,
-  PersonAddAltOutlined,
+  CancelOutlined,
+  LogoutOutlined,
+  StarBorder,
 } from "@mui/icons-material";
-import { appRoutes } from "../../../routes";
-// import "./AccountDropdown.css"; // includes .glass-card
+
+import "./AccountDropdown.css";
 
 interface AccountDropdownProps {
   open: boolean;
@@ -24,14 +25,30 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
   isMobile,
 }) => {
   const menuItems = [
-    { label: "My Account", to: "", icon: <AccountCircleOutlined /> },
-    { label: "Orders", to: "", icon: <ShoppingBagOutlined /> },
-    { label: "Wishlist", to: appRoutes.wishlist, icon: <FavoriteBorder /> },
-    { label: "Login", to: appRoutes.auth.login, icon: <LoginOutlined /> },
     {
-      label: "Register",
-      to: appRoutes.auth.signUp,
-      icon: <PersonAddAltOutlined />,
+      label: "Manage My Account",
+      to: "",
+      icon: <AccountCircleOutlined sx={{ fontSize: 22 }} />,
+    },
+    {
+      label: "My Orders",
+      to: "",
+      icon: <ShoppingBagOutlined sx={{ fontSize: 22 }} />,
+    },
+    {
+      label: "My Cancellations",
+      to: "",
+      icon: <CancelOutlined sx={{ fontSize: 22 }} />,
+    },
+    {
+      label: "My Reviews",
+      to: "",
+      icon: <StarBorder sx={{ fontSize: 22 }} />,
+    },
+    {
+      label: "Logout",
+      to: "",
+      icon: <LogoutOutlined sx={{ fontSize: 22 }} />,
     },
   ];
 
@@ -42,7 +59,7 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.2 }}
+          transition={{ duration: 0.25, ease: "easeOut" }}
           style={{
             position: "absolute",
             top: "100%",
@@ -54,18 +71,16 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
           <Box
             className="glass-card"
             sx={{
-              width: 240,
-              borderRadius: "20px",
+              width: 250,
+              p: 2.2,
+              borderRadius: "5px",
               display: "flex",
               flexDirection: "column",
-              p: 2,
-              gap: 1,
-              backdropFilter: "blur(9px)",
-              WebkitBackdropFilter: "blur(9px)",
+              gap: 1.2,
               ...(isMobile && {
                 right: "50%",
                 transform: "translateX(50%)",
-                width: "80vw",
+                width: "50vw",
               }),
             }}
             onClick={(e) => e.stopPropagation()}
@@ -77,14 +92,21 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
                 to={item.to}
                 underline="none"
                 sx={{
-                  color: theme.primary1,
-                  fontSize: 14,
-                  fontWeight: 500,
+                  color: "#f5f5f5",
+                  fontSize:isMobile?12: 15,
+
                   display: "flex",
                   alignItems: "center",
-                  gap: 1.2,
-                  transition: "color 0.2s ease",
-                  "&:hover": { color: theme.HoverButton },
+                  gap: 1.5,
+                  py: 0.7,
+                  px: 1,
+                  borderRadius: "10px",
+                  transition: "all 0.25s ease",
+                  "&:hover": {
+                    backgroundColor: "rgba(255, 255, 255, 0.08)",
+                    color: theme?.HoverButton || "#ffffff",
+                    transform: "translateX(3px)",
+                  },
                 }}
               >
                 <Box
@@ -92,8 +114,9 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    fontSize: "1.2rem",
-                    color: theme.primary1,
+                    justifyContent: "center",
+                    color: "#ffffff",
+                    opacity: 0.9,
                   }}
                 >
                   {item.icon}
