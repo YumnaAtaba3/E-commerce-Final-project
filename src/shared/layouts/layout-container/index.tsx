@@ -9,7 +9,7 @@ export function LayoutContainer() {
     <>
       <PromoBar />
       <Header />
-      <Box sx={{ height: { xs: 50 + 64, sm: 40 + 64 }, width: "100%" }} />
+      <Box sx={{ height: { xs: 50 + 55, sm: 40 + 55 }, width: "100%" }} />
       <Outlet />
       <Footer />
     </>

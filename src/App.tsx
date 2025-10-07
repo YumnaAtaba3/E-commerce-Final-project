@@ -1,16 +1,23 @@
 import React from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AppRouterProvider } from "./routes/provider";
 import "./index.css";
+import GlobalKeyboardListener from "./shared/components/Global-keyboard-listener";
+import SearchDialog from "./shared/components/Search-dialog";
+import { useSearchStore } from "./store/searchStore";
+import FixedButton from "./shared/components/Fixed-button";
 
 function App() {
-  
+  const open = useSearchStore((state) => state.open);
+
   return (
     <>
-      <AppRouterProvider />
+      <GlobalKeyboardListener />
 
-
+      {/* ✅ Move SearchDialog inside AppRouterProvider */}
+      <AppRouterProvider>{open && <SearchDialog />}</AppRouterProvider>
+      <FixedButton />
       <ToastContainer
         position="top-right"
         hideProgressBar

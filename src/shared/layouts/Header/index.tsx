@@ -6,12 +6,15 @@ import {
   Link,
   IconButton,
   InputBase,
-  useMediaQuery,
   Typography,
+  Badge,
+  useMediaQuery,
+  InputAdornment,
 } from "@mui/material";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { Link as RouterLink, useLocation } from "react-router";
+import { motion } from "framer-motion";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -24,9 +27,21 @@ import InfoIcon from "@mui/icons-material/Info";
 import ContactMailIcon from "@mui/icons-material/ContactMail";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 
-import { motion } from "framer-motion";
-import { appRoutes } from "../../../routes/index";
 import AccountDropdown from "../../components/Account-dropdown";
+import MobileNavDrawer from "./components/MobileNavDrawer";
+import SearchDialog from "../../../shared/components/Search-dialog";
+
+import { useWishlistStore } from "../../../store/wishlistStore";
+import { useSearchStore } from "../../../store/searchStore";
+import { appRoutes } from "../../../routes/index";
+
+// Shared nav links
+const navLinks = [
+  { label: "Home", to: appRoutes.home, icon: <HomeIcon /> },
+  { label: "About", to: appRoutes.about, icon: <InfoIcon /> },
+  { label: "Contact", to: appRoutes.contact, icon: <ContactMailIcon /> },
+  { label: "Sign Up", to: appRoutes.auth.signUp, icon: <PersonAddIcon /> },
+];
 
 const Header: React.FC = () => {
   const { theme } = useTheme();
@@ -34,35 +49,29 @@ const Header: React.FC = () => {
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
 
   const location = useLocation();
+  const wishlist = useWishlistStore((state) => state.wishlist);
+  const searchStore = useSearchStore();
 
-  // Close dropdown when clicking outside
+  // Close account dropdown on outside click
   useEffect(() => {
     const handleClickOutside = () => setAccountOpen(false);
     window.addEventListener("click", handleClickOutside);
     return () => window.removeEventListener("click", handleClickOutside);
   }, []);
 
-  const navLinks = [
-    { label: "Home", path: appRoutes.home, icon: <HomeIcon /> },
-    { label: "About", path: appRoutes.about, icon: <InfoIcon /> },
-    { label: "Contact", path: appRoutes.contact, icon: <ContactMailIcon /> },
-    { label: "Sign Up", path: appRoutes.auth.signUp, icon: <PersonAddIcon /> },
-  ];
-
   const navLinkVariants = {
     initial: { scale: 1, color: theme.Text1 },
     hover: {
-      scale: 1.2,
-      color: theme.Text1,
+      scale: 1.05,
+      color: theme.HoverButton,
       transition: { type: "spring", stiffness: 300 },
     },
     active: {
-      scale: 1.2,
-      color: theme.Text1,
+      scale: 1.05,
+      color: theme.HoverButton,
       transition: { type: "spring", stiffness: 300 },
     },
   };
@@ -72,7 +81,7 @@ const Header: React.FC = () => {
       <AppBar
         position="fixed"
         sx={{
-          top: { xs: 50, sm: 40 },
+          top: { xs: 50, sm: 35 },
           bgcolor: theme.primary1,
           color: theme.Text1,
           borderBottom: `1px solid ${theme.Text2}`,
@@ -81,7 +90,7 @@ const Header: React.FC = () => {
         }}
       >
         <Toolbar sx={{ justifyContent: "space-between", gap: 2 }}>
-          {/* Animated Text Logo */}
+          {/* Logo */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -107,9 +116,9 @@ const Header: React.FC = () => {
 
           {/* Desktop Nav Links */}
           {!isMobile && (
-            <Box sx={{ display: "flex", gap: 4, position: "relative" }}>
+            <Box sx={{ display: "flex", gap: 4 }}>
               {navLinks.map((item) => {
-                const isActive = location.pathname === item.path;
+                const isActive = location.pathname === item.to;
                 return (
                   <motion.div
                     key={item.label}
@@ -117,48 +126,46 @@ const Header: React.FC = () => {
                     animate={isActive ? "active" : "initial"}
                     whileHover="hover"
                     variants={navLinkVariants}
-                    style={{ position: "relative" }}
                   >
                     <Link
                       component={RouterLink}
-                      to={item.path}
+                      to={item.to}
                       underline="none"
                       sx={{
                         fontSize: 14,
                         fontWeight: 500,
                         fontFamily: theme.font,
                         cursor: "pointer",
-                        color: theme.Text1,
-                        transition: "color 0.3s ease",
-                        "&:hover": { color: theme.HoverButton },
+                        color: isActive ? theme.HoverButton : theme.Text1,
+                        position: "relative",
+                        "&::after": isActive
+                          ? {
+                              content: '""',
+                              position: "absolute",
+                              left: 0,
+                              bottom: -4,
+                              width: "100%",
+                              height: 2,
+                              bgcolor: theme.HoverButton,
+                              borderRadius: 1,
+                            }
+                          : {},
                       }}
                     >
                       {item.label}
                     </Link>
-                    {isActive && (
-                      <motion.div
-                        layoutId="underline"
-                        style={{
-                          position: "absolute",
-                          bottom: -4,
-                          left: 0,
-                          height: 2,
-                          width: "100%",
-                          backgroundColor: theme.Text1,
-                          borderRadius: 1,
-                        }}
-                      />
-                    )}
                   </motion.div>
                 );
               })}
             </Box>
           )}
 
-          {/* Icons + Mobile Menu */}
+          {/* Icons & Search */}
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+            {/* Desktop Search Input opens SearchDialog */}
             {!isMobile && (
               <Box
+                onClick={() => searchStore.setOpen(true)}
                 sx={{
                   bgcolor: theme.disabledText,
                   borderRadius: 1,
@@ -167,29 +174,44 @@ const Header: React.FC = () => {
                   display: "flex",
                   alignItems: "center",
                   width: 250,
+                  cursor: "pointer",
+                  position: "relative",
                 }}
               >
-                <InputBase
-                  placeholder="What are you looking for?"
+                <SearchIcon sx={{ fontSize: 20, color: theme.Text1, mr: 1 }} />
+                <Typography
                   sx={{
-                    flex: 1,
-                    fontSize: 14,
-                    bgcolor: theme.disabledText,
+                    fontSize: 12,
                     color: theme.Text1,
                     fontFamily: theme.font,
-                    "& input::placeholder": {
-                      color: theme.Text1,
-                      opacity: 0.7,
-                    },
                   }}
-                />
-                <SearchIcon sx={{ color: theme.Text1, fontSize: 20 }} />
+                >
+                  What are you looking for?
+                </Typography>
+                <Typography
+                  sx={{
+                    position: "absolute",
+                    right: 8,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    fontSize: 11,
+                    color: theme.Text1,
+                    userSelect: "none",
+                  }}
+                >
+                  Ctrl + /
+                </Typography>
               </Box>
             )}
 
+            {/* Wishlist */}
             <IconButton component={RouterLink} to={appRoutes.wishlist}>
-              <FavoriteBorderIcon sx={{ color: theme.Text1 }} />
+              <Badge badgeContent={wishlist.length} color="secondary">
+                <FavoriteBorderIcon sx={{ color: theme.Text1 }} />
+              </Badge>
             </IconButton>
+
+            {/* Cart */}
             <IconButton component={RouterLink} to={appRoutes.cart}>
               <ShoppingCartOutlinedIcon sx={{ color: theme.Text1 }} />
             </IconButton>
@@ -204,7 +226,6 @@ const Header: React.FC = () => {
               >
                 <PersonOutlineIcon sx={{ color: theme.Text1 }} />
               </IconButton>
-
               <AccountDropdown
                 open={accountOpen}
                 theme={theme}
@@ -212,26 +233,12 @@ const Header: React.FC = () => {
               />
             </Box>
 
-            {/* Mobile Menu / Search Icons */}
+            {/* Mobile Search & Menu */}
             {isMobile && (
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "end",
-                  justifyContent: "space-between",
-                  width: 120,
-                }}
-              >
-                {/* Left: Search */}
-                <IconButton onClick={() => setSearchOpen((p) => !p)}>
-                  {searchOpen ? (
-                    <CloseIcon sx={{ color: theme.Text1 }} />
-                  ) : (
-                    <SearchIcon sx={{ color: theme.Text1 }} />
-                  )}
+              <Box sx={{ display: "flex", alignItems: "end", gap: 1 }}>
+                <IconButton onClick={() => searchStore.setOpen(true)}>
+                  <SearchIcon sx={{ color: theme.Text1 }} />
                 </IconButton>
-
-                {/* Right: Menu */}
                 <IconButton onClick={() => setMenuOpen((p) => !p)}>
                   {menuOpen ? (
                     <CloseIcon sx={{ color: theme.Text1 }} />
@@ -245,108 +252,13 @@ const Header: React.FC = () => {
         </Toolbar>
       </AppBar>
 
-      {/* Mobile Search Modal */}
-      {isMobile && searchOpen && (
-        <Box
-          sx={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            bgcolor: "rgba(0,0,0,0.4)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1400,
-          }}
-          onClick={() => setSearchOpen(false)}
-        >
-          <Box
-            sx={{
-              bgcolor: "#f0f0f0", // white-grey background
-              borderRadius: 2,
-              width: "80%",
-              maxWidth: 300,
-              p: 3,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 1.5,
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <InputBase
-              autoFocus
-              placeholder="What are you looking for?"
-              sx={{
-                flex: 1,
-                fontSize: 14,
-                color: "#333",
-              }}
-            />
-            <IconButton onClick={() => setSearchOpen(false)}>
-              <CloseIcon sx={{ color: "#333" }} />
-            </IconButton>
-          </Box>
-        </Box>
-      )}
-
-      {/* Mobile Menu Modal */}
-      {isMobile && menuOpen && (
-        <Box
-          sx={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            bgcolor: "rgba(0,0,0,0.4)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1400,
-          }}
-          onClick={() => setMenuOpen(false)}
-        >
-          <Box
-            className="glass-card" // glass-card background
-            sx={{
-              width: "80%",
-              maxWidth: 300,
-              p: 4,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 3,
-              right: "50%",
-              transform: "translateX(50%)",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {navLinks.map((item) => (
-              <Link
-                key={item.label}
-                component={RouterLink}
-                to={item.path}
-                underline="none"
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  color: theme.Text1,
-                  fontSize: 16,
-                  fontWeight: 500,
-                  cursor: "pointer",
-                  "&:hover": { color: theme.HoverButton },
-                }}
-                onClick={() => setMenuOpen(false)}
-              >
-                {item.icon} {item.label}
-              </Link>
-            ))}
-          </Box>
-        </Box>
+      {/* Mobile Drawer */}
+      {isMobile && (
+        <MobileNavDrawer
+          open={menuOpen}
+          onClose={() => setMenuOpen(false)}
+          navLinks={navLinks}
+        />
       )}
     </>
   );

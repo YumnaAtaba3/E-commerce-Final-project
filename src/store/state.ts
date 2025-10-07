@@ -6,6 +6,8 @@ export interface Category {
 }
 
 export interface Product {
+  name?: string;
+  img: string;
   id: number;
   title: string;
   price: number;
@@ -15,7 +17,7 @@ export interface Product {
   slug?: string;
 
   // Frontend-only fields
-  oldPrice:string;
+ oldPrice?: string;
   colors?:string;
   rating?: number;     
   discount?: string;   

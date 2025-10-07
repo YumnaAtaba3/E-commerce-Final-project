@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Box, Link } from "@mui/material";
+import { Box, Link, IconButton, Tooltip } from "@mui/material";
 import { Link as RouterLink } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -9,7 +9,10 @@ import {
   CancelOutlined,
   LogoutOutlined,
   StarBorder,
+  DarkModeOutlined,
+  LightModeOutlined,
 } from "@mui/icons-material";
+import { useTheme } from "../../../theme/ThemeProvider"; 
 
 import "./AccountDropdown.css";
 
@@ -24,6 +27,8 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
   theme,
   isMobile,
 }) => {
+  const { toggleTheme, isDark } = useTheme(); // 👈 get theme state + toggler
+
   const menuItems = [
     {
       label: "Manage My Account",
@@ -93,8 +98,7 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
                 underline="none"
                 sx={{
                   color: "#f5f5f5",
-                  fontSize:isMobile?12: 15,
-
+                  fontSize: isMobile ? 12 : 15,
                   display: "flex",
                   alignItems: "center",
                   gap: 1.5,
@@ -124,6 +128,37 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
                 {item.label}
               </Link>
             ))}
+
+            {/* 🌗 Theme Toggle Button */}
+            <Box
+              sx={{
+                mt: 1,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                borderTop: "1px solid rgba(255,255,255,0.1)",
+                pt: 1,
+              }}
+            >
+              <Tooltip title={`Switch to ${isDark ? "Light" : "Dark"} Mode`}>
+                <IconButton
+                  onClick={toggleTheme}
+                  sx={{
+                    color: "#fff",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      color: theme?.HoverButton || "#90caf9",
+                    },
+                  }}
+                >
+                  {isDark ? (
+                    <LightModeOutlined fontSize="large" />
+                  ) : (
+                    <DarkModeOutlined fontSize="large" />
+                  )}
+                </IconButton>
+              </Tooltip>
+            </Box>
           </Box>
         </motion.div>
       )}

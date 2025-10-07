@@ -1,4 +1,3 @@
-// pages/ProductDetailsPage.tsx
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -23,6 +22,8 @@ import RelatedItems from "./components/RelatedItems";
 
 import DeliveryIcon from "../../assets/Product-details/icon-delivery (2).svg";
 import ReturnIcon from "../../assets/Product-details/Icon-return.svg";
+
+import { useWishlistStore } from "../../store/wishlistStore";
 
 // Helper: generate random colors
 const getRandomColors = (count: number = 3) => {
@@ -55,29 +56,51 @@ const ProductDetailsPage: React.FC = () => {
   const [size, setSize] = useState("M");
   const [color, setColor] = useState("#fff");
   const [colors, setColors] = useState<string[]>([]);
-  const [favorite, setFavorite] = useState(false);
+  const [favorite, setFavorite] = useState(false); // Local favorite state
+
+  // Wishlist store
+  const addToWishlist = useWishlistStore((state) => state.addToWishlist);
+  const removeFromWishlist = useWishlistStore(
+    (state) => state.removeFromWishlist
+  );
+  const isInWishlist = useWishlistStore((state) => state.isInWishlist);
+
+  // Sync favorite state with store whenever product or wishlist changes
+  useEffect(() => {
+    if (product) {
+      setFavorite(isInWishlist(product.id));
+    }
+  }, [product, isInWishlist]);
+
+  const handleFavoriteToggle = () => {
+    if (!product) return;
+
+    if (favorite) removeFromWishlist(product.id);
+    else addToWishlist(product);
+
+    // Toggle local state immediately
+    setFavorite((prev) => !prev);
+  };
 
   // Generate colors only once after product loads
-useEffect(() => {
-  if (product) {
-    let productColors: string[] = [];
+  useEffect(() => {
+    if (product) {
+      let productColors: string[] = [];
 
-    if (product.colors) {
-      // Ensure it's always an array
-      productColors = Array.isArray(product.colors)
-        ? product.colors
-        : [product.colors];
+      if (product.colors) {
+        productColors = Array.isArray(product.colors)
+          ? product.colors
+          : [product.colors];
+      }
+
+      if (productColors.length === 0) {
+        productColors = getRandomColors(3);
+      }
+
+      setColors(productColors);
+      setColor(productColors[0]);
     }
-
-    if (productColors.length === 0) {
-      productColors = getRandomColors(3);
-    }
-
-    setColors(productColors);
-    setColor(productColors[0]); // default selected color
-  }
-}, [product]);
-
+  }, [product]);
 
   if (loadingProduct) return <div>Loading...</div>;
   if (!product) return <div>Product not found</div>;
@@ -85,7 +108,7 @@ useEffect(() => {
   const thumbnails = product.images.length ? product.images : ["/bag.png"];
   const sizes = ["XS", "S", "M", "L", "XL"];
 
-  // Related items colors are now also stable
+  // Related items
   const relatedItems = relatedProducts.map((p) => {
     const itemColors =
       p.colors && p.colors.length > 0 ? p.colors : getRandomColors(3);
@@ -114,13 +137,13 @@ useEffect(() => {
         bgcolor: theme.primary1,
         display: "flex",
         justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
       }}
     >
-      <Box sx={{ maxWidth: 1200, width: "100%" }}>
+      <Box sx={{ width: "100%" }}>
         {/* Breadcrumb */}
-        <Box
-          sx={{ mb: 4, overflowX: "auto", whiteSpace: "nowrap", width: "100%" }}
-        >
+        <Box sx={{ mb: 4, overflowX: "auto", width: "100%" ,pl:isMobile?0:20}}>
           <Breadcrumbs
             separator="›"
             sx={{ fontSize: 14, "& a, & span": { whiteSpace: "nowrap" } }}
@@ -142,7 +165,10 @@ useEffect(() => {
           container
           spacing={4}
           alignItems="flex-start"
-          sx={{ flexDirection: { xs: "column", md: "row" } }}
+          sx={{
+            flexDirection: { xs: "column", md: "row" },
+            overflow: "hidden",
+          }}
         >
           <Grid>
             <ProductImages thumbnails={thumbnails} mainImage={thumbnails[0]} />
@@ -156,13 +182,13 @@ useEffect(() => {
               quantity={quantity}
               size={size}
               color={color}
-              favorite={favorite}
+              favorite={favorite} // Pass synced favorite
               onQuantityChange={handleQuantity}
               onSizeChange={setSize}
               onColorChange={setColor}
-              onFavoriteToggle={() => setFavorite(!favorite)}
+              onFavoriteToggle={handleFavoriteToggle} // Toggle logic
               sizes={sizes}
-              colors={colors} // ✅ stable colors
+              colors={colors}
               DeliveryIcon={DeliveryIcon}
               ReturnIcon={ReturnIcon}
             />

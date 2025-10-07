@@ -12,7 +12,7 @@ import WishlistCard from "./components/WishlistCard";
 import ProductCard from "../../shared/components/Product-card";
 import { useTheme } from "../../theme/ThemeProvider";
 import { useWishlistStore } from "../../store/wishlistStore";
-import { useProductsQuery } from "../../features/Products-page/hooks/useProducts"; // your React Query hook
+import { useProductsQuery } from "../../features/Products-page/hooks/useProducts";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";

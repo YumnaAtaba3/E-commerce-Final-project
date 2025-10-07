@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import React from "react";
 import {
   Box,
@@ -16,11 +17,12 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { useNavigate } from "react-router";
 import { useWishlistStore } from "../../../store/wishlistStore";
+import type { Product } from "../../../store/state";
 
 interface ProductCardProps {
   id: number;
   name: string;
-  price: string;
+  price: number | string;
   oldPrice?: string;
   discount?: string;
   rating?: number;
@@ -47,11 +49,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const removeFromWishlist = useWishlistStore(
     (state) => state.removeFromWishlist
   );
-  const isInWishlist = useWishlistStore((state) => state.isInWishlist);
+  const favorite = useWishlistStore((state) => state.isInWishlist(id));
 
-const favorite = useWishlistStore((state) => state.isInWishlist(id));
-  // Compute price based on discount
-  let numericPrice = parseFloat(price.replace("$", ""));
+  // Ensure numeric price
+  let numericPrice =
+    typeof price === "string" ? parseFloat(price.replace("$", "")) : price;
+  if (isNaN(numericPrice)) numericPrice = 0;
+
   let finalPrice = numericPrice;
   let finalOldPrice = oldPrice;
 
@@ -66,12 +70,23 @@ const favorite = useWishlistStore((state) => state.isInWishlist(id));
   const displayPrice = `$${finalPrice.toFixed(2)}`;
   const displayOldPrice =
     finalOldPrice && finalOldPrice !== displayPrice ? finalOldPrice : undefined;
+  const imageToShow = Array.isArray(img) ? img[0] : img;
 
- const toggleWishlist = () => {
-   favorite
-     ? removeFromWishlist(id)
-     : addToWishlist({ id, name, price, oldPrice, discount, img });
- };
+  const toggleWishlist = () => {
+    favorite
+      ? removeFromWishlist(id)
+      : addToWishlist({
+          id,
+          title: name,
+          price: numericPrice,
+          oldPrice: finalOldPrice,
+          discount,
+          images: [imageToShow],
+          rating,
+          colors,
+          isNew,
+        } as Product);
+  };
 
   return (
     <Card
@@ -157,9 +172,9 @@ const favorite = useWishlistStore((state) => state.isInWishlist(id));
           }}
         >
           {favorite ? (
-            <FavoriteIcon fontSize="medium" />
+            <FavoriteIcon fontSize="large" />
           ) : (
-            <FavoriteBorderIcon fontSize="medium" />
+            <FavoriteBorderIcon fontSize="large" />
           )}
         </IconButton>
 
@@ -172,7 +187,7 @@ const favorite = useWishlistStore((state) => state.isInWishlist(id));
             height: 42,
           }}
         >
-          <VisibilityOutlinedIcon fontSize="medium" />
+          <VisibilityOutlinedIcon fontSize="large" />
         </IconButton>
       </Box>
 
@@ -188,7 +203,7 @@ const favorite = useWishlistStore((state) => state.isInWishlist(id));
         <CardMedia
           component="img"
           height="180"
-          image={img}
+          image={imageToShow}
           alt={name}
           sx={{ objectFit: "contain", mx: "auto" }}
         />
@@ -230,7 +245,7 @@ const favorite = useWishlistStore((state) => state.isInWishlist(id));
           {name}
         </Typography>
 
-        {/* Price & Rating */}
+        {/* Price + optional rating */}
         <Box display="flex" alignItems="center" gap={1} mb={1}>
           <Typography
             sx={{ fontSize: 16, color: theme.Button2, fontWeight: 600 }}
@@ -249,14 +264,9 @@ const favorite = useWishlistStore((state) => state.isInWishlist(id));
             </Typography>
           )}
 
-          {colors && colors.length > 0 && rating !== undefined && (
-            <Box
-              display="flex"
-              alignItems="center"
-              gap={0.5}
-              ml="auto"
-              sx={{ pr: 9 }}
-            >
+          {/* Show rating next to price if colors exist */}
+          {colors && rating !== undefined && (
+            <Box display="flex" alignItems="center" gap={0.5} ml="auto">
               <Rating value={rating} precision={0.5} readOnly size="medium" />
               <Typography sx={{ fontSize: 14, color: "gray" }}>
                 ({rating})
@@ -265,8 +275,9 @@ const favorite = useWishlistStore((state) => state.isInWishlist(id));
           )}
         </Box>
 
+        {/* Show rating under price if no colors */}
         {!colors && rating !== undefined && (
-          <Box display="flex" alignItems="center" gap={1}>
+          <Box display="flex" alignItems="center" gap={0.5} mb={1}>
             <Rating value={rating} precision={0.5} readOnly size="medium" />
             <Typography sx={{ fontSize: 14, color: "gray" }}>
               ({rating})
@@ -274,6 +285,7 @@ const favorite = useWishlistStore((state) => state.isInWishlist(id));
           </Box>
         )}
 
+        {/* Colors */}
         {colors && colors.length > 0 && (
           <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
             {colors.map((color, i) => (

@@ -30,14 +30,14 @@ const RelatedItems: React.FC<RelatedItemsProps> = ({ items }) => {
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
 
   return (
-    <Box mt={10}>
+    <Box mt={10} pl={isMobile ? 0 : 18}>
       {/* Section Header */}
       <Box
         display="flex"
         alignItems="center"
         gap={2}
         mb={2}
-        sx={{ flexWrap: "wrap" }} // prevents overflow on mobile
+        sx={{ flexWrap: "wrap" }}
       >
         {/* Colored bar */}
         <Box
@@ -51,11 +51,11 @@ const RelatedItems: React.FC<RelatedItemsProps> = ({ items }) => {
           }}
         />
         <Typography
-          variant="h5"
+          variant="h6"
           sx={{
             fontWeight: 700,
             color: theme.Button2 || "#DB4444",
-            fontSize: isMobile ? 18 : 24,
+            fontSize: isMobile ? 13 : 18,
           }}
         >
           Related Items

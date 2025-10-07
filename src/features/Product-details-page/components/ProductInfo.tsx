@@ -114,7 +114,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         fontSize={isMobile ? 12 : 14}
         color={theme.Text1}
         mb={2}
-        maxWidth={isMobile ? "100%" : isTablet ? "100%" : 340}
+        maxWidth={isMobile ? "100%" : isTablet ? "100%" : 300}
         textAlign={textAlign}
       >
         {product.description || "No description available."}

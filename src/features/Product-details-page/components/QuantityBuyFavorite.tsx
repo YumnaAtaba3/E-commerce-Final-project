@@ -17,9 +17,16 @@ const QuantityBuyFavorite: React.FC<Props> = ({
   favorite,
   onFavoriteToggle,
 }) => {
-   const { theme } = useTheme();
+  const { theme } = useTheme();
   return (
-    <Box display="flex" alignItems="center" gap={2} mb={4} color={theme.Text1}>
+    <Box
+      display="flex"
+      alignItems="center"
+      gap={2}
+      mb={4}
+      color={theme.Text1}
+      width="100%"
+    >
       <Counter quantity={quantity} onChange={onQuantityChange} />
       <Button
         variant="contained"

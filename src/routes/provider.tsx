@@ -1,11 +1,8 @@
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { CircularProgress, Box } from "@mui/material";
-
 import { LayoutContainer } from "../shared/layouts/layout-container";
 import AuthLayout from "../shared/layouts/Auth-layout";
-
-//pages
 import { AboutRoutes } from "../features/About/routes";
 import { CartRoutes } from "../features/Cart/routes";
 import { ContactRoutes } from "../features/Contact/routes";
@@ -19,32 +16,42 @@ import { useTheme } from "../theme/ThemeProvider";
 
 const NotFoundPage = lazy(() => import("../shared/pages/Not-found-page"));
 
-const routes = [
-  {
-    path: "/",
-    element: <LayoutContainer />,
-    children: [
-      ...AboutRoutes,
-      ...CartRoutes,
-      ...ContactRoutes,
-      ...CheckOutRoutes,
-      ...HomepageRoutes,
-      ...ProductsRoutes,
-      ...ProductDetailsRoutes,
-      ...WishlistRoutes,
-      {
-        element: <AuthLayout />,
-        children: [...authRoutes],
-      },
-      { path: "*", element: <NotFoundPage /> },
-    ],
-  },
-];
+export function AppRouterProvider({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
+  const { theme } = useTheme();
 
-const router = createBrowserRouter(routes);
+  const routes = [
+    {
+      path: "/",
+      element: (
+        <>
+          <LayoutContainer />
+          {/* ✅ Router context is active here */}
+          {children}
+        </>
+      ),
+      children: [
+        ...AboutRoutes,
+        ...CartRoutes,
+        ...ContactRoutes,
+        ...CheckOutRoutes,
+        ...HomepageRoutes,
+        ...ProductsRoutes,
+        ...ProductDetailsRoutes,
+        ...WishlistRoutes,
+        {
+          element: <AuthLayout />,
+          children: [...authRoutes],
+        },
+        { path: "*", element: <NotFoundPage /> },
+      ],
+    },
+  ];
 
-export function AppRouterProvider() {
-  const {theme} = useTheme();
+  const router = createBrowserRouter(routes);
 
   return (
     <Suspense

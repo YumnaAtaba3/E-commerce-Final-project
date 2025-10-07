@@ -20,19 +20,30 @@ const ProductImages: React.FC<ProductImagesProps> = ({
 
   return (
     <Box
-      display="flex"
-      gap={2}
-      flexDirection={isMobile ? "column" : "row"} 
-      pl={isMobile?3:0}
+      sx={{
+        width: "100%",
+        maxWidth: "100%", // <-- important
+        height: isMobile ? 300 : isTablet ? 400 : 600,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        bgcolor:theme.primary1,
+        borderRadius: 2,
+        p: 0, 
+        pl:isMobile?0:20,
+        overflow: "hidden",
+      }}
     >
       {/* Thumbnails */}
       <Box
         sx={{
           display: "flex",
-          flexDirection: isMobile ? "row" : "column", 
+          flexDirection: isMobile ? "row" : "column",
           gap: 2,
           flexShrink: 0,
-          overflowX: isMobile ? "auto" : "visible", 
+          overflowX: "auto",
+          maxWidth: "100%", // <-- prevent overflow
+          pb: 1, // optional: padding bottom
         }}
       >
         {thumbnails.map((src, idx) => (
