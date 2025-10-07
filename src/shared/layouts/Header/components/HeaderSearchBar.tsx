@@ -28,7 +28,7 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
     <Box
       onClick={() => searchStore.setOpen(true)}
       sx={{
-        bgcolor: theme.disabledText,
+        bgcolor: theme.disabledBg,
         borderRadius: 1,
         px: 1.5,
         py: 1.0,
@@ -46,7 +46,7 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
         sx={{
           fontSize: 10,
           color: theme.Text1,
-          ml:3,
+          ml: 3,
           px: 0.5,
           py: 0.2,
           borderRadius: 0.5,

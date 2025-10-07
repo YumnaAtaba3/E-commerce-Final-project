@@ -34,6 +34,24 @@ const slides = [
     subtitle: "UP TO 20% OFF VOUCHER",
     img: heroImg,
   },
+  {
+    id: 4,
+    title: "IPHONE 14 SERIES",
+    subtitle: "UP TO 10% OFF VOUCHER",
+    img: heroImg,
+  },
+  {
+    id: 5,
+    title: "IPHONE 13 SERIES",
+    subtitle: "UP TO 80% OFF VOUCHER",
+    img: heroImg,
+  },
+  {
+    id: 6,
+    title: "IPHONE 40 SERIES",
+    subtitle: "UP TO 20% OFF VOUCHER",
+    img: heroImg,
+  },
 ];
 
 const HeroSwiper: React.FC = () => {

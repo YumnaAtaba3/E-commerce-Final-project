@@ -64,8 +64,8 @@ export const lightTheme: Theme = {
   borderColor: "#A4A1A1FF",
   font: "Roboto, sans-serif",
   headingFont: "Poppins, sans-serif",
-  disabledBg: "#F5F5F5",
-  disabledText: "#F2F2F2FF",
+  disabledBg: "#F2F2F2FF",
+  disabledText: "#999999",
   heading2: {
     fontSize: "32px",
     fontFamily: "Poppins, sans-serif",
@@ -103,7 +103,7 @@ export const darkTheme: Theme = {
   borderColor: "#E7E7E7FF",
   font: "Roboto, sans-serif",
   headingFont: "Poppins, sans-serif",
-  disabledBg: "#4A4A4A",
+  disabledBg: "#C3C0C0FF",
   disabledText: "#C3C0C0FF",
   heading2: {
     fontSize: "32px",
