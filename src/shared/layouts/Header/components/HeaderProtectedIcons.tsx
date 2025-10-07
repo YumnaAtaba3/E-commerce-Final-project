@@ -61,6 +61,14 @@ const HeaderProtectedIcons: React.FC<HeaderProtectedIconsProps> = ({
     },
   };
 
+const iconStyles = {
+  fontSize: 20,
+  color: theme.Text1,
+  "&:hover": {
+    color: "white",
+  },
+};
+
   return (
     <Box
       sx={{
@@ -77,7 +85,9 @@ const HeaderProtectedIcons: React.FC<HeaderProtectedIconsProps> = ({
         sx={{ ...iconButtonStyles, ...badgeStyles }}
       >
         <Badge badgeContent={wishlist.length} color="secondary">
-          <FavoriteBorderIcon sx={{ fontSize: 20, color: theme.Text1 }} />
+          <FavoriteBorderIcon
+            sx={iconStyles}
+          />
         </Badge>
       </IconButton>
 
@@ -88,7 +98,9 @@ const HeaderProtectedIcons: React.FC<HeaderProtectedIconsProps> = ({
         sx={{ ...iconButtonStyles, ...badgeStyles }}
       >
         <Badge badgeContent={cart.length} color="secondary">
-          <ShoppingCartOutlinedIcon sx={{ fontSize: 20, color: theme.Text1 }} />
+          <ShoppingCartOutlinedIcon
+            sx={iconStyles}
+          />
         </Badge>
       </IconButton>
 
@@ -101,7 +113,9 @@ const HeaderProtectedIcons: React.FC<HeaderProtectedIconsProps> = ({
           }}
           sx={iconButtonStyles}
         >
-          <PersonOutlineIcon sx={{ fontSize: 20, color: theme.Text1 }} />
+          <PersonOutlineIcon
+            sx={iconStyles}
+          />
         </IconButton>
         <AccountDropdown open={accountOpen} theme={theme} isMobile={false} />
       </Box>
