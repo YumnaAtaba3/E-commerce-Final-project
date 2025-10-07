@@ -4,17 +4,10 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import type { Theme } from "../../../theme/themeTokens";
-
-interface Item {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
+import type { CartItem as StoreCartItem } from "../../../store/cartStore";
 
 interface Props {
-  item: Item;
+  item: StoreCartItem;
   gridCols: string;
   onRemove: (id: number) => void;
   onQtyChange: (id: number, qty: number) => void;
@@ -63,26 +56,22 @@ const CartItem: React.FC<Props> = ({
         <IconButton
           size="small"
           onClick={() => onQtyChange(item.id, item.quantity + 1)}
-          sx={{
-            padding: 0,
-            height: "50%",
-          }}
+          sx={{ padding: 0, height: "50%" }}
         >
           <KeyboardArrowUpIcon fontSize="small" />
         </IconButton>
         <IconButton
           size="small"
           onClick={() => onQtyChange(item.id, Math.max(1, item.quantity - 1))}
-          sx={{
-            padding: 0,
-            height: "50%",
-          }}
+          sx={{ padding: 0, height: "50%" }}
         >
           <KeyboardArrowDownIcon fontSize="small" />
         </IconButton>
       </Box>
     </Box>
   );
+
+  const productImage = item.images[0] || ""; // Use first image
 
   return (
     <Paper
@@ -120,8 +109,8 @@ const CartItem: React.FC<Props> = ({
             <Box sx={{ width: 70, height: 70, position: "relative" }}>
               <Box
                 component="img"
-                src={item.image}
-                alt={item.name}
+                src={productImage}
+                alt={item.title}
                 sx={{
                   width: "100%",
                   height: "100%",
@@ -149,7 +138,7 @@ const CartItem: React.FC<Props> = ({
               </IconButton>
             </Box>
             <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
-              {item.name}
+              {item.title}
             </Typography>
           </Box>
 
@@ -186,8 +175,8 @@ const CartItem: React.FC<Props> = ({
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
             <Box
               component="img"
-              src={item.image}
-              alt={item.name}
+              src={productImage}
+              alt={item.title}
               sx={{
                 width: 60,
                 height: 60,
@@ -197,7 +186,7 @@ const CartItem: React.FC<Props> = ({
               }}
             />
             <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
-              {item.name}
+              {item.title}
             </Typography>
           </Box>
           <Typography sx={{ fontSize: 14 }}>Price: ${item.price}</Typography>

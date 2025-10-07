@@ -56,7 +56,7 @@ const PromoBanner: React.FC = () => {
         bgcolor: "white",
         color: "black",
         borderRadius: "50%",
-        width: { xs: 55, sm: 60, md: 68 },
+        width: { xs: 55, sm: 60, md: 60 },
         height: { xs: 55, sm: 60, md: 68 },
         mb: 2,
         display: "flex",

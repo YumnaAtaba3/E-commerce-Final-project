@@ -1,20 +1,25 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
-import { useNavigate } from "react-router"; 
+import { useNavigate } from "react-router";
 import { appRoutes } from "../../../routes";
 
-const CartSummary: React.FC<{ subtotal: number; isMobile: boolean }> = ({
-  subtotal,
-  isMobile,
-}) => {
+interface Props {
+  subtotal: number;
+  discount: number; // discount in percentage
+  isMobile: boolean;
+}
+
+const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
   const { theme } = useTheme();
   const navigate = useNavigate();
+
+  const discountedTotal = subtotal * (1 - discount / 100);
 
   return (
     <Box
       sx={{
-        color:theme.Text1,
+        color: theme.Text1,
         border: `1px solid ${theme.Text1}`,
         p: { xs: 2, md: 4 },
         borderRadius: 2,
@@ -35,22 +40,20 @@ const CartSummary: React.FC<{ subtotal: number; isMobile: boolean }> = ({
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>Subtotal:</Typography>
         <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>
-          ${subtotal}
+          ${subtotal.toFixed(2)}
         </Typography>
       </Box>
 
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          mb: 3,
-          borderTop: `1px solid ${theme.borderColor}`,
-          pt: 2,
-        }}
-      >
-        <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>Shipping:</Typography>
-        <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>Free</Typography>
-      </Box>
+      {discount > 0 && (
+        <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
+          <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>
+            Discount ({discount}%):
+          </Typography>
+          <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>
+            -${(subtotal * (discount / 100)).toFixed(2)}
+          </Typography>
+        </Box>
+      )}
 
       <Box
         sx={{
@@ -65,7 +68,7 @@ const CartSummary: React.FC<{ subtotal: number; isMobile: boolean }> = ({
           Total:
         </Typography>
         <Typography sx={{ fontSize: { xs: 16, md: 18 }, fontWeight: 500 }}>
-          ${subtotal}
+          ${discountedTotal.toFixed(2)}
         </Typography>
       </Box>
 
@@ -80,7 +83,7 @@ const CartSummary: React.FC<{ subtotal: number; isMobile: boolean }> = ({
           py: { xs: 1, md: 1.5 },
           "&:hover": { bgcolor: theme.Button2 },
         }}
-        onClick={() => navigate(appRoutes.checkout)} 
+        onClick={() => navigate(appRoutes.checkout)}
       >
         Proceed to checkout
       </Button>

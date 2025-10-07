@@ -20,10 +20,13 @@ import ProductImages from "./components/ProductImages";
 import ProductInfo from "./components/ProductInfo";
 import RelatedItems from "./components/RelatedItems";
 
+
 import DeliveryIcon from "../../assets/Product-details/icon-delivery (2).svg";
 import ReturnIcon from "../../assets/Product-details/Icon-return.svg";
 
 import { useWishlistStore } from "../../store/wishlistStore";
+import ErrorState from "../../shared/components/Error-state";
+import LoadingState from "../../shared/components/Loading-state";
 
 // Helper: generate random colors
 const getRandomColors = (count: number = 3) => {
@@ -56,7 +59,7 @@ const ProductDetailsPage: React.FC = () => {
   const [size, setSize] = useState("M");
   const [color, setColor] = useState("#fff");
   const [colors, setColors] = useState<string[]>([]);
-  const [favorite, setFavorite] = useState(false); // Local favorite state
+  const [favorite, setFavorite] = useState(false);
 
   // Wishlist store
   const addToWishlist = useWishlistStore((state) => state.addToWishlist);
@@ -65,7 +68,6 @@ const ProductDetailsPage: React.FC = () => {
   );
   const isInWishlist = useWishlistStore((state) => state.isInWishlist);
 
-  // Sync favorite state with store whenever product or wishlist changes
   useEffect(() => {
     if (product) {
       setFavorite(isInWishlist(product.id));
@@ -78,11 +80,9 @@ const ProductDetailsPage: React.FC = () => {
     if (favorite) removeFromWishlist(product.id);
     else addToWishlist(product);
 
-    // Toggle local state immediately
     setFavorite((prev) => !prev);
   };
 
-  // Generate colors only once after product loads
   useEffect(() => {
     if (product) {
       let productColors: string[] = [];
@@ -102,13 +102,34 @@ const ProductDetailsPage: React.FC = () => {
     }
   }, [product]);
 
-  if (loadingProduct) return <div>Loading...</div>;
-  if (!product) return <div>Product not found</div>;
+  const handleQuantity = (type: "inc" | "dec") => {
+    if (type === "inc") setQuantity(quantity + 1);
+    else if (quantity > 1) setQuantity(quantity - 1);
+  };
+
+  // ---------- Render Loading/Error States ----------
+  if (loadingProduct) {
+    return (
+      <LoadingState
+        title="Loading product..."
+        description="Please wait while we fetch the product details."
+      />
+    );
+  }
+
+  if (!product) {
+    return (
+      <ErrorState
+        title="Product not found"
+        description="The product you are looking for does not exist."
+        onRetry={() => window.location.reload()}
+      />
+    );
+  }
 
   const thumbnails = product.images.length ? product.images : ["/bag.png"];
   const sizes = ["XS", "S", "M", "L", "XL"];
 
-  // Related items
   const relatedItems = relatedProducts.map((p) => {
     const itemColors =
       p.colors && p.colors.length > 0 ? p.colors : getRandomColors(3);
@@ -124,11 +145,6 @@ const ProductDetailsPage: React.FC = () => {
     };
   });
 
-  const handleQuantity = (type: "inc" | "dec") => {
-    if (type === "inc") setQuantity(quantity + 1);
-    else if (quantity > 1) setQuantity(quantity - 1);
-  };
-
   return (
     <Box
       sx={{
@@ -142,8 +158,15 @@ const ProductDetailsPage: React.FC = () => {
       }}
     >
       <Box sx={{ width: "100%" }}>
-        {/* Breadcrumb */}
-        <Box sx={{ mb: 4, overflowX: "auto", width: "100%" ,pl:isMobile?0:20}}>
+        {/* Breadcrumbs */}
+        <Box
+          sx={{
+            mb: 4,
+            overflowX: "auto",
+            width: "100%",
+            pl: isMobile ? 0 : 20,
+          }}
+        >
           <Breadcrumbs
             separator="›"
             sx={{ fontSize: 14, "& a, & span": { whiteSpace: "nowrap" } }}
@@ -160,7 +183,7 @@ const ProductDetailsPage: React.FC = () => {
           </Breadcrumbs>
         </Box>
 
-        {/* Product Section */}
+        {/* Product Images & Info */}
         <Grid
           container
           spacing={4}
@@ -173,7 +196,6 @@ const ProductDetailsPage: React.FC = () => {
           <Grid>
             <ProductImages thumbnails={thumbnails} mainImage={thumbnails[0]} />
           </Grid>
-
           <Grid>
             <ProductInfo
               product={product}
@@ -182,25 +204,37 @@ const ProductDetailsPage: React.FC = () => {
               quantity={quantity}
               size={size}
               color={color}
-              favorite={favorite} // Pass synced favorite
+              favorite={favorite}
               onQuantityChange={handleQuantity}
               onSizeChange={setSize}
               onColorChange={setColor}
-              onFavoriteToggle={handleFavoriteToggle} // Toggle logic
+              onFavoriteToggle={handleFavoriteToggle}
               sizes={sizes}
               colors={colors}
               DeliveryIcon={DeliveryIcon}
               ReturnIcon={ReturnIcon}
             />
+          
           </Grid>
         </Grid>
 
-        {/* Related Items Section */}
-        {!loadingRelated && relatedItems.length > 0 && (
-          <Box mt={8}>
+        {/* Related Items */}
+        <Box mt={8}>
+          {loadingRelated ? (
+            <LoadingState
+              title="Loading related items..."
+              description="Fetching items you may like."
+              height={200}
+            />
+          ) : relatedItems.length ? (
             <RelatedItems items={relatedItems} />
-          </Box>
-        )}
+          ) : (
+            <ErrorState
+              title="No related items found"
+              description="There are no similar products at the moment."
+            />
+          )}
+        </Box>
       </Box>
     </Box>
   );

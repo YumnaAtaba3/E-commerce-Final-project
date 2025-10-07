@@ -6,8 +6,6 @@ export interface Category {
 }
 
 export interface Product {
-  name?: string;
-  img: string;
   id: number;
   title: string;
   price: number;
@@ -15,13 +13,15 @@ export interface Product {
   category?: Category;
   images: string[];
   slug?: string;
+  img?: string;
+  quantity?: number; 
 
   // Frontend-only fields
- oldPrice?: string;
-  colors?:string;
-  rating?: number;     
-  discount?: string;   
-  isNew?: boolean;     
+  oldPrice?: string;
+  colors?: string[];
+  rating?: number;
+  discount?: string;
+  isNew?: boolean;
 }
 
 export const productInitState = {

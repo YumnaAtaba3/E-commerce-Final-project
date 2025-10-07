@@ -146,7 +146,7 @@ const FlashSales: React.FC = () => {
               fontWeight: 500,
               color: theme.Text1,
               mt: isMobile ? 1 : 0,
-              fontSize: isMobile ? "1.5rem" : "2.1rem",
+              fontSize: isMobile ? "1.5rem" : "3rem",
             }}
           >
             Flash Sales
@@ -167,6 +167,8 @@ const FlashSales: React.FC = () => {
       <Swiper
         spaceBetween={0}
         slidesPerView={isMobile ? 1.1 : 4.1}
+        watchOverflow={false}
+        allowTouchMove={true}
         breakpoints={{
           1200: { slidesPerView: 4 },
           1000: { slidesPerView: 3.1 },

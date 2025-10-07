@@ -1,6 +1,6 @@
 // src/pages/home/Homepage.tsx
 import React from "react";
-import { Container, Grid, Stack } from "@mui/material";
+import { Box, Button, CircularProgress, Container, Divider, Grid, Stack, Typography } from "@mui/material";
 import { useTheme } from "../../theme/ThemeProvider";
 
 import FilterSidebar from "./components/FilterSidebar";
@@ -21,10 +21,78 @@ import { useHomepageData } from "./hooks/useHomepageData";
 
 const Homepage: React.FC = () => {
   const { theme } = useTheme();
-  const {  isLoading, isError } = useHomepageData();
+  const { isLoading, isError, refetch } = useHomepageData();
 
-  if (isLoading) return <div>Loading products...</div>;
-  if (isError) return <div>Failed to load products.</div>;
+   if (isLoading) {
+     return (
+       <Box
+         sx={{
+           height: "80vh",
+           display: "flex",
+           flexDirection: "column",
+           justifyContent: "center",
+           alignItems: "center",
+           bgcolor: theme.primary1,
+           color: theme.Text1,
+         }}
+       >
+         <CircularProgress size={60} sx={{ color: theme.Button2, mb: 3 }} />
+         <Typography variant="h6" sx={{ mb: 1 }}>
+           Loading products...
+         </Typography>
+         <Typography
+           variant="body2"
+           sx={{ maxWidth: 300, textAlign: "center", color: theme.Text2 }}
+         >
+           Please wait a moment while we fetch the latest products for you.
+         </Typography>
+       </Box>
+     );
+   }
+
+   if (isError) {
+     return (
+       <Box
+         sx={{
+           height: "80vh",
+           display: "flex",
+           flexDirection: "column",
+           justifyContent: "center",
+           alignItems: "center",
+           bgcolor: theme.primary1,
+           color: theme.Text1,
+           px: 2,
+         }}
+       >
+         <Typography variant="h5" sx={{ mb: 2, color: theme.Button2 }}>
+           Oops! Something went wrong.
+         </Typography>
+         <Typography
+           variant="body1"
+           sx={{
+             mb: 3,
+             textAlign: "center",
+             maxWidth: 350,
+             color: theme.Text2,
+           }}
+         >
+           We couldn’t load the products at this time. Please check your
+           connection or try again.
+         </Typography>
+         <Button
+           variant="contained"
+           onClick={refetch}
+           sx={{
+             bgcolor: theme.Button2,
+             color: theme.Text1,
+             "&:hover": { bgcolor: theme.Button1 },
+           }}
+         >
+           Retry
+         </Button>
+       </Box>
+     );
+   }
 
   return (
     <Stack sx={{ bgcolor: theme.primary1 }}>
@@ -42,10 +110,60 @@ const Homepage: React.FC = () => {
 
         {/* Product Sections */}
         <FlashSales />
+        <Divider
+          sx={{
+            my: 6,
+            borderColor: theme.Text2,
+            opacity: 0.2,
+            width: "80%", // ✅ عرض 80%
+            mx: "auto", // ✅ في المنتصف أفقياً
+          }}
+        />
+
         <Categories />
+        <Divider
+          sx={{
+            my: 6,
+            borderColor: theme.Text2,
+            opacity: 0.2,
+            width: "80%",
+            mx: "auto",
+          }}
+        />
+
         <BestSelling />
+        <Divider
+          sx={{
+            my: 6,
+            borderColor: theme.Text2,
+            opacity: 0.2,
+            width: "80%",
+            mx: "auto",
+          }}
+        />
+
         <PromoBanner />
+        <Divider
+          sx={{
+            my: 6,
+            borderColor: theme.Text2,
+            opacity: 0.2,
+            width: "80%",
+            mx: "auto",
+          }}
+        />
+
         <ExploreProducts />
+        <Divider
+          sx={{
+            my: 6,
+            borderColor: theme.Text2,
+            opacity: 0.2,
+            width: "80%",
+            mx: "auto",
+          }}
+        />
+
         <NewArrival />
 
         {/* Feature Cards */}

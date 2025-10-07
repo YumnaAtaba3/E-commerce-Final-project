@@ -15,7 +15,7 @@ function enrichProducts(products: Product[]): Product[] {
 }
 
 // Fetch all products
-export function useProductsQuery(offset = 0, limit = 50) {
+export function useProductsQuery(offset = 0, limit = 50, retryIndex?: number) {
   return useQuery<Product[], Error>({
     queryKey: ["products", offset, limit],
     queryFn: async () => {

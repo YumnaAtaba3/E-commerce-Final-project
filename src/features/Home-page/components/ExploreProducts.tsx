@@ -41,7 +41,7 @@ const ExploreProducts: React.FC = () => {
     () =>
       products.map((p) => ({
         ...p,
-        colors: p.colors || getRandomColors(3), // keep existing colors if present
+        colors: p.colors || getRandomColors(3),
       })),
     [products]
   );
@@ -58,7 +58,7 @@ const ExploreProducts: React.FC = () => {
         pr: isMobile ? 1 : 8,
       }}
     >
-      {/* Section Header */}
+      {/* Section Label */}
       <Box display="flex" alignItems="center" gap={1} mb={2}>
         <Box
           sx={{
@@ -86,12 +86,13 @@ const ExploreProducts: React.FC = () => {
             fontWeight: 500,
             color: theme.Text1,
             mt: isMobile ? 1 : 0,
-            fontSize: isMobile ? "1.5rem" : "1.8rem",
+            fontSize: isMobile ? "1.5rem" : "3rem",
           }}
         >
           Explore Our Products
         </Typography>
 
+        {/* 🔹 Arrow Navigation */}
         <Box mt={isMobile ? 1 : 0}>
           <ArrowNavigation
             prevClass="explore-prev"
@@ -103,9 +104,11 @@ const ExploreProducts: React.FC = () => {
 
       {/* Swiper Grid */}
       <Swiper
-        spaceBetween={0}
+        spaceBetween={20}
         slidesPerView={isMobile ? 2 : 4}
         grid={{ rows: 2, fill: "row" }}
+        watchOverflow={false}
+        allowTouchMove={true}
         breakpoints={{
           1200: { slidesPerView: 4 },
           1000: { slidesPerView: 3.1 },
@@ -127,9 +130,7 @@ const ExploreProducts: React.FC = () => {
               rating={p.rating ?? 0}
               img={p.images?.[0] ?? ""}
               isNew={p.isNew}
-              colors={
-                Array.isArray(p.colors) ? p.colors : undefined
-              }
+              colors={Array.isArray(p.colors) ? p.colors : undefined}
             />
           </SwiperSlide>
         ))}

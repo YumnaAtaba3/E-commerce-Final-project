@@ -17,7 +17,10 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { useNavigate } from "react-router";
 import { useWishlistStore } from "../../../store/wishlistStore";
+import { useCartStore } from "../../../store/cartStore";
 import type { Product } from "../../../store/state";
+import { appRoutes } from "../../../routes";
+import { useIsLoggedIn } from "../../../features/auth/hooks/is-logged-in"; 
 
 interface ProductCardProps {
   id: number;
@@ -44,12 +47,18 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const { theme } = useTheme();
   const navigate = useNavigate();
+  const { isLoggedIn } = useIsLoggedIn(); // ✅ check login state
 
+  // Wishlist
   const addToWishlist = useWishlistStore((state) => state.addToWishlist);
   const removeFromWishlist = useWishlistStore(
     (state) => state.removeFromWishlist
   );
   const favorite = useWishlistStore((state) => state.isInWishlist(id));
+
+  // Cart
+  const addToCart = useCartStore((state) => state.addToCart);
+  const inCart = useCartStore((state) => state.isInCart(id));
 
   // Ensure numeric price
   let numericPrice =
@@ -72,7 +81,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
     finalOldPrice && finalOldPrice !== displayPrice ? finalOldPrice : undefined;
   const imageToShow = Array.isArray(img) ? img[0] : img;
 
+  // ✅ Protect wishlist action
   const toggleWishlist = () => {
+    if (!isLoggedIn) {
+      navigate(appRoutes.auth.signUp); 
+      return;
+    }
     favorite
       ? removeFromWishlist(id)
       : addToWishlist({
@@ -86,6 +100,39 @@ const ProductCard: React.FC<ProductCardProps> = ({
           colors,
           isNew,
         } as Product);
+  };
+
+  // ✅ Protect add-to-cart action
+  const handleAddToCart = () => {
+    if (!isLoggedIn) {
+      navigate(appRoutes.auth.signUp); 
+      return;
+    }
+    if (!inCart) {
+      addToCart(
+        {
+          id,
+          title: name,
+          price: numericPrice,
+          oldPrice: finalOldPrice,
+          discount,
+          images: [imageToShow],
+          rating,
+          colors,
+          isNew,
+        } as Product,
+        1
+      );
+    }
+  };
+
+  // ✅ Protect view details
+  const handleViewDetails = () => {
+    if (!isLoggedIn) {
+      navigate(appRoutes.auth.signUp);
+      return;
+    }
+    navigate(appRoutes.products.details(id));
   };
 
   return (
@@ -161,6 +208,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           zIndex: 2,
         }}
       >
+        {/* ❤️ Wishlist */}
         <IconButton
           onClick={toggleWishlist}
           sx={{
@@ -178,8 +226,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </IconButton>
 
+        {/* 👁️ View Details */}
         <IconButton
-          onClick={() => navigate(`/products/${id}`)}
+          onClick={handleViewDetails}
           sx={{
             bgcolor: "white",
             "&:hover": { bgcolor: theme.Button2, color: "white" },
@@ -224,15 +273,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <Button
             fullWidth
             sx={{
-              bgcolor: "black",
+              bgcolor: inCart ? "gray" : "black",
               color: "white",
               fontSize: 16,
               fontWeight: 500,
-              "&:hover": { bgcolor: "#222" },
+              "&:hover": { bgcolor: inCart ? "gray" : "#222" },
             }}
             startIcon={<ShoppingCartOutlinedIcon />}
+            onClick={handleAddToCart}
           >
-            Add To Cart
+            {inCart ? "In Cart" : "Add To Cart"}
           </Button>
         </Box>
       </Box>
@@ -245,7 +295,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {name}
         </Typography>
 
-        {/* Price + optional rating */}
+        {/* Price + rating */}
         <Box display="flex" alignItems="center" gap={1} mb={1}>
           <Typography
             sx={{ fontSize: 16, color: theme.Button2, fontWeight: 600 }}
@@ -263,8 +313,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
               {displayOldPrice}
             </Typography>
           )}
-
-          {/* Show rating next to price if colors exist */}
           {colors && rating !== undefined && (
             <Box display="flex" alignItems="center" gap={0.5} ml="auto">
               <Rating value={rating} precision={0.5} readOnly size="medium" />
@@ -275,7 +323,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </Box>
 
-        {/* Show rating under price if no colors */}
         {!colors && rating !== undefined && (
           <Box display="flex" alignItems="center" gap={0.5} mb={1}>
             <Rating value={rating} precision={0.5} readOnly size="medium" />
@@ -285,7 +332,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </Box>
         )}
 
-        {/* Colors */}
         {colors && colors.length > 0 && (
           <Box sx={{ display: "flex", gap: 1, mt: 1 }}>
             {colors.map((color, i) => (

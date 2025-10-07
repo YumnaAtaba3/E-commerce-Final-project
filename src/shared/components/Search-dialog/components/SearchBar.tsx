@@ -10,7 +10,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import { useSearchStore } from "../../../../store/searchStore";
 import { useTheme as useAppTheme } from "../../../../theme/ThemeProvider";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface SearchBarProps {
   query: string;

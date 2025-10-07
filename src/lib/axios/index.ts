@@ -73,7 +73,7 @@ httpClient.interceptors.response.use(
     if (status && statusesConfig[status]) {
       statusesConfig[status].action();
     } else if (!status) {
-      toast.error("Network error. Please check your connection.");
+      toast.error("Network error. Please check your connection.",{ className: "toast-error"});
     }
     return Promise.reject(error);
   }

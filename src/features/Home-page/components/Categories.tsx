@@ -62,7 +62,7 @@ const Categories: React.FC = () => {
             fontWeight: 500,
             color: theme.Text1,
             mt: isMobile ? 1 : 0,
-            fontSize: isMobile ? "1.5rem" : "1.8rem",
+            fontSize: isMobile ? "1.5rem" : "3rem",
           }}
         >
           Browse By Category
@@ -79,6 +79,8 @@ const Categories: React.FC = () => {
         slidesPerView={5}
         navigation={{ nextEl: ".cat-next", prevEl: ".cat-prev" }}
         modules={[Navigation]}
+        watchOverflow={false}
+        allowTouchMove={true}
         breakpoints={{
           1200: { slidesPerView: 6 },
           900: { slidesPerView: 4.2 },

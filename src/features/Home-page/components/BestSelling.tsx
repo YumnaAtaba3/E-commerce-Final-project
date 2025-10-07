@@ -62,7 +62,7 @@ const BestSelling: React.FC = () => {
           sx={{
             fontWeight: 500,
             color: theme.Text1,
-            fontSize: isMobile ? "1.5rem" : "1.8rem",
+            fontSize: isMobile ? "1.5rem" : "3rem",
           }}
         >
           Best Selling Products

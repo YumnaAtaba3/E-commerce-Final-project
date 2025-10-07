@@ -6,7 +6,7 @@ import { useWishlistStore } from "../../../store/wishlistStore";
 import { useProductsQuery } from "../../../features/Products-page/hooks/useProducts";
 import SearchBar from "./components/SearchBar";
 import PopularSearches from "./components/PopularSearches";
-import SearchProductCard from "./components/ProductCard";
+import SearchProductCard from "./components/SearchProductCard";
 import { useTheme as useAppTheme } from "../../../theme/ThemeProvider";
 import { useDebounce } from "../../../shared/hooks/debounce";
 

@@ -17,11 +17,15 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import LoadingState from "../../shared/components/Loading-state";
+import ErrorState from "../../shared/components/Error-state";
+
+
 
 const WishlistPage: React.FC = () => {
   const { theme } = useTheme();
-  const muiTheme = useMuiTheme();
   const navigate = useNavigate();
+    const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md"));
 
@@ -31,8 +35,12 @@ const WishlistPage: React.FC = () => {
   );
   const clearWishlist = useWishlistStore((state) => state.clearWishlist);
 
-  // Fetch products with React Query
-  const { data: products = [], isLoading, isError } = useProductsQuery();
+  const {
+    data: products = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useProductsQuery();
 
   const handleDelete = (id: number) => removeFromWishlist(id);
 
@@ -108,7 +116,7 @@ const WishlistPage: React.FC = () => {
               <Grid key={item.id}>
                 <WishlistCard
                   id={item.id}
-                  name={item.name || item.title || "Unnamed Product"}
+                  name={ item.title || "Unnamed Product"}
                   price={item.price ?? 0}
                   oldPrice={item.oldPrice}
                   discount={item.discount}
@@ -173,13 +181,18 @@ const WishlistPage: React.FC = () => {
           </Box>
 
           {isLoading ? (
-            <Typography sx={{ color: theme.Text1 }}>
-              Loading products...
-            </Typography>
+            <LoadingState
+              title="Loading products..."
+              description="Please wait a moment while we fetch recommendations."
+              height={isMobile ? "40vh" : "60vh"}
+            />
           ) : isError ? (
-            <Typography sx={{ color: theme.Text1 }}>
-              Failed to load products.
-            </Typography>
+            <ErrorState
+              title="Failed to load products."
+              description="There was an issue fetching recommended products."
+              onRetry={() => refetch()}
+              height={isMobile ? "40vh" : "60vh"}
+            />
           ) : justForYou.length === 0 ? (
             <Typography sx={{ color: theme.Text1 }}>
               No products available.
@@ -203,7 +216,7 @@ const WishlistPage: React.FC = () => {
                     oldPrice={product.oldPrice}
                     discount={product.discount}
                     rating={product.rating}
-                    img={product.images?.[0]|| "/placeholder.png"}
+                    img={product.images?.[0] || "/placeholder.png"}
                     isNew={product.isNew}
                   />
                 </SwiperSlide>
