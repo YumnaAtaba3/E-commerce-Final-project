@@ -31,7 +31,7 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
         bgcolor: theme.disabledText,
         borderRadius: 1,
         px: 1.5,
-        py: 0.5,
+        py: 1.0,
         display: "flex",
         alignItems: "center",
         width: 250,
@@ -41,6 +41,18 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
       <SearchIcon sx={{ fontSize: 20, color: theme.Text1, mr: 1 }} />
       <Typography sx={{ fontSize: 12, color: theme.Text1 }}>
         What are you looking for?
+      </Typography>
+      <Typography
+        sx={{
+          fontSize: 10,
+          color: theme.Text1,
+          ml:3,
+          px: 0.5,
+          py: 0.2,
+          borderRadius: 0.5,
+        }}
+      >
+        Ctrl+/
       </Typography>
     </Box>
   );

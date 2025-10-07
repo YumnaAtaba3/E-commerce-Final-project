@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Box, IconButton, Badge } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -24,6 +24,42 @@ const HeaderProtectedIcons: React.FC<HeaderProtectedIconsProps> = ({
   wishlist,
 }) => {
   const [accountOpen, setAccountOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setAccountOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const iconButtonStyles = {
+    bgcolor: "transparent",
+    "&:hover": {
+      bgcolor: theme.Button2,
+      color: "white",
+    },
+    borderRadius: "50%",
+    transition: "all 0.3s ease",
+  };
+
+  const badgeStyles = {
+    "& .MuiBadge-badge": {
+      bgcolor: theme.Button2,
+      color: "white",
+      fontWeight: 600,
+    },
+  };
 
   return (
     <Box
@@ -35,28 +71,37 @@ const HeaderProtectedIcons: React.FC<HeaderProtectedIconsProps> = ({
       }}
     >
       {/* Wishlist */}
-      <IconButton component={RouterLink} to={appRoutes.wishlist}>
+      <IconButton
+        component={RouterLink}
+        to={appRoutes.wishlist}
+        sx={{ ...iconButtonStyles, ...badgeStyles }}
+      >
         <Badge badgeContent={wishlist.length} color="secondary">
-          <FavoriteBorderIcon sx={{ color: theme.Text1 }} />
+          <FavoriteBorderIcon sx={{ fontSize: 20, color: theme.Text1 }} />
         </Badge>
       </IconButton>
 
       {/* Cart */}
-      <IconButton component={RouterLink} to={appRoutes.cart}>
+      <IconButton
+        component={RouterLink}
+        to={appRoutes.cart}
+        sx={{ ...iconButtonStyles, ...badgeStyles }}
+      >
         <Badge badgeContent={cart.length} color="secondary">
-          <ShoppingCartOutlinedIcon sx={{ color: theme.Text1 }} />
+          <ShoppingCartOutlinedIcon sx={{ fontSize: 20, color: theme.Text1 }} />
         </Badge>
       </IconButton>
 
       {/* Account */}
-      <Box sx={{ position: "relative" }}>
+      <Box sx={{ position: "relative" }} ref={dropdownRef}>
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
             setAccountOpen((prev) => !prev);
           }}
+          sx={iconButtonStyles}
         >
-          <PersonOutlineIcon sx={{ color: theme.Text1 }} />
+          <PersonOutlineIcon sx={{ fontSize: 20, color: theme.Text1 }} />
         </IconButton>
         <AccountDropdown open={accountOpen} theme={theme} isMobile={false} />
       </Box>

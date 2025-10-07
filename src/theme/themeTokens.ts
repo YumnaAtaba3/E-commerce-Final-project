@@ -65,7 +65,7 @@ export const lightTheme: Theme = {
   font: "Roboto, sans-serif",
   headingFont: "Poppins, sans-serif",
   disabledBg: "#F5F5F5",
-  disabledText: "#999999",
+  disabledText: "#F2F2F2FF",
   heading2: {
     fontSize: "32px",
     fontFamily: "Poppins, sans-serif",
