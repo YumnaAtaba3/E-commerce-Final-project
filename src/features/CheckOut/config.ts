@@ -9,14 +9,12 @@ export const billingFormSchemaValidation = Yup.object().shape({
     .min(2, "First name must be at least 2 characters")
     .max(50, "First name cannot exceed 50 characters"),
 
-  companyName: Yup.string().optional(),
-
+  companyName: Yup.string().optional().nullable(), // ✅ explicitly optional
   streetAddress: Yup.string()
     .required("Street address is required")
     .min(5, "Street address must be at least 5 characters"),
 
-  apartment: Yup.string().optional(),
-
+  apartment: Yup.string().optional().nullable(),
   townCity: Yup.string()
     .required("Town/City is required")
     .min(2, "Town/City must be at least 2 characters"),
@@ -29,8 +27,17 @@ export const billingFormSchemaValidation = Yup.object().shape({
     .required("Email address is required")
     .email("Enter a valid email address"),
 
-  saveInfo: Yup.boolean().optional(),
+  saveInfo: Yup.boolean().optional().nullable(),
 });
 
-// Type for React Hook Form
-export type BillingFormValues = Yup.InferType<typeof billingFormSchemaValidation>;
+// ✅ Make it stricter for RHF compatibility
+export type BillingFormValues = {
+  firstName: string;
+  companyName?: string;
+  streetAddress: string;
+  apartment?: string;
+  townCity: string;
+  phoneNumber: string;
+  emailAddress: string;
+  saveInfo?: boolean;
+};

@@ -5,35 +5,31 @@ import {
   FormControlLabel,
   Radio,
   Button,
-  TextField,
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
 import ProductItem from "./ProductItem";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
-import { useNavigate } from "react-router"; // ✅ Import useNavigate
-
-// Product images
-import PlayStation from "../../../assets/CheckOut/playstation.png";
+import { useCartStore } from "../../../store/cartStore"; 
 import MasterCard from "../../../assets/CheckOut/masterCard.svg";
 import ChinaLogo from "../../../assets/CheckOut/chinalogo.svg";
 import Bkash from "../../../assets/CheckOut/Bkash.svg";
-import { appRoutes } from "../../../routes";
-
-// Example product list
-const products = [
-  { name: "LCD Monitor", price: 650, image: PlayStation },
-  { name: "HI Gamepad", price: 1100, image: PlayStation },
-];
-
-const OrderSummary = () => {
+interface OrderSummaryProps {
+  onPlaceOrder: () => void;
+}
+const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
-  const navigate = useNavigate(); // ✅ Initialize navigator
 
-  const subtotal = products.reduce((sum, p) => sum + p.price, 0);
-  const shipping = 0;
+
+  // ✅ Pull data from cart
+  const cart = useCartStore((state) => state.cart);
+  const getTotalPrice = useCartStore((state) => state.getTotalPrice);
+
+  // 🧮 Calculate totals
+  const subtotal = getTotalPrice();
+  const shipping = subtotal > 0 ? 20 : 0; // Example shipping cost rule
   const total = subtotal + shipping;
 
   return (
@@ -62,17 +58,22 @@ const OrderSummary = () => {
             borderRadius: "4px",
           },
           "&::-webkit-scrollbar-track": { backgroundColor: "transparent" },
-          transition: "all 0.3s ease-in-out",
         }}
       >
-        {products.map((product, index) => (
-          <ProductItem
-            key={index}
-            name={product.name}
-            price={`$${product.price}`}
-            image={product.image}
-          />
-        ))}
+        {cart.length > 0 ? (
+          cart.map((product) => (
+            <ProductItem
+              key={product.id}
+              name={product.title}
+              price={`$${product.price.toFixed(2)}`}
+              image={product.images?.[0] || "/placeholder.png"}
+            />
+          ))
+        ) : (
+          <Typography sx={{ fontSize: 16, color: theme.Text1 }}>
+            Your cart is empty 🛒
+          </Typography>
+        )}
       </Box>
 
       {/* Action Box: Totals + Payment */}
@@ -98,44 +99,27 @@ const OrderSummary = () => {
           }}
         >
           {/* Subtotal */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography sx={{ fontSize: 16 }}>Subtotal</Typography>
             <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
-              ${subtotal}
+              ${subtotal.toFixed(2)}
             </Typography>
           </Box>
-          <Box
-            sx={{
-              borderTop: `1px solid ${theme.borderColor}`,
-              width: "100%",
-              mt: 1,
-            }}
-          />
 
           {/* Shipping */}
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
-            }}
-          >
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography sx={{ fontSize: 16 }}>Shipping</Typography>
             <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
-              {shipping === 0 ? "Free" : `$${shipping}`}
+              {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
             </Typography>
           </Box>
+
+          {/* Divider */}
           <Box
             sx={{
               borderTop: `1px solid ${theme.borderColor}`,
               width: "100%",
-              mt: 1,
+              my: 1,
             }}
           />
 
@@ -145,11 +129,10 @@ const OrderSummary = () => {
               display: "flex",
               justifyContent: "space-between",
               fontWeight: 600,
-              width: "100%",
             }}
           >
             <Typography sx={{ fontSize: 16 }}>Total</Typography>
-            <Typography sx={{ fontSize: 16 }}>${total}</Typography>
+            <Typography sx={{ fontSize: 16 }}>${total.toFixed(2)}</Typography>
           </Box>
         </Box>
 
@@ -216,53 +199,6 @@ const OrderSummary = () => {
         </RadioGroup>
       </Box>
 
-      {/* Coupon Input + Apply Button */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          gap: 2,
-          width: "100%",
-          maxWidth: isMobile ? 300 : 500,
-          alignItems: { xs: "stretch", md: "center" },
-        }}
-      >
-        <TextField
-          placeholder="Coupon Code"
-          variant="outlined"
-          size={isMobile ? "small" : "medium"}
-          sx={{
-            flexGrow: 1,
-            "& .MuiOutlinedInput-root": {
-              height: "56px",
-              width: isMobile ? "200px" : "300px",
-              fontSize: "16px",
-              "& fieldset": { borderColor: "black" },
-              "&:hover fieldset": { borderColor: theme.Button2 },
-              "&.Mui-focused fieldset": {
-                borderColor: theme.Button2,
-                borderWidth: "1.5px",
-              },
-            },
-          }}
-        />
-        <Button
-          variant="contained"
-          sx={{
-            width: isMobile ? "190px" : "160px",
-            height: 56,
-            bgcolor: theme.Button2,
-            color: "#fff",
-            fontSize: "14px",
-            fontWeight: 500,
-            textTransform: "none",
-            "&:hover": { bgcolor: theme.error },
-          }}
-        >
-          Apply Coupon
-        </Button>
-      </Box>
-
       {/* Place Order Button */}
       <Button
         variant="contained"
@@ -277,7 +213,7 @@ const OrderSummary = () => {
           "&:hover": { bgcolor: theme.error },
           alignSelf: "flex-start",
         }}
-        onClick={() => navigate(appRoutes.home)} 
+        onClick={onPlaceOrder}
       >
         Place Order
       </Button>

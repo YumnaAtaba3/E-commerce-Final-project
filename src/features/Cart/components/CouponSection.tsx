@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Box, TextField, Button } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
+import { toast } from "react-toastify";
 
 interface Props {
   isMobile: boolean;
@@ -14,23 +15,45 @@ const CouponSection: React.FC<Props> = ({ isMobile, setDiscountPercent }) => {
   const handleApplyCoupon = () => {
     const code = couponCode.trim().toUpperCase();
 
-    if (code === "SAVE10") setDiscountPercent(10);
-    else if (code === "SAVE20") setDiscountPercent(20);
-    else {
-      setDiscountPercent(0);
-      alert("Invalid coupon code");
+    switch (code) {
+      case "SAVE10":
+        setDiscountPercent(10);
+        toast.success("Coupon applied! 10% off", {
+          className: "toast-success",
+        });
+        break;
+      case "SAVE20":
+        setDiscountPercent(20);
+        toast.success("Coupon applied! 20% off",{className:"toast-success"});
+        break;
+      case "SAVE30":
+        setDiscountPercent(30);
+        toast.success("Coupon applied! 30% off", {
+          className: "toast-success",
+        });
+        break;
+      case "SAVE50":
+        setDiscountPercent(50);
+        toast.success("Coupon applied! 50% off", {
+          className: "toast-success",
+        });
+        break;
+      default:
+        setDiscountPercent(0);
+        toast.error("Invalid coupon code",{className:"toast-error"});
+        break;
     }
   };
 
   return (
     <Box
       sx={{
-        mt: 4,
+        mt: 6,
         display: "flex",
         gap: 3,
-        flexWrap: "wrap",
-        pr: isMobile ? 0 : 40,
-        justifyContent: isMobile ? "center" : "start",
+        flexWrap: isMobile ? "wrap" : "nowrap",
+        pr: isMobile ? 0 : 30,
+        justifyContent: isMobile ? "center" : "flex-start",
         mx: isMobile ? "auto" : 0,
         width: isMobile ? "70%" : "auto",
         maxWidth: isMobile ? 360 : "none",
@@ -67,9 +90,10 @@ const CouponSection: React.FC<Props> = ({ isMobile, setDiscountPercent }) => {
           bgcolor: theme.Button2,
           color: theme.primary1,
           textTransform: "none",
-          fontSize: 14,
-          px: 4,
+          fontSize: 14, // better readable
+          px: 6, // reasonable padding
           height: 50,
+          whiteSpace: "nowrap", // prevent text wrap
           "&:hover": { bgcolor: theme.Button2 },
         }}
         onClick={handleApplyCoupon}

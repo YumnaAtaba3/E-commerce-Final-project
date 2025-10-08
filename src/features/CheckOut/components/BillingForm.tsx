@@ -1,24 +1,62 @@
-import { Box, Typography, OutlinedInput, Checkbox } from "@mui/material";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  Box,
+  Typography,
+  OutlinedInput,
+  Checkbox,
+  FormHelperText,
+} from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { billingFormSchemaValidation, type BillingFormValues } from "../config";
 
-interface Field {
-  label: string;
-  required?: boolean;
+// ✅ Properly export this type
+export interface BillingFormRef {
+  submitForm: () => Promise<BillingFormValues | null>;
 }
 
-const BillingForm = () => {
+const BillingForm = forwardRef<BillingFormRef>((_, ref) => {
   const { theme } = useTheme();
   const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
 
-  const fields: Field[] = [
-    { label: "First Name", required: true },
-    { label: "Company Name" },
-    { label: "Street Address", required: true },
-    { label: "Apartment, floor, etc. (optional)" },
-    { label: "Town/City", required: true },
-    { label: "Phone Number", required: true },
-    { label: "Email Address", required: true },
+  const {
+    control,
+    formState: { errors },
+    getValues,
+    trigger,
+  } = useForm<BillingFormValues>({
+    resolver: yupResolver(billingFormSchemaValidation) as any,
+    defaultValues: {
+      firstName: "",
+      companyName: "",
+      streetAddress: "",
+      apartment: "",
+      townCity: "",
+      phoneNumber: "",
+      emailAddress: "",
+      saveInfo: false,
+    },
+  });
+
+  // 👇 Expose validation + data submit
+  useImperativeHandle(ref, () => ({
+    async submitForm() {
+      const isValid = await trigger();
+      if (!isValid) return null;
+      return getValues();
+    },
+  }));
+
+  const fields = [
+    { name: "firstName", label: "First Name", required: true },
+    { name: "companyName", label: "Company Name" },
+    { name: "streetAddress", label: "Street Address", required: true },
+    { name: "apartment", label: "Apartment, floor, etc. (optional)" },
+    { name: "townCity", label: "Town/City", required: true },
+    { name: "phoneNumber", label: "Phone Number", required: true },
+    { name: "emailAddress", label: "Email Address", required: true },
   ];
 
   return (
@@ -27,79 +65,89 @@ const BillingForm = () => {
         display: "flex",
         flexDirection: "column",
         gap: 3,
-        maxHeight: { xs: "auto", md: 830 },
-        overflowY: { xs: "visible", md: "auto" },
         p: { xs: 1, md: 2 },
-        transition: "all 0.3s ease-in-out",
       }}
     >
       {fields.map((field, i) => (
-        <Box key={i} sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-          {/* Label with red * if required */}
-          <Typography
-            sx={{
-              fontSize: "14px",
-              fontFamily: "'Inter', sans-serif",
-              color: focusedIndex === i ? theme.Button2 : theme.Text1,
-              transition: "color 0.2s",
-            }}
-          >
-            {field.label}
-            {field.required && (
-              <Box component="span" sx={{ color: "red", ml: 0.3 }}>
-                *
-              </Box>
-            )}
-          </Typography>
+        <Controller
+          key={field.name}
+          name={field.name as keyof BillingFormValues}
+          control={control}
+          render={({ field: controllerField }) => (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <Typography
+                sx={{
+                  fontSize: "14px",
+                  fontFamily: "'Inter', sans-serif",
+                  color: focusedIndex === i ? theme.Button2 : theme.Text1,
+                }}
+              >
+                {field.label}
+                {field.required && (
+                  <Box component="span" sx={{ color: "red", ml: 0.3 }}>
+                    *
+                  </Box>
+                )}
+              </Typography>
 
-          {/* Input */}
-          <OutlinedInput
-          fullWidth
-            size="small"
-            required={field.required}
-            onFocus={() => setFocusedIndex(i)}
-            onBlur={() => setFocusedIndex(null)}
-            sx={{
-              fontSize: "14px",
-              fontFamily: "'Inter', sans-serif",
-              px: 1.2,
-              py: 0.8,
-              bgcolor: theme.bgColor,
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: "1px solid transparent", // no border default
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                border: `1px solid ${theme.Button2}`, // border on focus
-              },
-            }}
-          />
-        </Box>
+              <OutlinedInput
+                {...controllerField}
+                fullWidth
+                size="small"
+                onFocus={() => setFocusedIndex(i)}
+                onBlur={() => setFocusedIndex(null)}
+                error={Boolean(errors[field.name as keyof BillingFormValues])}
+                sx={{
+                  fontSize: "14px",
+                  fontFamily: "'Inter', sans-serif",
+                  bgcolor: theme.bgColor,
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "1px solid transparent",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    border: `1px solid ${theme.Button2}`,
+                  },
+                }}
+              />
+
+              {errors[field.name as keyof BillingFormValues] && (
+                <FormHelperText error sx={{ mt: -1 }}>
+                  {
+                    errors[field.name as keyof BillingFormValues]
+                      ?.message as string
+                  }
+                </FormHelperText>
+              )}
+            </Box>
+          )}
+        />
       ))}
 
       {/* Save info checkbox */}
-      <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-        <Checkbox
-          id="saveInfo"
-          sx={{
-            color: theme.Button2,
-            "&.Mui-checked": { color: theme.Button2 },
-            transform: "scale(1.3)",
-          }}
-        />
-        <Typography
-          htmlFor="saveInfo"
-          component="label"
-          sx={{
-            fontSize: "14px",
-            cursor: "pointer",
-            color: theme.Text1,
-          }}
-        >
-          Save this information for faster check-out next time
-        </Typography>
-      </Box>
+      <Controller
+        name="saveInfo"
+        control={control}
+        render={({ field }) => (
+          <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+            <Checkbox
+              {...field}
+              checked={field.value}
+              sx={{
+                color: theme.Button2,
+                "&.Mui-checked": { color: theme.Button2 },
+                transform: "scale(1.3)",
+              }}
+            />
+            <Typography
+              sx={{ fontSize: "14px", cursor: "pointer", color: theme.Text1 }}
+            >
+              Save this information for faster check-out next time
+            </Typography>
+          </Box>
+        )}
+      />
     </Box>
   );
-};
+});
 
 export default BillingForm;

@@ -14,16 +14,18 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
 import { useTheme } from "../../../theme/ThemeProvider";
+import { useNavigate } from "react-router-dom";
 
+// Map categories
 const categories = [
-  "Woman’s Fashion",
-  "Men’s Fashion",
-  "Electronics",
-  "Home & Lifestyle",
-  "Sports & Outdoor",
-  "Baby’s & Toys",
-  "Groceries & Pets",
-  "Health & Beauty",
+  { name: "Woman’s Fashion", slug: "clothes" },
+  { name: "Men’s Fashion", slug: "luxery" },
+  { name: "Electronics", slug: "electronics" },
+  { name: "Home & Lifestyle", slug: "furniture" },
+  { name: "Sports & Outdoor", slug: "shoes" },
+  { name: "Baby’s & Toys", slug: "babys-toys" },
+  { name: "Groceries & Pets", slug: "testing" },
+  { name: "Health & Beauty", slug: "luxery-2" },
 ];
 
 const FilterSidebar: React.FC = () => {
@@ -32,13 +34,20 @@ const FilterSidebar: React.FC = () => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (slug: string, name: string) => {
+    setActive(name);
+    navigate({ pathname: "/products", search: `?category=${slug}` });
+    setOpen(false);
+  };
 
   const categoryList = (
     <List disablePadding>
       {categories.map((cat, index) => (
         <ListItemButton
-          key={cat}
-          onClick={() => setActive(cat)}
+          key={`${cat.slug}-${index}`} // ✅ unique key
+          onClick={() => handleCategoryClick(cat.slug, cat.name)}
           sx={{
             py: 1.2,
             px: 2,
@@ -47,22 +56,20 @@ const FilterSidebar: React.FC = () => {
             alignItems: "center",
             borderRadius: 0,
             fontSize: 15,
-            fontWeight: active === cat ? 600 : 400,
-            color: active === cat ? theme.Button2 : theme.Text1,
+            fontWeight: active === cat.name ? 600 : 400,
+            color: active === cat.name ? theme.Button2 : theme.Text1,
             "&:hover": {
               bgcolor: "transparent",
               color: theme.Button2,
             },
           }}
         >
-          <Typography sx={{ fontSize: 15 }}>{cat}</Typography>
-
-          {/* Show arrow only for first 2 items */}
+          <Typography sx={{ fontSize: 15 }}>{cat.name}</Typography>
           {(index === 0 || index === 1) && (
             <ArrowForwardIosIcon
               sx={{
                 fontSize: 14,
-                color: active === cat ? theme.Button2 : theme.Text1,
+                color: active === cat.name ? theme.Button2 : theme.Text1,
               }}
             />
           )}
@@ -73,7 +80,6 @@ const FilterSidebar: React.FC = () => {
 
   return (
     <>
-      {/* Desktop Sidebar */}
       {!isMobile && (
         <Box
           sx={{
@@ -89,7 +95,6 @@ const FilterSidebar: React.FC = () => {
         </Box>
       )}
 
-      {/* Mobile Filter Button + Drawer */}
       {isMobile && (
         <>
           <Button
@@ -117,7 +122,7 @@ const FilterSidebar: React.FC = () => {
             onClose={() => setOpen(false)}
             PaperProps={{
               sx: {
-                height: "80%", // take most of screen
+                height: "80%",
                 borderTopLeftRadius: 16,
                 borderTopRightRadius: 16,
                 bgcolor: theme.primary1,

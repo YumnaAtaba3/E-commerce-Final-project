@@ -1,3 +1,4 @@
+// ✅ WishlistCard.tsx
 import React from "react";
 import {
   Box,
@@ -11,6 +12,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { useWishlistStore } from "../../../store/wishlistStore";
+import { useCartStore } from "../../../store/cartStore"; // 👈 add this import
 
 interface WishlistCardProps {
   id: number;
@@ -35,10 +37,25 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
   const removeFromWishlist = useWishlistStore(
     (state) => state.removeFromWishlist
   );
+  const addToCart = useCartStore((state) => state.addToCart); // 👈 add
 
   const handleDelete = () => {
     removeFromWishlist(id);
     if (onDelete) onDelete(id);
+  };
+
+  // 👇 New handler for "Add To Bag"
+  const handleAddToCart = () => {
+    const product = {
+      id,
+      title: name,
+      price: Number(price),
+      oldPrice,
+      discount,
+      images,
+    };
+    addToCart(product, 1); // Add to cart
+    removeFromWishlist(id); // Remove from wishlist after adding
   };
 
   return (
@@ -91,14 +108,16 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
         <CardMedia
           component="img"
           height="180"
-          image={images?.[0] || "/placeholder.png"} 
+          image={images?.[0] || "/placeholder.png"}
           alt={name}
           sx={{ objectFit: "contain", mx: "auto" }}
         />
       </Box>
 
+      {/* ✅ Updated Button */}
       <Button
         fullWidth
+        onClick={handleAddToCart}
         sx={{
           bgcolor: "black",
           color: "white",

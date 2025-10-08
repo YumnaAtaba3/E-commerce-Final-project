@@ -17,10 +17,10 @@ export interface Product {
   quantity?: number; 
 
   // Frontend-only fields
-  oldPrice?: string;
+  oldPrice: number | undefined,
+  discount: string,
   colors?: string[];
   rating?: number;
-  discount?: string;
   isNew?: boolean;
 }
 

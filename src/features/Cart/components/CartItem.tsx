@@ -32,7 +32,6 @@ const CartItem: React.FC<Props> = ({
         overflow: "hidden",
         width: 60,
         height: 30,
-        transition: "all 0.3s",
       }}
     >
       <Box
@@ -40,7 +39,7 @@ const CartItem: React.FC<Props> = ({
           flex: 1,
           textAlign: "center",
           fontSize: 16,
-          lineHeight: "32px",
+          lineHeight: "30px",
           userSelect: "none",
         }}
       >
@@ -71,7 +70,7 @@ const CartItem: React.FC<Props> = ({
     </Box>
   );
 
-  const productImage = item.images[0] || ""; // Use first image
+  const productImage = item.images[0] || "";
 
   return (
     <Paper
@@ -95,9 +94,9 @@ const CartItem: React.FC<Props> = ({
         "&:hover .cancel": { opacity: 1 },
       }}
     >
-      {!isMobile && (
+      {!isMobile ? (
         <>
-          {/* Product */}
+          {/* Desktop Layout */}
           <Box
             sx={{
               display: "flex",
@@ -117,7 +116,6 @@ const CartItem: React.FC<Props> = ({
                   objectFit: "cover",
                   borderRadius: 1,
                   boxShadow: "0px 4px 12px rgba(0,0,0,0.15)",
-                  transition: "all 0.3s",
                 }}
               />
               <IconButton
@@ -142,62 +140,61 @@ const CartItem: React.FC<Props> = ({
             </Typography>
           </Box>
 
-          {/* Price */}
           <Typography sx={{ fontSize: 16, justifySelf: "center" }}>
             ${item.price}
           </Typography>
-
-          {/* Quantity */}
           <Box sx={{ justifySelf: "center" }}>
             <Counter />
           </Box>
-
-          {/* Subtotal */}
           <Typography sx={{ fontSize: 16, justifySelf: "center" }}>
             ${item.price * item.quantity}
           </Typography>
         </>
-      )}
+      ) : (
+        <>
+          {/* Mobile Layout */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 1.5,
+              border: `1px solid ${theme.borderColor}`,
+              borderRadius: 2,
+              p: 2,
+              transition: "all 0.3s",
+              boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Box
+                component="img"
+                src={productImage}
+                alt={item.title}
+                sx={{
+                  width: 60,
+                  height: 60,
+                  objectFit: "cover",
+                  borderRadius: 1,
+                  boxShadow: "0px 4px 12px rgba(0,0,0,0.15)",
+                }}
+              />
+              <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
+                {item.title}
+              </Typography>
+            </Box>
 
-      {isMobile && (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 1.5,
-            border: `1px solid ${theme.borderColor}`,
-            borderRadius: 2,
-            p: 2,
-            transition: "all 0.3s",
-            boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Box
-              component="img"
-              src={productImage}
-              alt={item.title}
-              sx={{
-                width: 60,
-                height: 60,
-                objectFit: "cover",
-                borderRadius: 1,
-                boxShadow: "0px 4px 12px rgba(0,0,0,0.15)",
-              }}
-            />
-            <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
-              {item.title}
+            <Typography sx={{ fontSize: 14 }}>Price: ${item.price}</Typography>
+
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Typography sx={{ fontSize: 14 }}>Quantity:</Typography>
+              <Counter />
+            </Box>
+
+            <Typography sx={{ fontSize: 14 }}>
+              Subtotal: ${item.price * item.quantity}
             </Typography>
           </Box>
-          <Typography sx={{ fontSize: 14 }}>Price: ${item.price}</Typography>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography sx={{ fontSize: 14 }}>Quantity:</Typography>
-            <Counter />
-          </Box>
-          <Typography sx={{ fontSize: 14 }}>
-            Subtotal: ${item.price * item.quantity}
-          </Typography>
-        </Box>
+        </>
       )}
     </Paper>
   );

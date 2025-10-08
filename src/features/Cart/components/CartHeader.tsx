@@ -12,6 +12,7 @@ const CartHeader: React.FC<Props> = ({ gridCols,isMobile }) => (
       mb: 3,
       px: 4,
       py: 1.5,
+      overflowX:"hidden",
       width: "100%",
       minWidth: isMobile?500:700,
       mx: "auto",

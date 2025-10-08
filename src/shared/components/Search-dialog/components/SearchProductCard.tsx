@@ -74,6 +74,8 @@ const SearchProductCard: React.FC<SearchProductCardProps> = ({ product }) => {
         title: product.title,
         price: product.price,
         images: product.images || [productImage],
+        oldPrice: undefined,
+        discount: ""
       },
       1
     );
