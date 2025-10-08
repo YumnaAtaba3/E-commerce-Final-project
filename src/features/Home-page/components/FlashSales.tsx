@@ -17,7 +17,7 @@ import ArrowNavigation from "../../../shared/components/Arrow-navigation";
 import ProductCard from "../../../shared/components/Product-card";
 import { useProductsState } from "../../../store";
 
-// Countdown logic
+
 const calculateTimeLeft = (endDate: Date) => {
   const diff = endDate.getTime() - new Date().getTime();
   if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
@@ -40,7 +40,7 @@ const FlashSales: React.FC = () => {
   const { products } = useProductsState();
   const navigate = useNavigate();
 
-  // 👇 Get only the first 8 products that have a discount
+ 
   const flashProducts = products.filter((p) => p.discount).slice(0, 8);
 
   useEffect(() => {
@@ -166,7 +166,6 @@ const FlashSales: React.FC = () => {
       {/* Swiper Carousel */}
       <Swiper
         spaceBetween={0}
-        slidesPerView={isMobile ? 1.1 : 4.1}
         watchOverflow={false}
         allowTouchMove={true}
         breakpoints={{
@@ -174,7 +173,7 @@ const FlashSales: React.FC = () => {
           1000: { slidesPerView: 3.1 },
           900: { slidesPerView: 2.4 },
           600: { slidesPerView: 1.3 },
-          0: { slidesPerView: 1.1 },
+          0: { slidesPerView: 1 },
         }}
         navigation={{ nextEl: ".flash-next", prevEl: ".flash-prev" }}
         modules={[Navigation]}

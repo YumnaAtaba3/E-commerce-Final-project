@@ -10,8 +10,11 @@ import {
   IconButton,
   useMediaQuery,
   useTheme as useMuiTheme,
+  
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
 import { useLocation, useNavigate } from "react-router";
 import ProductCard from "../../shared/components/Product-card";
 import LoadingState from "../../shared/components/Loading-state";
@@ -32,8 +35,7 @@ const ProductPage: React.FC = () => {
 
   const categorySlug =
     queryParams.get("categorySlug") || queryParams.get("category") || undefined;
-
-  const filterType = queryParams.get("filter"); // ✅ Read filter from URL
+  const filterType = queryParams.get("filter");
 
   const [page, setPage] = useState(1);
   const itemsPerPage = 8;
@@ -50,12 +52,12 @@ const ProductPage: React.FC = () => {
     refetch: () => void;
   };
 
-  // ✅ Apply filter logic (only discounted products if ?filter=discount)
   const filteredProducts = useMemo(() => {
+    let result = products;
     if (filterType === "discount") {
-      return products.filter((p) => p.discount);
+      result = result.filter((p) => p.discount);
     }
-    return products;
+    return result;
   }, [products, filterType]);
 
   const pageCount = Math.ceil((filteredProducts?.length || 0) / itemsPerPage);
@@ -66,11 +68,31 @@ const ProductPage: React.FC = () => {
   };
 
   const pageTitle =
-    filterType === "discount"
+    filterType === "discount" && categorySlug
+      ? `Discounted ${
+          categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1)
+        }`
+      : filterType === "discount"
       ? "Discounted Products"
       : categorySlug
       ? categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1)
       : "All Products";
+
+  const handleCategorySelect = (slug?: string) => {
+    const params = new URLSearchParams(location.search);
+    if (slug) params.set("categorySlug", slug);
+    else params.delete("categorySlug");
+
+ 
+    if (filterType === "discount") {
+      params.set("filter", "discount");
+    }
+
+    navigate(`/products?${params.toString()}`);
+  };
+
+ 
+  const [openFilter, setOpenFilter] = useState(false);
 
   return (
     <Box
@@ -81,10 +103,25 @@ const ProductPage: React.FC = () => {
         bgcolor: theme.primary1,
       }}
     >
-      <FilterSidebar />
+      {/* Desktop sidebar */}
+      {!isMobile && <FilterSidebar onCategorySelect={handleCategorySelect} />}
 
+      {/*  Mobile Drawer Trigger */}
       <Box sx={{ flex: 1, maxWidth: 1200, mx: "auto" }}>
-        {/* Header */}
+        {isMobile && (
+          <>
+          
+
+         
+            <FilterSidebar
+              onCategorySelect={handleCategorySelect}
+              open={openFilter}
+              setOpen={setOpenFilter}
+            />
+          </>
+        )}
+
+        {/*  Header */}
         <Box display="flex" alignItems="center" mb={4}>
           <IconButton
             onClick={() => navigate(-1)}
@@ -105,7 +142,7 @@ const ProductPage: React.FC = () => {
           </Typography>
         </Box>
 
-        {/* Loading */}
+        {/*  Loading */}
         {isLoading && (
           <LoadingState
             title="Loading products..."
@@ -123,20 +160,41 @@ const ProductPage: React.FC = () => {
           />
         )}
 
-        {/* Products */}
+        {/* Product Grid */}
         {!isLoading && !isError && (
           <>
             {filteredProducts.length === 0 ? (
-              <Typography
-                sx={{ textAlign: "center", mt: 4, color: theme.Text1 }}
+              <Box
+                sx={{
+                  textAlign: "center",
+                  mt: 6,
+                  p: 4,
+                  borderRadius: 4,
+                  bgcolor: theme.primary1 ,
+                }}
               >
-                No products found.
-              </Typography>
+                <SentimentDissatisfiedIcon
+                  sx={{
+                    fontSize: 60,
+                    color: theme.Button2,
+                    mb: 2,
+                  }}
+                />
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: 600, color: theme.Text1, mb: 1 }}
+                >
+                  No Products Found
+                </Typography>
+                <Typography sx={{ color: theme.Text2, fontSize: 14 }}>
+                  Try adjusting your filters or selecting another category.
+                </Typography>
+              </Box>
             ) : (
               <Grid
                 container
                 spacing={3}
-                justifyContent={isMobile ? "center" : "flex-start"}
+                justifyContent={isMobile ? "center" : "center"}
               >
                 {filteredProducts.map((product) => (
                   <Grid
@@ -163,7 +221,7 @@ const ProductPage: React.FC = () => {
               </Grid>
             )}
 
-            {/* Pagination */}
+            {/*  Pagination */}
             {pageCount > 0 && (
               <Box
                 display="flex"

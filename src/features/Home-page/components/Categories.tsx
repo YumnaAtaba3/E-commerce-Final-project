@@ -17,7 +17,6 @@ import ArrowNavigation from "../../../shared/components/Arrow-navigation";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { useCategoriesQuery } from "../hooks/useCategoriesQuery";
 
-// ✅ Import your local category icons
 import CategoryCamera from "../../../assets/Category/Category-Camera.svg";
 import CategoryCellPhone from "../../../assets/Category/Category-CellPhone.svg";
 import CategoryComputer from "../../../assets/Category/Category-Computer.svg";
@@ -61,17 +60,15 @@ const Categories: React.FC = () => {
     navigate(`/products?categorySlug=${slug}`);
   };
 
-  // ✅ Replace API image with local SVG, keep name and slug
+  
 const enrichedCategories = categories.map((cat) => {
-  // Get first word of slug or name in lowercase
+
   const key = (cat.slug?.split("-")[0] || cat.name.split(" ")[0]).toLowerCase();
-
-  // Lookup image in map
   const localImage =
-    categoryImageMap[key] || // match first word
-    DefaultCategoryIcon; // fallback
+    categoryImageMap[key] || 
+    DefaultCategoryIcon;
 
-  return { ...cat, image: localImage }; // only replace image
+  return { ...cat, image: localImage }; 
 });
 
 
@@ -147,14 +144,14 @@ const enrichedCategories = categories.map((cat) => {
       {!isLoading && !isError && (
         <Swiper
           spaceBetween={0}
-          slidesPerView={5}
+          
           navigation={{ nextEl: ".cat-next", prevEl: ".cat-prev" }}
           modules={[Navigation]}
           breakpoints={{
             1200: { slidesPerView: 6 },
-            900: { slidesPerView: 4.2 },
-            600: { slidesPerView: 3.2 },
-            0: { slidesPerView: 1.5 },
+            900: { slidesPerView: 4.1 },
+            600: { slidesPerView: 3.1 },
+            0: { slidesPerView: 1 },
           }}
         >
           {enrichedCategories.map((cat) => (
@@ -182,7 +179,7 @@ const enrichedCategories = categories.map((cat) => {
                   <Box
                     component="img"
                     src={cat.image}
-                    alt={cat.name} // ✅ keep alt as category name
+                    alt={cat.name} 
                     sx={{ width: 40, mb: 1, transition: "all 0.3s ease" }}
                   />
                   <Typography sx={{ fontSize: 14, fontWeight: 600 }}>

@@ -1,8 +1,8 @@
 export interface Category {
   id: number;
   name: string;
-  image: string;
   slug: string;
+  image?: string;
 }
 
 export interface Product {
@@ -14,11 +14,11 @@ export interface Product {
   images: string[];
   slug?: string;
   img?: string;
-  quantity?: number; 
+  quantity?: number;
 
   // Frontend-only fields
-  oldPrice: number | undefined,
-  discount: string,
+  oldPrice?: number | string;
+  discount?: string;
   colors?: string[];
   rating?: number;
   isNew?: boolean;

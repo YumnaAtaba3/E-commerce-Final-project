@@ -18,7 +18,6 @@ import ProductCard from "../../../shared/components/Product-card";
 import ArrowNavigation from "../../../shared/components/Arrow-navigation";
 import { useNavigate } from "react-router";
 
-// 🔹 Helper: generate random hex colors
 const getRandomColors = (count: number = 3) => {
   const colors: string[] = [];
   for (let i = 0; i < count; i++) {
@@ -36,7 +35,7 @@ const ExploreProducts: React.FC = () => {
 
   const { products } = useProductsState();
 
-  // 🔹 Memoize colors so they remain consistent
+
   const productsWithColors = useMemo(
     () =>
       products.map((p) => ({
@@ -105,7 +104,6 @@ const ExploreProducts: React.FC = () => {
       {/* Swiper Grid */}
       <Swiper
         spaceBetween={20}
-        slidesPerView={isMobile ? 2 : 4}
         grid={{ rows: 2, fill: "row" }}
         watchOverflow={false}
         allowTouchMove={true}
@@ -114,7 +112,7 @@ const ExploreProducts: React.FC = () => {
           1000: { slidesPerView: 3.1 },
           900: { slidesPerView: 2.4 },
           600: { slidesPerView: 1.3 },
-          0: { slidesPerView: 1.1 },
+          0: { slidesPerView: 1 },
         }}
         navigation={{ nextEl: ".explore-next", prevEl: ".explore-prev" }}
         modules={[Navigation, SwiperGrid]}

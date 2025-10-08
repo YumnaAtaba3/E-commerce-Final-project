@@ -73,9 +73,7 @@ const CartPage = () => {
         </Typography>
       </Breadcrumbs>
 
-      <Typography sx={{ fontSize: { xs: 24, md: 32 }, fontWeight: 600, mb: 4 }}>
-        Your Cart
-      </Typography>
+
 
       {cart.length === 0 ? (
         <Box
@@ -85,7 +83,7 @@ const CartPage = () => {
             alignItems: "center",
             justifyContent: "center",
             mt: 8,
-            gap: 2,
+            gap: 3,
           }}
         >
           <Typography
@@ -112,11 +110,12 @@ const CartPage = () => {
             flexDirection: "column",
             alignItems: "center",
             gap: 2,
+            mt:2
           }}
         >
           {/* Header only on desktop */}
           {!isMobile && (
-            <CartHeader gridCols="1.5fr 1fr 1fr 1.5fr" isMobile={isMobile} />
+            <CartHeader gridCols="1.5fr 1fr 1fr 1.5fr" isMobile={isMobile}  theme={theme}/>
           )}
 
           {/* Cart Items */}

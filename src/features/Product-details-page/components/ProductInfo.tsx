@@ -44,8 +44,6 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   ReturnIcon,
 }) => {
   const { theme } = useTheme();
-
-  // Determine alignment for mobile / tablet / desktop
   const textAlign = isMobile ? "center" : isTablet ? "center" : "left";
   const containerAlign = isMobile
     ? "center"
@@ -61,11 +59,10 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         flexDirection: "column",
         alignItems: containerAlign,
         width: containerWidth,
-        mx: isTablet ? "auto" : 0, // center for tablet
+        mx: isTablet ? "auto" : 0,
         pl: isMobile ? 2 : 0,
       }}
     >
-      {/* Title */}
       <Typography
         fontSize={isMobile ? 20 : 24}
         fontWeight={550}
@@ -77,7 +74,6 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         {product.title}
       </Typography>
 
-      {/* Rating & Stock */}
       <Box
         display="flex"
         alignItems="center"
@@ -100,7 +96,6 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         </Typography>
       </Box>
 
-      {/* Price */}
       <Typography
         fontSize={isMobile ? 24 : 28}
         sx={{ fontWeight: 500, mb: 2, textAlign }}
@@ -109,7 +104,6 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         ${product.price}
       </Typography>
 
-      {/* Description */}
       <Typography
         fontSize={isMobile ? 12 : 14}
         color={theme.Text1}
@@ -120,12 +114,8 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         {product.description || "No description available."}
       </Typography>
 
-      <Box
-        sx={{ width: "100%", borderBottom: "1px solid #000", mb: 3 }}
-       
-      />
+      <Box sx={{ width: "100%", borderBottom: "1px solid #000", mb: 3 }} />
 
-      {/* Product Options */}
       <ProductColors
         colors={colors}
         selected={color}
@@ -133,6 +123,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
       />
       <ProductSizes sizes={sizes} selected={size} onSelect={onSizeChange} />
       <QuantityBuyFavorite
+        product={product} // ✅ Must pass product
         quantity={quantity}
         onQuantityChange={onQuantityChange}
         favorite={favorite}

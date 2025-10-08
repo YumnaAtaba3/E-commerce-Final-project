@@ -1,4 +1,4 @@
-// src/pages/home/Homepage.tsx
+
 import React from "react";
 import { Box, Button, CircularProgress, Container, Divider, Grid, Stack, Typography } from "@mui/material";
 import { useTheme } from "../../theme/ThemeProvider";
@@ -115,8 +115,8 @@ const Homepage: React.FC = () => {
             my: 6,
             borderColor: theme.Text2,
             opacity: 0.2,
-            width: "80%", // ✅ عرض 80%
-            mx: "auto", // ✅ في المنتصف أفقياً
+            width: "80%", 
+            mx: "auto", 
           }}
         />
 

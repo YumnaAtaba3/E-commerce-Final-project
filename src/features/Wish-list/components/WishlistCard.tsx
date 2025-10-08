@@ -1,4 +1,3 @@
-// ✅ WishlistCard.tsx
 import React from "react";
 import {
   Box,
@@ -12,13 +11,13 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { useWishlistStore } from "../../../store/wishlistStore";
-import { useCartStore } from "../../../store/cartStore"; // 👈 add this import
+import { useCartStore } from "../../../store/cartStore";
 
 interface WishlistCardProps {
   id: number;
   name: string;
   price: number | string;
-  oldPrice?: string;
+  oldPrice?: number | string;
   discount?: string;
   images: string[];
   onDelete?: (id: number) => void;
@@ -37,25 +36,29 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
   const removeFromWishlist = useWishlistStore(
     (state) => state.removeFromWishlist
   );
-  const addToCart = useCartStore((state) => state.addToCart); // 👈 add
+  const addToCart = useCartStore((state) => state.addToCart);
 
   const handleDelete = () => {
     removeFromWishlist(id);
     if (onDelete) onDelete(id);
   };
 
-  // 👇 New handler for "Add To Bag"
   const handleAddToCart = () => {
     const product = {
       id,
       title: name,
-      price: Number(price),
-      oldPrice,
+      price: typeof price === "string" ? Number(price) : price,
+      oldPrice: oldPrice
+        ? typeof oldPrice === "string"
+          ? Number(oldPrice)
+          : oldPrice
+        : undefined,
       discount,
       images,
     };
-    addToCart(product, 1); // Add to cart
-    removeFromWishlist(id); // Remove from wishlist after adding
+    addToCart(product, 1);
+    removeFromWishlist(id);
+    if (onDelete) onDelete(id);
   };
 
   return (
@@ -114,7 +117,6 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
         />
       </Box>
 
-      {/* ✅ Updated Button */}
       <Button
         fullWidth
         onClick={handleAddToCart}
@@ -139,7 +141,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
           <Typography
             sx={{ fontSize: 16, color: theme.Button2, fontWeight: 600 }}
           >
-            ${price}
+            ${typeof price === "number" ? price.toFixed(2) : price}
           </Typography>
           {oldPrice && (
             <Typography
@@ -149,7 +151,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
                 textDecoration: "line-through",
               }}
             >
-              {oldPrice}
+              ${typeof oldPrice === "number" ? oldPrice.toFixed(2) : oldPrice}
             </Typography>
           )}
         </Box>

@@ -32,6 +32,8 @@ const CartItem: React.FC<Props> = ({
         overflow: "hidden",
         width: 60,
         height: 30,
+        bgcolor: theme.primary1,
+        color: theme.Text1,
       }}
     >
       <Box
@@ -92,6 +94,8 @@ const CartItem: React.FC<Props> = ({
           transform: "translateY(-4px)",
         },
         "&:hover .cancel": { opacity: 1 },
+        bgcolor: theme.primary1,
+        color: theme.Text1,
       }}
     >
       {!isMobile ? (

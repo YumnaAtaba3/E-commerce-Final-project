@@ -22,7 +22,7 @@ const ProductImages: React.FC<ProductImagesProps> = ({
     <Box
       sx={{
         width: "100%",
-        maxWidth: "100%", // <-- important
+        maxWidth: "100%", 
         height: isMobile ? 300 : isTablet ? 400 : 600,
         display: "flex",
         justifyContent: "center",
@@ -42,8 +42,8 @@ const ProductImages: React.FC<ProductImagesProps> = ({
           gap: 2,
           flexShrink: 0,
           overflowX: "auto",
-          maxWidth: "100%", // <-- prevent overflow
-          pb: 1, // optional: padding bottom
+          maxWidth: "100%", 
+          pb: 1,
         }}
       >
         {thumbnails.map((src, idx) => (

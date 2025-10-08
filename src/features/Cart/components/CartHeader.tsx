@@ -3,10 +3,11 @@ import React from "react";
 
 interface Props {
   gridCols: string;
-  isMobile:boolean
+  isMobile:boolean;
+  theme:any
 }
 
-const CartHeader: React.FC<Props> = ({ gridCols,isMobile }) => (
+const CartHeader: React.FC<Props> = ({ gridCols,isMobile,theme }) =>(
   <Paper
     sx={{
       mb: 3,
@@ -20,7 +21,8 @@ const CartHeader: React.FC<Props> = ({ gridCols,isMobile }) => (
       gridTemplateColumns: gridCols,
       alignItems: "center",
       justifyItems: "center", 
-     
+      bgcolor:theme.primary1,
+      color:theme.Text1,
       gap: 18,
       
       fontSize: 16,

@@ -20,7 +20,7 @@ import { useWishlistStore } from "../../../store/wishlistStore";
 import { useCartStore } from "../../../store/cartStore";
 import type { Product } from "../../../store/state";
 import { appRoutes } from "../../../routes";
-import { useIsLoggedIn } from "../../../features/auth/hooks/is-logged-in"; 
+
 
 interface ProductCardProps {
   id: number;
@@ -47,7 +47,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const { theme } = useTheme();
   const navigate = useNavigate();
-  const { isLoggedIn } = useIsLoggedIn(); // ✅ check login state
+
 
   // Wishlist
   const addToWishlist = useWishlistStore((state) => state.addToWishlist);
@@ -60,7 +60,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const addToCart = useCartStore((state) => state.addToCart);
   const inCart = useCartStore((state) => state.isInCart(id));
 
-  // Ensure numeric price
+ 
   let numericPrice =
     typeof price === "string" ? parseFloat(price.replace("$", "")) : price;
   if (isNaN(numericPrice)) numericPrice = 0;
@@ -81,12 +81,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
     finalOldPrice && finalOldPrice !== displayPrice ? finalOldPrice : undefined;
   const imageToShow = Array.isArray(img) ? img[0] : img;
 
-  // ✅ Protect wishlist action
+ 
   const toggleWishlist = () => {
-    if (!isLoggedIn) {
-      navigate(appRoutes.auth.signUp); 
-      return;
-    }
     favorite
       ? removeFromWishlist(id)
       : addToWishlist({
@@ -102,12 +98,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
         } as Product);
   };
 
-  // ✅ Protect add-to-cart action
+
   const handleAddToCart = () => {
-    if (!isLoggedIn) {
-      navigate(appRoutes.auth.signUp); 
-      return;
-    }
     if (!inCart) {
       addToCart(
         {
@@ -126,12 +118,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
     }
   };
 
-  // ✅ Protect view details
+
   const handleViewDetails = () => {
-    if (!isLoggedIn) {
-      navigate(appRoutes.auth.signUp);
-      return;
-    }
     navigate(appRoutes.products.details(id));
   };
 

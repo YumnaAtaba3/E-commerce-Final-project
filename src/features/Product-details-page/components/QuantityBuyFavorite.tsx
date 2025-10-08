@@ -1,4 +1,3 @@
-// components/ProductDetails/QuantityBuyFavorite.tsx
 import React from "react";
 import { Box, Button } from "@mui/material";
 import FavoriteButton from "./FavoriteButton";
@@ -30,21 +29,33 @@ const QuantityBuyFavorite: React.FC<Props> = ({
 
   const addToCart = useCartStore((state) => state.addToCart);
 
-  // ✅ Add to cart and navigate to cart
+
   const handleBuyNow = () => {
     if (!product) return;
 
-    addToCart(product, quantity); // ✅ Correct usage
+    addToCart(product, quantity);
 
     toast.success(`${product.title} added to cart!`, {
       className: "toast-success",
       autoClose: 2000,
     });
 
-    navigate(appRoutes.cart); // redirect to cart
+    navigate(appRoutes.cart);
   };
 
-  // ✅ Add/remove from wishlist
+ 
+  const handleAddToCart = () => {
+    if (!product) return;
+
+    addToCart(product, quantity);
+
+    toast.success(`${product.title} added to cart!`, {
+      className: "toast-success",
+      autoClose: 2000,
+    });
+  };
+
+
   const handleFavoriteToggle = () => {
     onFavoriteToggle();
 
@@ -81,6 +92,7 @@ const QuantityBuyFavorite: React.FC<Props> = ({
       >
         Buy Now
       </Button>
+
 
       <FavoriteButton favorite={favorite} onClick={handleFavoriteToggle} />
     </Box>

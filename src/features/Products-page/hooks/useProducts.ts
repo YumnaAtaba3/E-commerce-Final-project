@@ -1,20 +1,9 @@
-// src/pages/ProductsPage/hooks/useProducts.ts
 import { useQuery } from "@tanstack/react-query";
 import { httpClient } from "../../../lib/axios";
+import ProductServices from "../services/api";
+import type { Product } from "../../../store/state";
 
-export interface Product {
-  id: number;
-  title: string;
-  price: number;
-  oldPrice?: number;
-  discount?: string;
-  rating?: number;
-  images: string[];
-  category: { id: number; name: string; slug: string };
-  isNew?: boolean;
-}
-
-// Optional enrichment (for demo)
+// Optional enrichment
 function enrichProducts(products: Product[]): Product[] {
   return products.map((p) => ({
     ...p,
@@ -27,10 +16,31 @@ function enrichProducts(products: Product[]): Product[] {
   }));
 }
 
-/**
- * Fetch products with pagination and optional category filter.
- * `page` starts at 1
- */
+export function useProductByIdQuery(id: number | undefined) {
+  return useQuery<Product, Error>({
+    queryKey: ["product", id],
+    queryFn: async () => {
+      if (!id) throw new Error("Product ID is required");
+      const product = await ProductServices.getById(id);
+      return enrichProducts([product])[0];
+    },
+    enabled: !!id,
+  });
+}
+
+export function useRelatedProductsQuery(id: number | undefined, limit = 4) {
+  return useQuery<Product[], Error>({
+    queryKey: ["relatedProducts", id, limit],
+    queryFn: async () => {
+      if (!id) throw new Error("Product ID is required");
+      const all = await ProductServices.getAll();
+      const related = all.filter((p) => p.id !== id).slice(0, limit);
+      return enrichProducts(related);
+    },
+    enabled: !!id,
+  });
+}
+
 export const useProductsQuery = (
   page: number = 1,
   limit: number = 10,

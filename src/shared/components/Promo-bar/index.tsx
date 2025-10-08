@@ -44,7 +44,7 @@ const PromoBar: React.FC<PromoBarProps> = ({
         top: 0,
         left: 0,
         right: 0,
-        zIndex: 1301, // higher than header
+        zIndex: 1301,
         bgcolor: theme.ButtonCard,
         height: isMobile ? 50 : 40,
         display: "flex",
@@ -71,7 +71,7 @@ const PromoBar: React.FC<PromoBarProps> = ({
             fontSize: isMobile ? "9px" : "14px",
             fontWeight: isMobile ? 300 : 400,
             fontFamily: "'Inter', sans-serif",
-            color: theme.bgColor,
+            color: "white",
             textAlign: "center",
           }}
         >
@@ -79,7 +79,7 @@ const PromoBar: React.FC<PromoBarProps> = ({
           <Link
             href={actionHref}
             sx={{
-              color: theme.bgColor,
+              color: "white",
               fontWeight: 600,
               ml: 0.5,
               textDecoration: "underline",
@@ -94,7 +94,7 @@ const PromoBar: React.FC<PromoBarProps> = ({
           <IconButton
             onClick={handleClick}
             sx={{
-              color: theme.bgColor,
+              color: "white",
               p: 0,
               fontSize: isMobile ? "12px" : "14px",
             }}
@@ -119,7 +119,7 @@ const PromoBar: React.FC<PromoBarProps> = ({
             PaperProps={{
               sx: {
                 bgcolor: theme.ButtonCard,
-                color: theme.bgColor,
+                color: "white",
               },
             }}
           >

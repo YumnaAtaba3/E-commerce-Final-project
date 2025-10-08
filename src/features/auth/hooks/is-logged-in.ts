@@ -11,7 +11,7 @@ export function useIsLoggedIn() {
     retry: false,
   });
 
-  // ✅ immediate fallback: if we have a token, consider logged in
+ 
   const isLoggedIn = Boolean(accessToken) && !isError;
 
   return { isLoggedIn, isLoading };

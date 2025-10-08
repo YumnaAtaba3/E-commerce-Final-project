@@ -34,13 +34,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
     setQuery("");
   };
 
-  // ✅ Focus + animate when dialog opens
+  
   useEffect(() => {
     if (open && inputRef.current) {
       setTimeout(() => {
         inputRef.current?.focus();
         setAnimate(true);
-        setTimeout(() => setAnimate(false), 600); // stop glow after 0.6s
+        setTimeout(() => setAnimate(false), 600); 
       }, 150);
     }
   }, [open]);

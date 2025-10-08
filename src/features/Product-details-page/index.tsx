@@ -4,11 +4,11 @@ import {
   Breadcrumbs,
   Link,
   Grid,
+  Typography,
   useMediaQuery,
   useTheme as useMuiTheme,
-  Typography,
 } from "@mui/material";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 
 import { useTheme } from "../../theme/ThemeProvider";
 import {
@@ -20,7 +20,6 @@ import ProductImages from "./components/ProductImages";
 import ProductInfo from "./components/ProductInfo";
 import RelatedItems from "./components/RelatedItems";
 
-
 import DeliveryIcon from "../../assets/Product-details/icon-delivery (2).svg";
 import ReturnIcon from "../../assets/Product-details/Icon-return.svg";
 
@@ -28,7 +27,6 @@ import { useWishlistStore } from "../../store/wishlistStore";
 import ErrorState from "../../shared/components/Error-state";
 import LoadingState from "../../shared/components/Loading-state";
 
-// Helper: generate random colors
 const getRandomColors = (count: number = 3) => {
   const colors: string[] = [];
   for (let i = 0; i < count; i++) {
@@ -61,7 +59,6 @@ const ProductDetailsPage: React.FC = () => {
   const [colors, setColors] = useState<string[]>([]);
   const [favorite, setFavorite] = useState(false);
 
-  // Wishlist store
   const addToWishlist = useWishlistStore((state) => state.addToWishlist);
   const removeFromWishlist = useWishlistStore(
     (state) => state.removeFromWishlist
@@ -69,55 +66,41 @@ const ProductDetailsPage: React.FC = () => {
   const isInWishlist = useWishlistStore((state) => state.isInWishlist);
 
   useEffect(() => {
-    if (product) {
-      setFavorite(isInWishlist(product.id));
-    }
+    if (product) setFavorite(isInWishlist(product.id));
   }, [product, isInWishlist]);
 
   const handleFavoriteToggle = () => {
     if (!product) return;
-
     if (favorite) removeFromWishlist(product.id);
     else addToWishlist(product);
-
     setFavorite((prev) => !prev);
   };
 
   useEffect(() => {
-    if (product) {
-      let productColors: string[] = [];
+    if (!product) return;
 
-      if (product.colors) {
-        productColors = Array.isArray(product.colors)
-          ? product.colors
-          : [product.colors];
-      }
+    let productColors: string[] = [];
+    if (product.colors)
+      productColors = Array.isArray(product.colors)
+        ? product.colors
+        : [product.colors];
+    if (productColors.length === 0) productColors = getRandomColors(3);
 
-      if (productColors.length === 0) {
-        productColors = getRandomColors(3);
-      }
-
-      setColors(productColors);
-      setColor(productColors[0]);
-    }
+    setColors(productColors);
+    setColor(productColors[0]);
   }, [product]);
 
-  const handleQuantity = (type: "inc" | "dec") => {
-    if (type === "inc") setQuantity(quantity + 1);
-    else if (quantity > 1) setQuantity(quantity - 1);
-  };
+  const handleQuantity = (type: "inc" | "dec") =>
+    setQuantity((prev) => (type === "inc" ? prev + 1 : Math.max(prev - 1, 1)));
 
-  // ---------- Render Loading/Error States ----------
-  if (loadingProduct) {
+  if (loadingProduct)
     return (
       <LoadingState
         title="Loading product..."
         description="Please wait while we fetch the product details."
       />
     );
-  }
-
-  if (!product) {
+  if (!product)
     return (
       <ErrorState
         title="Product not found"
@@ -125,11 +108,9 @@ const ProductDetailsPage: React.FC = () => {
         onRetry={() => window.location.reload()}
       />
     );
-  }
 
   const thumbnails = product.images.length ? product.images : ["/bag.png"];
   const sizes = ["XS", "S", "M", "L", "XL"];
-
   const relatedItems = relatedProducts.map((p) => {
     const itemColors =
       p.colors && p.colors.length > 0 ? p.colors : getRandomColors(3);
@@ -158,7 +139,6 @@ const ProductDetailsPage: React.FC = () => {
       }}
     >
       <Box sx={{ width: "100%" }}>
-        {/* Breadcrumbs */}
         <Box
           sx={{
             mb: 4,
@@ -183,7 +163,6 @@ const ProductDetailsPage: React.FC = () => {
           </Breadcrumbs>
         </Box>
 
-        {/* Product Images & Info */}
         <Grid
           container
           spacing={4}
@@ -193,10 +172,11 @@ const ProductDetailsPage: React.FC = () => {
             overflow: "hidden",
           }}
         >
-          <Grid>
+          <Grid item xs={12} md={6}>
             <ProductImages thumbnails={thumbnails} mainImage={thumbnails[0]} />
           </Grid>
-          <Grid>
+
+          <Grid item xs={12} md={6}>
             <ProductInfo
               product={product}
               isMobile={isMobile}
@@ -214,11 +194,9 @@ const ProductDetailsPage: React.FC = () => {
               DeliveryIcon={DeliveryIcon}
               ReturnIcon={ReturnIcon}
             />
-          
           </Grid>
         </Grid>
 
-        {/* Related Items */}
         <Box mt={8}>
           {loadingRelated ? (
             <LoadingState

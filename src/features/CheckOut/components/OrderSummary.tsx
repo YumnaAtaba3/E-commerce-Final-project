@@ -7,30 +7,32 @@ import {
   Button,
   useMediaQuery,
 } from "@mui/material";
-import { useTheme } from "../../../theme/ThemeProvider";
+import { useTheme as useCustomTheme } from "../../../theme/ThemeProvider";
 import ProductItem from "./ProductItem";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
-import { useCartStore } from "../../../store/cartStore"; 
+import { useCartStore } from "../../../store/cartStore";
 import MasterCard from "../../../assets/CheckOut/masterCard.svg";
 import ChinaLogo from "../../../assets/CheckOut/chinalogo.svg";
 import Bkash from "../../../assets/CheckOut/Bkash.svg";
+import { useState } from "react";
+
 interface OrderSummaryProps {
-  onPlaceOrder: () => void;
+  onPlaceOrder: (paymentMethod: string) => void;
 }
+
 const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
-  const { theme } = useTheme();
+  const { theme } = useCustomTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
 
-
-  // ✅ Pull data from cart
   const cart = useCartStore((state) => state.cart);
-  const getTotalPrice = useCartStore((state) => state.getTotalPrice);
 
-  // 🧮 Calculate totals
-  const subtotal = getTotalPrice();
-  const shipping = subtotal > 0 ? 20 : 0; // Example shipping cost rule
+  // Calculate subtotal from cart items
+  const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+  const shipping = subtotal > 0 ? 20 : 0;
   const total = subtotal + shipping;
+
+  const [selectedPayment, setSelectedPayment] = useState("bank");
 
   return (
     <Box
@@ -76,7 +78,7 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
         )}
       </Box>
 
-      {/* Action Box: Totals + Payment */}
+      {/* Totals and Payment */}
       <Box
         sx={{
           p: 2,
@@ -90,31 +92,19 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
         }}
       >
         {/* Totals */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            width: "100%",
-          }}
-        >
-          {/* Subtotal */}
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography sx={{ fontSize: 16 }}>Subtotal</Typography>
             <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
               ${subtotal.toFixed(2)}
             </Typography>
           </Box>
-
-          {/* Shipping */}
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography sx={{ fontSize: 16 }}>Shipping</Typography>
             <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
               {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
             </Typography>
           </Box>
-
-          {/* Divider */}
           <Box
             sx={{
               borderTop: `1px solid ${theme.borderColor}`,
@@ -122,8 +112,6 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
               my: 1,
             }}
           />
-
-          {/* Total */}
           <Box
             sx={{
               display: "flex",
@@ -136,8 +124,12 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
           </Box>
         </Box>
 
-        {/* Payment options */}
-        <RadioGroup sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        {/* Payment Options */}
+        <RadioGroup
+          value={selectedPayment}
+          onChange={(e) => setSelectedPayment(e.target.value)}
+          sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+        >
           <FormControlLabel
             value="bank"
             control={
@@ -213,7 +205,7 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
           "&:hover": { bgcolor: theme.error },
           alignSelf: "flex-start",
         }}
-        onClick={onPlaceOrder}
+        onClick={() => onPlaceOrder(selectedPayment)}
       >
         Place Order
       </Button>

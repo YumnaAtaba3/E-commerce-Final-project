@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useWishlistStore } from "../../../../store/wishlistStore";
 import { useCartStore } from "../../../../store/cartStore";
 import { useSearchStore } from "../../../../store/searchStore";
-import { useIsLoggedIn } from "../../../../features/auth/hooks/is-logged-in";
+
 import { appRoutes } from "../../../../routes";
 import { toast } from "react-toastify";
 import ProductCardIcons from "./ProductCardIcons";
@@ -30,7 +30,7 @@ const SearchProductCard: React.FC<SearchProductCardProps> = ({ product }) => {
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
   const setSearchOpen = useSearchStore((state) => state.setOpen);
-  const { isLoggedIn } = useIsLoggedIn();
+
 
   const addToWishlist = useWishlistStore((state) => state.addToWishlist);
   const removeFromWishlist = useWishlistStore(
@@ -42,11 +42,6 @@ const SearchProductCard: React.FC<SearchProductCardProps> = ({ product }) => {
   const productImage = product.images?.[0] || "/backup.png";
 
   const toggleWishlist = () => {
-    if (!isLoggedIn) {
-      setSearchOpen(false);
-      navigate(appRoutes.auth.signUp);
-      return;
-    }
     if (favorite) {
       removeFromWishlist(product.id);
       toast.info(`${product.title} removed from wishlist!`, {
@@ -63,11 +58,6 @@ const SearchProductCard: React.FC<SearchProductCardProps> = ({ product }) => {
   };
 
   const handleAddToCart = () => {
-    if (!isLoggedIn) {
-      setSearchOpen(false);
-      navigate(appRoutes.auth.signUp);
-      return;
-    }
     addToCart(
       {
         id: product.id,
@@ -86,11 +76,6 @@ const SearchProductCard: React.FC<SearchProductCardProps> = ({ product }) => {
   };
 
   const handleViewDetails = () => {
-    if (!isLoggedIn) {
-      setSearchOpen(false);
-      navigate(appRoutes.auth.signUp);
-      return;
-    }
     setSearchOpen(false);
     navigate(appRoutes.products.details(product.id));
   };

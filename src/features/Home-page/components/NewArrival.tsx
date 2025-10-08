@@ -7,7 +7,6 @@ import {
   useTheme as useMuiTheme,
 } from "@mui/material";
 
-// ✅ Import images
 import ps5Img from "../../../assets/Home-page/NewArrival/ps5-slim-goedkope-playstation_large1.png.png";
 import womanImg from "../../../assets/Home-page/NewArrival/attractive-woman-wearing-hat-posing-black-background 1.png";
 import speakersImg from "../../../assets/Home-page/NewArrival/speakers.png";
@@ -88,13 +87,13 @@ const NewArrival: React.FC = () => {
           position: "absolute",
           left: { xs: 8, md: 16 },
           bottom: { xs: 16, md: 24 },
-          right: { xs: 8, md: "auto" }, // prevent overflow on mobile
+          right: { xs: 8, md: "auto" }, 
           color: "white",
           zIndex: 2,
           display: "flex",
           flexDirection: "column",
-          gap: { xs: 0.5, md: 1 }, // smaller gap on mobile
-          maxWidth: { xs: "90%", md: "auto" }, // limit width on mobile
+          gap: { xs: 0.5, md: 1 }, 
+          maxWidth: { xs: "90%", md: "auto" }, 
         }}
       >
         {/* Title */}

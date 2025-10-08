@@ -88,12 +88,12 @@ const CouponSection: React.FC<Props> = ({ isMobile, setDiscountPercent }) => {
         variant="contained"
         sx={{
           bgcolor: theme.Button2,
-          color: theme.primary1,
+          color:"white",
           textTransform: "none",
-          fontSize: 14, // better readable
-          px: 6, // reasonable padding
+          fontSize: 14, 
+          px: 6,
           height: 50,
-          whiteSpace: "nowrap", // prevent text wrap
+          whiteSpace: "nowrap",
           "&:hover": { bgcolor: theme.Button2 },
         }}
         onClick={handleApplyCoupon}

@@ -14,9 +14,9 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
 import { useTheme } from "../../../theme/ThemeProvider";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-// Map categories
+
 const categories = [
   { name: "Woman’s Fashion", slug: "clothes" },
   { name: "Men’s Fashion", slug: "luxery" },
@@ -28,17 +28,39 @@ const categories = [
   { name: "Health & Beauty", slug: "luxery-2" },
 ];
 
-const FilterSidebar: React.FC = () => {
+interface FilterSidebarProps {
+  onCategorySelect?: (slug?: string) => void;
+}
+
+const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
   const [active, setActive] = useState<string>("");
   const [open, setOpen] = useState(false);
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
   const navigate = useNavigate();
+  const location = useLocation();
 
+  
   const handleCategoryClick = (slug: string, name: string) => {
     setActive(name);
-    navigate({ pathname: "/products", search: `?category=${slug}` });
+
+    const params = new URLSearchParams(location.search);
+    params.set("category", slug);
+
+   
+    const existingFilter = params.get("filter");
+    if (existingFilter) {
+      params.set("filter", existingFilter);
+    }
+
+
+    if (onCategorySelect) {
+      onCategorySelect(slug);
+    } else {
+      navigate({ pathname: "/products", search: `?${params.toString()}` });
+    }
+
     setOpen(false);
   };
 
@@ -46,7 +68,7 @@ const FilterSidebar: React.FC = () => {
     <List disablePadding>
       {categories.map((cat, index) => (
         <ListItemButton
-          key={`${cat.slug}-${index}`} // ✅ unique key
+          key={`${cat.slug}-${index}`}
           onClick={() => handleCategoryClick(cat.slug, cat.name)}
           sx={{
             py: 1.2,
@@ -80,6 +102,7 @@ const FilterSidebar: React.FC = () => {
 
   return (
     <>
+      {/*  Desktop Sidebar */}
       {!isMobile && (
         <Box
           sx={{
@@ -95,6 +118,7 @@ const FilterSidebar: React.FC = () => {
         </Box>
       )}
 
+      {/*  Mobile Drawer */}
       {isMobile && (
         <>
           <Button
@@ -117,6 +141,7 @@ const FilterSidebar: React.FC = () => {
           </Button>
 
           <Drawer
+
             anchor="bottom"
             open={open}
             onClose={() => setOpen(false)}

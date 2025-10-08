@@ -4,7 +4,7 @@ import { Box, IconButton, Badge } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import { Link as RouterLink } from "react-router-dom";
+import { useLocation, Link as RouterLink } from "react-router-dom";
 
 import { appRoutes } from "../../../../routes";
 import AccountDropdown from "../../../components/Account-dropdown";
@@ -25,8 +25,13 @@ const HeaderProtectedIcons: React.FC<HeaderProtectedIconsProps> = ({
 }) => {
   const [accountOpen, setAccountOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
 
-  // Close dropdown when clicking outside
+  // تحديد الصفحات التي يجب فيها إخفاء جميع الأيقونات
+  const hideAllIconsPages =
+    location.pathname === appRoutes.auth.signUp ||
+    location.pathname === appRoutes.auth.login;
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -36,11 +41,8 @@ const HeaderProtectedIcons: React.FC<HeaderProtectedIconsProps> = ({
         setAccountOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const iconButtonStyles = {
@@ -61,51 +63,58 @@ const HeaderProtectedIcons: React.FC<HeaderProtectedIconsProps> = ({
     },
   };
 
-const iconStyles = {
-  fontSize: 20,
-  color: theme.Text1,
-  "&:hover": {
-    color: "white",
-  },
-};
+  const iconStyles = {
+    fontSize: 20,
+    color: theme.Text1,
+    "&:hover": {
+      color: "white",
+    },
+  };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        gap: 1.5,
-        visibility: isLoggedIn ? "visible" : "hidden",
-      }}
-    >
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
       {/* Wishlist */}
-      <IconButton
-        component={RouterLink}
-        to={appRoutes.wishlist}
-        sx={{ ...iconButtonStyles, ...badgeStyles }}
+      <Box
+        sx={{
+          visibility: hideAllIconsPages ? "hidden" : "visible",
+        }}
       >
-        <Badge badgeContent={wishlist.length} color="secondary">
-          <FavoriteBorderIcon
-            sx={iconStyles}
-          />
-        </Badge>
-      </IconButton>
+        <IconButton
+          component={RouterLink}
+          to={appRoutes.wishlist} 
+          sx={{ ...iconButtonStyles, ...badgeStyles }}
+        >
+          <Badge badgeContent={wishlist.length} color="secondary">
+            <FavoriteBorderIcon sx={iconStyles} />
+          </Badge>
+        </IconButton>
+      </Box>
 
       {/* Cart */}
-      <IconButton
-        component={RouterLink}
-        to={appRoutes.cart}
-        sx={{ ...iconButtonStyles, ...badgeStyles }}
+      <Box
+        sx={{
+          visibility: hideAllIconsPages ? "hidden" : "visible",
+        }}
       >
-        <Badge badgeContent={cart.length} color="secondary">
-          <ShoppingCartOutlinedIcon
-            sx={iconStyles}
-          />
-        </Badge>
-      </IconButton>
+        <IconButton
+          component={RouterLink}
+          to={appRoutes.cart} 
+          sx={{ ...iconButtonStyles, ...badgeStyles }}
+        >
+          <Badge badgeContent={cart.length} color="secondary">
+            <ShoppingCartOutlinedIcon sx={iconStyles} />
+          </Badge>
+        </IconButton>
+      </Box>
 
       {/* Account */}
-      <Box sx={{ position: "relative" }} ref={dropdownRef}>
+      <Box
+        sx={{
+          position: "relative",
+          visibility: hideAllIconsPages || !isLoggedIn ? "hidden" : "visible",
+        }}
+        ref={dropdownRef}
+      >
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
@@ -113,9 +122,7 @@ const iconStyles = {
           }}
           sx={iconButtonStyles}
         >
-          <PersonOutlineIcon
-            sx={iconStyles}
-          />
+          <PersonOutlineIcon sx={iconStyles} />
         </IconButton>
         <AccountDropdown open={accountOpen} theme={theme} isMobile={false} />
       </Box>

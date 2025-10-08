@@ -4,28 +4,49 @@ import { useTheme } from "../../../theme/ThemeProvider";
 import { useNavigate } from "react-router";
 import { appRoutes } from "../../../routes";
 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useIsLoggedIn } from "../../auth/hooks/is-logged-in";
+
 interface Props {
   subtotal: number;
-  discount: number; // discount in percentage
+  discount: number; 
   isMobile: boolean;
 }
 
 const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
   const { theme } = useTheme();
   const navigate = useNavigate();
+  const { isLoggedIn, isLoading } = useIsLoggedIn();
 
-  // Free shipping threshold
-  const freeShippingThreshold = 50; // e.g., orders over $50
-  const shippingCost = subtotal > 0 && subtotal < freeShippingThreshold ? 5 : 0; // $5 shipping if below threshold
+ 
+  const freeShippingThreshold = 50;
+  const shippingCost = subtotal > 0 && subtotal < freeShippingThreshold ? 5 : 0;
   const shippingLabel =
     shippingCost === 0 ? "Free" : `$${shippingCost.toFixed(2)}`;
-
   const discountedTotal = subtotal * (1 - discount / 100) + shippingCost;
+
+  const handleCheckoutClick = () => {
+    if (isLoading) return;
+
+    if (!isLoggedIn) {
+     
+      toast.warning("You must log in first!", {
+        className: "toast-warning",
+        autoClose: 1500,
+      });
+
+      navigate(appRoutes.auth.signUp);
+      return;
+    }
+
+
+    navigate(appRoutes.checkout);
+  };
 
   return (
     <Box
       sx={{
-      
         color: theme.Text1,
         border: `1px solid ${theme.Text1}`,
         p: { xs: 2, md: 4 },
@@ -33,7 +54,7 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
         boxShadow: "0px 6px 24px rgba(0,0,0,0.08)",
         width: "100%",
         minWidth: isMobile ? { xs: "100%", md: 100 } : { xs: "100%", md: 150 },
-        transition: "box-shadow 0.3s",
+        transition: "box-shadow 0.3s, transform 0.3s",
         "&:hover": {
           boxShadow: `0px 8px 30px ${theme.Button2}50`,
           transform: "translateY(-6px)",
@@ -67,11 +88,7 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
       {/* Shipping */}
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>Shipping:</Typography>
-        <Typography
-          sx={{
-            fontSize: { xs: 14, md: 16 },
-          }}
-        >
+        <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>
           {shippingLabel}
         </Typography>
       </Box>
@@ -95,12 +112,14 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
         </Typography>
       </Box>
 
+      {/* Checkout Button */}
       <Button
         variant="contained"
+        onClick={handleCheckoutClick}
         sx={{
-          width: { xs: 180, md: 220 }, // responsive width: smaller on mobile, bigger on desktop
-          mx: "auto", // centers the button horizontally
-          display: "block", // ensures mx works
+          width: { xs: 180, md: 220 },
+          mx: "auto",
+          display: "block",
           bgcolor: theme.Button2,
           color: theme.bgColor,
           textTransform: "none",
@@ -109,7 +128,6 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
           px: 0.5,
           "&:hover": { bgcolor: theme.Button2 },
         }}
-        onClick={() => navigate(appRoutes.checkout)}
       >
         Proceed to checkout
       </Button>

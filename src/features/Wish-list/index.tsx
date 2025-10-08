@@ -19,13 +19,12 @@ import "swiper/css";
 import "swiper/css/navigation";
 import LoadingState from "../../shared/components/Loading-state";
 import ErrorState from "../../shared/components/Error-state";
-
-
+import type { Product } from "../../store/state";
 
 const WishlistPage: React.FC = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
-    const muiTheme = useMuiTheme();
+  const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md"));
 
@@ -41,6 +40,8 @@ const WishlistPage: React.FC = () => {
     isError,
     refetch,
   } = useProductsQuery();
+  const productsData = products as Product[];
+  const justForYou = productsData.slice(0, 8);
 
   const handleDelete = (id: number) => removeFromWishlist(id);
 
@@ -64,7 +65,6 @@ const WishlistPage: React.FC = () => {
   };
 
   const headingFont = isMobile ? 18 : isTablet ? 22 : 24;
-  const justForYou = products.slice(0, 8);
 
   return (
     <Box
@@ -112,12 +112,12 @@ const WishlistPage: React.FC = () => {
             mb={6}
             justifyContent={isMobile ? "center" : "flex-start"}
           >
-            {wishlist.map((item) => (
+            {wishlist.map((item: Product) => (
               <Grid key={item.id}>
                 <WishlistCard
                   id={item.id}
-                  name={ item.title || "Unnamed Product"}
-                  price={item.price ?? 0}
+                  name={item.title || "Unnamed Product"}
+                  price={item.price}
                   oldPrice={item.oldPrice}
                   discount={item.discount}
                   images={
@@ -207,13 +207,18 @@ const WishlistPage: React.FC = () => {
               }}
               modules={[Navigation]}
             >
-              {justForYou.map((product) => (
+              {justForYou.map((product: Product) => (
                 <SwiperSlide key={product.id}>
                   <ProductCard
                     id={product.id}
                     name={product.title}
-                    price={`$${product.price}`}
-                    oldPrice={product.oldPrice}
+                    price={`$${product.price.toFixed(2)}`}
+                    oldPrice={
+                      product.oldPrice &&
+                      (typeof product.oldPrice === "number"
+                        ? product.oldPrice.toFixed(2)
+                        : product.oldPrice)
+                    }
                     discount={product.discount}
                     rating={product.rating}
                     img={product.images?.[0] || "/placeholder.png"}
