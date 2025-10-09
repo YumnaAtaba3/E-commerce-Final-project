@@ -24,6 +24,8 @@ import { appRoutes } from "../../../routes";
 
 import "./AccountDropdown.css";
 import LogoutDialog from "../Logout-dialog";
+import { ClassNames } from "@emotion/react";
+import { toast } from "react-toastify";
 
 interface AccountDropdownProps {
   open: boolean;
@@ -47,6 +49,11 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
   const handleLogoutCancel = () => setLogoutDialogOpen(false);
   const handleLogoutConfirm = () => {
     setLogoutDialogOpen(false);
+
+   
+    toast.success("Logged out successfully", {
+      className:"toast-success"
+    });
     logoutHelper(appRoutes.auth.signUp);
     onClose?.();
   };

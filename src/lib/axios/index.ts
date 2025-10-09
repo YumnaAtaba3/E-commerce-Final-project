@@ -8,6 +8,7 @@ import axios, {
 } from "axios";
 import { toast } from "react-toastify";
 import { userStorage } from "../../features/auth/storage/userStorage";
+import { logoutHelper } from "../../features/auth/utilities/auth";
 
 interface StatusAction {
   message: string;
@@ -15,13 +16,13 @@ interface StatusAction {
 }
 
 const statusesConfig: Record<number, StatusAction> = {
-  401: {
-    message: "You are not authorized to access this resource",
-    action: function () {
-      toast.error(this.message);
-      window.location.reload();
-    },
+ 401: {
+  message: "You are not authorized to access this resource",
+  action: function () {
+    toast.error(this.message);
+    logoutHelper("/login");
   },
+},
   403: {
     message: "You do not have permission to access this resource",
     action: function () {

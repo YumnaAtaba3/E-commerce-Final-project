@@ -85,36 +85,60 @@ const HeaderProtectedIcons: React.FC<HeaderProtectedIconsProps> = ({
   const iconSx = iconStylesConfig.icon(theme, iconColor);
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-      {/* Wishlist */}
+
+  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+    {/* Wishlist */}
+    <Box
+      sx={{
+        width: 40, // نفس عرض الايقونة تقريبا
+        height: 40,
+        display: hideAllIconsPages ? "inline-block" : "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       {!hideAllIconsPages && (
-        <IconButton
-          component={RouterLink}
-          to={appRoutes.wishlist}
-          sx={{ ...iconButtonSx, ...badgeSx }}
-        >
+        <IconButton component={RouterLink} to={appRoutes.wishlist} sx={{ ...iconButtonSx, ...badgeSx }}>
           <Badge badgeContent={wishlist.length} color="secondary">
             <FavoriteBorderIcon sx={iconSx} />
           </Badge>
         </IconButton>
       )}
+    </Box>
 
-      {/* Cart */}
+    {/* Cart */}
+    <Box
+      sx={{
+        width: 40,
+        height: 40,
+        display: hideAllIconsPages ? "inline-block" : "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       {!hideAllIconsPages && (
-        <IconButton
-          component={RouterLink}
-          to={appRoutes.cart}
-          sx={{ ...iconButtonSx, ...badgeSx }}
-        >
+        <IconButton component={RouterLink} to={appRoutes.cart} sx={{ ...iconButtonSx, ...badgeSx }}>
           <Badge badgeContent={cart.length} color="secondary">
             <ShoppingCartOutlinedIcon sx={iconSx} />
           </Badge>
         </IconButton>
       )}
+    </Box>
 
-      {/* Account */}
+    {/* Account */}
+    <Box
+      sx={{
+        width: 40,
+        height: 40,
+        display: hideAllIconsPages || !isLoggedIn ? "inline-block" : "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+      }}
+      ref={dropdownRef}
+    >
       {!hideAllIconsPages && isLoggedIn && (
-        <Box sx={{ position: "relative" }} ref={dropdownRef}>
+        <>
           <IconButton
             onClick={(e) => {
               e.stopPropagation();
@@ -124,15 +148,13 @@ const HeaderProtectedIcons: React.FC<HeaderProtectedIconsProps> = ({
           >
             <PersonOutlineIcon sx={iconSx} />
           </IconButton>
-          <AccountDropdown
-            open={accountOpen}
-            theme={theme}
-            isMobile={!!isMobile}
-          />
-        </Box>
+          <AccountDropdown open={accountOpen} theme={theme} isMobile={!!isMobile} />
+        </>
       )}
     </Box>
-  );
+  </Box>
+);
+
 };
 
 export default HeaderProtectedIcons;

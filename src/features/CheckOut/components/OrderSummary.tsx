@@ -55,6 +55,7 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
         flexDirection: "column",
         gap: 3.5,
         width: "100%",
+        
         alignItems: "flex-start",
       }}
     >

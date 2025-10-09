@@ -1,35 +1,65 @@
 
 function checkIsBrowser(): boolean {
-  return typeof window !== "undefined";
+  return typeof window !== "undefined" && typeof localStorage !== "undefined";
 }
 
-const defaultGetStorage = (): Storage | null =>
-  checkIsBrowser() ? localStorage : null;
+
+const defaultGetStorage = (): Storage => {
+  if (!checkIsBrowser()) {
+   
+    return {
+      getItem: () => null,
+      setItem: () => {},
+      removeItem: () => {},
+      clear: () => {},
+      key: () => null,
+      length: 0,
+    } as Storage;
+  }
+  return localStorage;
+};
 
 export function dataStorage<T = unknown>(
   key: string,
-  getStorage: () => Storage | null = defaultGetStorage
+  getStorage: () => Storage = defaultGetStorage
 ) {
   const storage = getStorage();
 
   return {
-    set: (data: T): void => {
-      if (!checkIsBrowser() || !storage) return;
-      storage.setItem(key, JSON.stringify(data));
-    },
-    get: (): T | undefined => {
-      if (!checkIsBrowser() || !storage) return undefined;
-      const json = storage.getItem(key);
-      if (!json) return undefined;
-      try {
-        return JSON.parse(json) as T;
-      } catch {
-        return json as unknown as T;
-      }
-    },
+   set: (data: T): void => {
+  if (!checkIsBrowser()) return;
+  try {
+    const value =
+      typeof data === "string" ? (data as string) : JSON.stringify(data);
+    storage.setItem(key, value);
+  } catch (err) {
+    console.error(`Failed to set ${key} in storage`, err);
+  }
+},
+
+get: (): T | undefined => {
+  if (!checkIsBrowser()) return undefined;
+  try {
+    const value = storage.getItem(key);
+    if (!value) return undefined;
+    try {
+      return JSON.parse(value) as T;
+    } catch {
+      return value as unknown as T;
+    }
+  } catch {
+    return undefined;
+  }
+},
+
+
     remove: (): void => {
-      if (!checkIsBrowser() || !storage) return;
-      storage.removeItem(key);
+      if (!checkIsBrowser()) return;
+      try {
+        storage.removeItem(key);
+      } catch (err) {
+        console.error(` Failed to remove ${key} from storage`, err);
+      }
     },
   };
 }
@@ -37,4 +67,3 @@ export function dataStorage<T = unknown>(
 export function dataSessionStorage<T = unknown>(key: string) {
   return dataStorage<T>(key, () => sessionStorage);
 }
-

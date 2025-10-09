@@ -1,8 +1,21 @@
-import { userStorage } from '../storage/userStorage';
+import { userStorage } from "../storage/userStorage";
+
+export function logoutHelper(fallbackUrl = "/login") {
+  try {
+
+    userStorage.remove();
 
 
-export function logoutHelper(fallbackUrl = '/login') {
-  userStorage.remove();
-  window.location.href = fallbackUrl;
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+
+    console.log(" Tokens and user data cleared successfully");
+  } catch (error) {
+    console.error(" Logout cleanup failed:", error);
+  }
+
+  
+  if (typeof window !== "undefined") {
+    window.location.href = fallbackUrl;
+  }
 }
-

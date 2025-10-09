@@ -64,24 +64,20 @@ const LoginForm: React.FC = () => {
 
   const { mutateAsync: login, isPending } = useLoginMutation();
 
-  const onSubmit = handleSubmit(async (values) => {
-    try {
-      const data = await login(values);
-      userStorage.set(data.access_token);
+const onSubmit = handleSubmit(async (values) => {
+  try {
+    const data = await login(values); 
+    userStorage.set(data.access_token);
 
-      toast.success("Login successful!", {
-        className: "toast-success",
-        autoClose: 1000,
-      });
-
-      navigate(-2);
-    } catch (error: any) {
-      toast.error(error.message || "Login failed. Please try again.", {
-        className: "toast-error",
-        autoClose: 1500,
-      });
-    }
-  });
+    toast.success("Login successful!", { autoClose: 1000 });
+    navigate(-2);
+  } catch (error: any) {
+    console.error("Login error:", error);
+    toast.error(error.message || "Login failed. Please try again.", {
+      autoClose: 1500,
+    });
+  }
+});
 
   const headingFont = isMobile ? "24px" : "32px";
   const subHeadingFont = isMobile ? "14px" : "16px";

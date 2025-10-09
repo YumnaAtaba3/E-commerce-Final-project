@@ -74,33 +74,26 @@ const SignUpForm: React.FC = () => {
 
   const { mutateAsync: signUp, isPending } = useSignUpMutation();
 
-  const onSubmit = handleSubmit(async (values) => {
-    try {
-      const user = await signUp(values);
-      userStorage.set(user.id);
+   const onSubmit = handleSubmit(async (values) => {
+     try {
+       const user = await signUp(values); // user = IUser
+       toast.success("Account created successfully!", { autoClose: 2000 });
 
-      toast.success("Account created successfully!", {
-        className: "toast-success",
-        autoClose: 10000,
-      });
-
-    
-      navigate(appRoutes.auth.login, {
-        state: {
-          from: locationState?.from,
-          email: values.email,
-          password: values.password,
-        },
-      });
-    } catch (error: any) {
-      console.error(error);
-      toast.error(error.message || "Sign-up failed. Please try again.", {
-        className: "toast-error",
-        autoClose: false,
-      });
-    }
-  });
-
+       // التوجيه لصفحة تسجيل الدخول مع prefill
+       navigate(appRoutes.auth.login, {
+         state: {
+           from: locationState?.from,
+           email: values.email,
+           password: values.password,
+         },
+       });
+     } catch (error: any) {
+       console.error("Sign-up error:", error);
+       toast.error(error.message || "Sign-up failed. Please try again.", {
+         autoClose: 4000,
+       });
+     }
+   });
   const headingFont = isMobile ? "24px" : "32px";
   const subHeadingFont = isMobile ? "14px" : "16px";
   const inputFont = isMobile ? "14px" : "16px";

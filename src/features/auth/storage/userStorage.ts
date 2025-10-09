@@ -1,3 +1,3 @@
-import { dataStorage } from '../../../lib/storage';
+import { dataStorage } from "../../../lib/storage";
 
-export  const userStorage = dataStorage('token');
+export const userStorage = dataStorage<string | null>("token");
