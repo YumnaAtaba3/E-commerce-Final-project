@@ -23,7 +23,7 @@ const AuthLayout: React.FC = () => {
       sx={{
         bgcolor: theme.primary1,
         p: { xs: 2, md: 0 },
-        pt:{ xs: 2, md: 8 },
+        pt:{ xs: 2, md: 5 },
         pb:{ xs: 2, md: 20},
         pr:{ xs: 2, md: 10 },
         gap: hideImage ? 0 : 3,

@@ -55,7 +55,7 @@ const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, text }) => {
       <Typography
         sx={{
           fontWeight: 700,
-          fontSize: 15,
+          fontSize: 16,
           mb: 1,
           textTransform: "uppercase",
           color:theme.Text1

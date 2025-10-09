@@ -115,15 +115,15 @@ const AboutPage: React.FC<AboutPageProps> = ({ isLoading = false }) => {
             {
               icon: IconShop,
               value: "10.5k",
-              text: "Sellers active on our site",
+              text: "Sallers active  our site",
             },
-            { icon: IconSale, value: "33k", text: "Monthly Product Sale" },
+            { icon: IconSale, value: "33k", text: "Mopnthly Product Sale" },
             {
               icon: Icon_Shopping_bag,
               value: "45.5k",
-              text: "Customers active",
+              text: "Customers active in our site",
             },
-            { icon: IconMoneybag, value: "25k", text: "Annual gross sale" },
+            { icon: IconMoneybag, value: "25k", text: "Anual gross sale in our site" },
           ].map((item, i) => (
             <Grid item key={i}>
               <StatCard {...item} />

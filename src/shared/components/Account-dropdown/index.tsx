@@ -190,9 +190,9 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
                     }}
                   >
                     {isDark ? (
-                      <LightModeOutlined fontSize="large" />
+                      <LightModeOutlined fontSize="medium" />
                     ) : (
-                      <DarkModeOutlined fontSize="large" />
+                      <DarkModeOutlined fontSize="medium" />
                     )}
                   </IconButton>
                 </Tooltip>

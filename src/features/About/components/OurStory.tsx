@@ -24,8 +24,8 @@ const OurStory: React.FC<OurStoryProps> = ({ image, title, paragraphs }) => {
             variant="h4"
             sx={{
               color:theme.Text1,
-              fontWeight: 700,
-              fontSize: { xs: 28, md: 36 },
+              fontWeight: 500,
+              fontSize: { xs: 28, md: 40 },
               mb: { xs: 3, md: 6 },
             }}
           >
@@ -34,10 +34,10 @@ const OurStory: React.FC<OurStoryProps> = ({ image, title, paragraphs }) => {
           {paragraphs.map((p, i) => (
             <Typography
               key={i}
-              maxWidth={500}
+              maxWidth={463}
               sx={{
                 mb: 2,
-                fontSize: 16,
+                fontSize: 15,
                 lineHeight: 1.8,
                 color: theme.Text1,
               }}
@@ -53,7 +53,7 @@ const OurStory: React.FC<OurStoryProps> = ({ image, title, paragraphs }) => {
             alt={title}
             sx={{
               width: "100%",
-              maxWidth: "60rem",
+              maxWidth: "40rem",
               height: "auto",
               borderRadius: 2,
               boxShadow: "0px 10px 30px rgba(0,0,0,0.35)",

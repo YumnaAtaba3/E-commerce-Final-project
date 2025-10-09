@@ -1,9 +1,10 @@
 import React from "react";
 import { Box, Card, Typography, IconButton } from "@mui/material";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { useTheme } from "../../../theme/ThemeProvider";
+
+import twitter from "../../../assets/Footer/Icon-Twitter.svg";
+import instagram from "../../../assets/Footer/icon-instagram.svg";
+import linkedin from "../../../assets/Footer/Icon-Linkedin.svg";
 
 interface StaffCardProps {
   img: string;
@@ -38,23 +39,29 @@ const StaffCard: React.FC<StaffCardProps> = ({ img, name, role }) => {
       <Typography sx={{ color: "#777", fontSize: 14, mb: 2 }}>
         {role}
       </Typography>
-      <Box sx={{ display: "flex", gap: 1 }}>
-        {[TwitterIcon, InstagramIcon, LinkedInIcon].map((Icon, i) => (
+
+      <Box sx={{ display: "flex", gap: 0.5 }}>
+        {[twitter, instagram, linkedin].map((icon, i) => (
           <IconButton
             key={i}
-            sx={{ color: theme.Text1, bgcolor: theme.primary1, gap: 9 }}
+            sx={{
+              p: 0.8,
+              bgcolor: "transparent", // ✅ remove background color
+              "&:hover": {
+                bgcolor: "transparent", // no hover background
+                transform: "scale(0.9)",
+              },
+            }}
           >
-            <Icon
-              fontSize="medium"
+            <Box
+              component="img"
+              src={icon}
+              alt={`social-icon-${i}`}
               sx={{
-                color: theme.Text1,
-                bgcolor: theme.primary1,
-                transition: "all 0.3s ease",
-                "&:hover": {
-                  bgcolor: theme.Button2,
-                  color: "#fff",
-                  transform: "scale(0.9)",
-                },
+                width: 22,
+                height: 22,
+                filter: "brightness(0) saturate(100%)",
+                transition: "transform 0.3s ease",
               }}
             />
           </IconButton>

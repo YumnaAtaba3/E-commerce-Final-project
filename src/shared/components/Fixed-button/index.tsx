@@ -50,7 +50,7 @@ const FixedButton: React.FC = () => {
         }}
       >
         <NorthIcon
-          fontSize={isMobile ? "small" : "large"}
+          fontSize={isMobile ? "small" : "medium"}
           sx={{
             color: "#555",
           }}

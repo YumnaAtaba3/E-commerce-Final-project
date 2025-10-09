@@ -168,7 +168,7 @@ const FlashSales: React.FC = () => {
               fontWeight: 500,
               color: theme.Text1,
               mt: isMobile ? 1 : 0,
-              fontSize: isMobile ? "1.5rem" : "3rem",
+              fontSize: isMobile ? "1.5rem" : "2rem",
             }}
           >
             Flash Sales

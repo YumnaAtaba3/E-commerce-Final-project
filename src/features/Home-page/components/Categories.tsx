@@ -103,7 +103,7 @@ const enrichedCategories = categories.map((cat) => {
           sx={{
             fontWeight: 500,
             color: theme.Text1,
-            fontSize: isMobile ? "1.5rem" : "3rem",
+            fontSize: isMobile ? "1.5rem" : "2rem",
           }}
         >
           Browse By Category

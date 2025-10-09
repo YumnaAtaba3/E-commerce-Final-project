@@ -103,7 +103,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
             color: "black",
           }}
         >
-          <DeleteOutlineIcon fontSize="large" />
+          <DeleteOutlineIcon fontSize="medium" />
         </IconButton>
       </Box>
 

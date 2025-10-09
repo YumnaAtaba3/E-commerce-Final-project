@@ -83,7 +83,7 @@ const ProductPage: React.FC = () => {
             <ArrowBackIcon />
           </IconButton>
           <Typography
-            variant={isMobile ? "h5" : "h4"}
+            variant={isMobile ? "h6" : "h5"}
             sx={{ fontWeight: 700, color: theme.Text1 }}
           >
             {pageTitle}
@@ -97,52 +97,20 @@ const ProductPage: React.FC = () => {
               <Grid item key={i} xs={12} sm={6} md={3}>
                
                 <Box
-                  sx={{
-                    bgcolor: theme.primary1,
-                    borderRadius: 2,
-                    p: 1,
-                    boxShadow: "0px 2px 10px rgba(0,0,0,0.05)",
-                  }}
-                >
-                 
-                  <Skeleton
-                    variant="rectangular"
-                    height={150}
-                    sx={{ borderRadius: 2 }}
-                  />
+                     sx={{
+                       width: 200,
+                       bgcolor: "background.paper",
+                       borderRadius: 2,
+                       p: 1,
+                       boxShadow: "0px 2px 10px rgba(0,0,0,0.05)",
+                     }}
+                   >
+                     <Skeleton variant="rectangular" height={140} sx={{ borderRadius: 1 }} />
+                     <Skeleton variant="text" width="80%" height={25} sx={{ mt: 1 }} />
+                     <Skeleton variant="text" width="50%" height={20} />
+                     <Skeleton variant="text" width="60%" height={20} />
+                   </Box>
 
-                
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      mt: 1,
-                    }}
-                  >
-                   
-                  </Box>
-
-                  
-                  <Skeleton variant="text" height={30} sx={{ mt: 1 }} />
-
-                  
-                  <Box sx={{ display: "flex", gap: 1, mt: 0.5 }}>
-                    <Skeleton variant="text" width="50%" height={25} />
-                    <Skeleton variant="text" width="30%" height={25} />
-                  </Box>
-
-                  
-                  <Box sx={{ display: "flex", gap: 0.5, mt: 1 }}>
-                    {Array.from({ length: 5 }).map((_, idx) => (
-                      <Skeleton
-                        key={idx}
-                        variant="circular"
-                        width={20}
-                        height={20}
-                      />
-                    ))}
-                  </Box>
-                </Box>
               </Grid>
             ))}
           </Grid>

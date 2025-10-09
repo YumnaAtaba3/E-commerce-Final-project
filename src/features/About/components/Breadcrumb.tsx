@@ -16,11 +16,11 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ current }) => {
         component={Link}
         to="/"
         underline="hover"
-        sx={{ color: "#555", fontWeight: 600, cursor: "pointer" }}
+        sx={{ color: "#555", cursor: "pointer" }}
       >
         Home
       </MuiLink>{" "}
-      / <span style={{ color: theme.Text1, fontWeight: 600 }}>{current}</span>
+      / <span style={{ color: theme.Text1}}>{current}</span>
     </Box>
   );
 };

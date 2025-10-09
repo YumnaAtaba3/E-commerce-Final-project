@@ -10,16 +10,17 @@ import {
   useMediaQuery,
   useTheme as useMuiTheme,
 } from "@mui/material";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
+
 
 import qrCode from "../../../assets/Footer/Qr Code.svg";
 import iconSend from "../../../assets/Footer/icon-send.svg";
 import googlePlay from "../../../assets/Footer/google-play-store-logo.svg";
 import appStore from "../../../assets/Footer/AppStore.svg";
 import { useTheme } from "../../../theme/ThemeProvider";
+import facebook from "../../../assets/Footer/facebook.svg"
+import Twitter from "../../../assets/Footer/Icon-Twitter.svg"
+import instagram from "../../../assets/Footer/icon-instagram.svg";
+import Linkedin from "../../../assets/Footer/Icon-Linkedin.svg";
 
 const Footer: React.FC = () => {
   const { theme } = useTheme();
@@ -228,31 +229,42 @@ const Footer: React.FC = () => {
                 </Box>
               </Box>
 
+              {/* Social Icons */}
               <Box
                 sx={{
                   display: "flex",
                   gap: 2,
                   mt: 4,
+                  mb:4,
                   justifyContent: isMobile ? "center" : "flex-start",
                   flexWrap: "wrap",
                   width: "100%",
                 }}
               >
-                {[FacebookIcon, TwitterIcon, InstagramIcon, LinkedInIcon].map(
-                  (Icon, i) => (
-                    <IconButton
-                      key={i}
-                      size="large"
+                {[facebook, Twitter, instagram, Linkedin].map((icon, i) => (
+                  <IconButton
+                    key={i}
+                    size="small"
+                    sx={{
+                      p: 1,
+                      "&:hover img": {
+                        filter:
+                          "brightness(0) saturate(100%) invert(54%) sepia(100%) saturate(310%) hue-rotate(176deg) brightness(93%) contrast(96%)", 
+                      },
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={icon}
+                      alt={`social-icon-${i}`}
                       sx={{
-                        color: theme.secound1,
-                        p: 1,
-                        "&:hover": { color: theme.HoverButton },
+                        width: 16,
+                        height: 16,
+                        filter: "brightness(0) invert(1)", 
                       }}
-                    >
-                      <Icon />
-                    </IconButton>
-                  )
-                )}
+                    />
+                  </IconButton>
+                ))}
               </Box>
             </Box>
           </Grid>
@@ -277,7 +289,6 @@ const Footer: React.FC = () => {
           </Typography>
         </Box>
       </Box>
-     
     </Box>
   );
 };

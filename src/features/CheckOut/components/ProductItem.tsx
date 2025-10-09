@@ -13,7 +13,7 @@ const ProductItem = ({ name, price, image }: ProductItemProps) => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        mb: 1.5, // smaller spacing between items
+        mb: 1.5,
         gap: 6,
         maxWidth: 400,
         width: "100%",

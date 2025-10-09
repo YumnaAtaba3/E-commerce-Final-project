@@ -208,9 +208,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
           }}
         >
           {favorite ? (
-            <FavoriteIcon fontSize="large" />
+            <FavoriteIcon fontSize="medium" />
           ) : (
-            <FavoriteBorderIcon fontSize="large" />
+            <FavoriteBorderIcon fontSize="medium" />
           )}
         </IconButton>
 
@@ -224,7 +224,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             height: 42,
           }}
         >
-          <VisibilityOutlinedIcon fontSize="large" />
+          <VisibilityOutlinedIcon fontSize="medium" />
         </IconButton>
       </Box>
 
@@ -265,7 +265,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               color: "white",
               fontSize: 16,
               fontWeight: 500,
-              "&:hover": { bgcolor: inCart ? "gray" : "#222" },
+              "&:hover": { bgcolor: inCart ? "#222" : "#222" },
             }}
             startIcon={<ShoppingCartOutlinedIcon />}
             onClick={handleAddToCart}
@@ -303,7 +303,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           )}
           {colors && rating !== undefined && (
             <Box display="flex" alignItems="center" gap={0.5} ml="auto">
-              <Rating value={rating} precision={0.5} readOnly size="medium" />
+              <Rating value={rating} precision={0.5} readOnly size="small" />
               <Typography sx={{ fontSize: 14, color: "gray" }}>
                 ({rating})
               </Typography>
@@ -313,7 +313,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         {!colors && rating !== undefined && (
           <Box display="flex" alignItems="center" gap={0.5} mb={1}>
-            <Rating value={rating} precision={0.5} readOnly size="medium" />
+            <Rating value={rating} precision={0.5} readOnly size="small" />
             <Typography sx={{ fontSize: 14, color: "gray" }}>
               ({rating})
             </Typography>

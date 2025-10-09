@@ -87,7 +87,7 @@ const StatCard: React.FC<StatCardProps> = ({ icon, value, text }) => {
       </Typography>
       <Typography
         className="text"
-        sx={{ fontSize: 12, transition: "0.3s", color: theme.Text1 }}
+        sx={{ fontSize: 13, transition: "0.3s", color: theme.Text1 }}
       >
         {text}
       </Typography>
