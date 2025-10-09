@@ -44,16 +44,7 @@ const QuantityBuyFavorite: React.FC<Props> = ({
   };
 
  
-  const handleAddToCart = () => {
-    if (!product) return;
 
-    addToCart(product, quantity);
-
-    toast.success(`${product.title} added to cart!`, {
-      className: "toast-success",
-      autoClose: 2000,
-    });
-  };
 
 
   const handleFavoriteToggle = () => {

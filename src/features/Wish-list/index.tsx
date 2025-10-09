@@ -7,43 +7,33 @@ import {
   useMediaQuery,
   useTheme as useMuiTheme,
 } from "@mui/material";
-import { useNavigate } from "react-router";
+import { useTheme } from "../../theme/ThemeProvider";
 import WishlistCard from "./components/WishlistCard";
 import ProductCard from "../../shared/components/Product-card";
-import { useTheme } from "../../theme/ThemeProvider";
-import { useWishlistStore } from "../../store/wishlistStore";
-import { useProductsQuery } from "../../features/Products-page/hooks/useProducts";
+import WishlistSkeletonCard from "./components/WishlistSkeletonCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import LoadingState from "../../shared/components/Loading-state";
 import ErrorState from "../../shared/components/Error-state";
-import type { Product } from "../../store/state";
+import { useWishlistPage } from "./hooks/useWishlistPage";
 
 const WishlistPage: React.FC = () => {
   const { theme } = useTheme();
-  const navigate = useNavigate();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md"));
 
-  const wishlist = useWishlistStore((state) => state.wishlist);
-  const removeFromWishlist = useWishlistStore(
-    (state) => state.removeFromWishlist
-  );
-  const clearWishlist = useWishlistStore((state) => state.clearWishlist);
-
   const {
-    data: products = [],
+    wishlist,
+    justForYou,
     isLoading,
     isError,
     refetch,
-  } = useProductsQuery();
-  const productsData = products as Product[];
-  const justForYou = productsData.slice(0, 8);
-
-  const handleDelete = (id: number) => removeFromWishlist(id);
+    handleDelete,
+    handleViewAll,
+    moveAllToBag,
+  } = useWishlistPage();
 
   const buttonStyle = {
     borderColor: theme.Text1,
@@ -60,7 +50,6 @@ const WishlistPage: React.FC = () => {
       bgcolor: theme.Button2,
       color: "white",
       borderColor: theme.Button2,
-      boxShadow: "none",
     },
   };
 
@@ -74,7 +63,6 @@ const WishlistPage: React.FC = () => {
         bgcolor: theme.primary1,
         display: "flex",
         justifyContent: "center",
-        width: "100%",
       }}
     >
       <Box sx={{ width: "100%", maxWidth: 1200 }}>
@@ -94,11 +82,7 @@ const WishlistPage: React.FC = () => {
             Wishlist ({wishlist.length})
           </Typography>
           {wishlist.length > 0 && (
-            <Button
-              variant="outlined"
-              sx={buttonStyle}
-              onClick={() => clearWishlist()}
-            >
+            <Button variant="outlined" sx={buttonStyle} onClick={moveAllToBag}>
               Move All To Bag
             </Button>
           )}
@@ -112,23 +96,29 @@ const WishlistPage: React.FC = () => {
             mb={6}
             justifyContent={isMobile ? "center" : "flex-start"}
           >
-            {wishlist.map((item: Product) => (
-              <Grid key={item.id}>
-                <WishlistCard
-                  id={item.id}
-                  name={item.title || "Unnamed Product"}
-                  price={item.price}
-                  oldPrice={item.oldPrice}
-                  discount={item.discount}
-                  images={
-                    item.images?.length
-                      ? item.images
-                      : [item.img || "/placeholder.png"]
-                  }
-                  onDelete={handleDelete}
-                />
-              </Grid>
-            ))}
+            {isLoading
+              ? Array.from({ length: 4 }).map((_, idx) => (
+                  <Grid key={idx} item>
+                    <WishlistSkeletonCard />
+                  </Grid>
+                ))
+              : wishlist.map((item) => (
+                  <Grid key={item.id} item>
+                    <WishlistCard
+                      id={item.id}
+                      name={item.title || "Unnamed Product"}
+                      price={item.price}
+                      oldPrice={item.oldPrice}
+                      discount={item.discount}
+                      images={
+                        item.images?.length
+                          ? item.images
+                          : [item.img || "/placeholder.png"]
+                      }
+                      onDelete={handleDelete}
+                    />
+                  </Grid>
+                ))}
           </Grid>
         ) : (
           <Box sx={{ textAlign: "center", py: 6, color: theme.Text1 }}>
@@ -141,7 +131,7 @@ const WishlistPage: React.FC = () => {
           </Box>
         )}
 
-        {/* Just For You Section */}
+        {/* Just For You */}
         <Box>
           <Box
             display="flex"
@@ -151,7 +141,7 @@ const WishlistPage: React.FC = () => {
             mb={2}
             gap={isMobile ? 1 : 0}
           >
-            <Box display="flex" alignItems="center" gap={1.5}>
+            <Box sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
               <Box
                 sx={{
                   width: 20,
@@ -171,32 +161,25 @@ const WishlistPage: React.FC = () => {
                 Just For You
               </Typography>
             </Box>
-            <Button
-              variant="outlined"
-              sx={buttonStyle}
-              onClick={() => navigate("/products")}
-            >
+            <Button variant="outlined" sx={buttonStyle} onClick={handleViewAll}>
               View All
             </Button>
           </Box>
 
           {isLoading ? (
-            <LoadingState
-              title="Loading products..."
-              description="Please wait a moment while we fetch recommendations."
-              height={isMobile ? "40vh" : "60vh"}
-            />
+            <Grid container spacing={2}>
+              {Array.from({ length: 4 }).map((_, idx) => (
+                <Grid item key={idx}>
+                  <WishlistSkeletonCard />
+                </Grid>
+              ))}
+            </Grid>
           ) : isError ? (
             <ErrorState
               title="Failed to load products."
-              description="There was an issue fetching recommended products."
-              onRetry={() => refetch()}
-              height={isMobile ? "40vh" : "60vh"}
+              description="Try again."
+              onRetry={refetch}
             />
-          ) : justForYou.length === 0 ? (
-            <Typography sx={{ color: theme.Text1 }}>
-              No products available.
-            </Typography>
           ) : (
             <Swiper
               spaceBetween={10}
@@ -207,17 +190,20 @@ const WishlistPage: React.FC = () => {
               }}
               modules={[Navigation]}
             >
-              {justForYou.map((product: Product) => (
+              {justForYou.map((product) => (
                 <SwiperSlide key={product.id}>
                   <ProductCard
                     id={product.id}
                     name={product.title}
                     price={`$${product.price.toFixed(2)}`}
                     oldPrice={
-                      product.oldPrice &&
-                      (typeof product.oldPrice === "number"
-                        ? product.oldPrice.toFixed(2)
-                        : product.oldPrice)
+                      product.oldPrice
+                        ? `$${
+                            typeof product.oldPrice === "number"
+                              ? product.oldPrice.toFixed(2)
+                              : product.oldPrice
+                          }`
+                        : undefined
                     }
                     discount={product.discount}
                     rating={product.rating}

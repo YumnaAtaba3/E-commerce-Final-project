@@ -49,7 +49,7 @@ const NewArrival: React.FC = () => {
         alignItems: "center",
       }}
     >
-      {/* Background Image */}
+    
       <Box
         component="img"
         src={src}
@@ -62,7 +62,7 @@ const NewArrival: React.FC = () => {
         }}
       />
 
-      {/* Optional Glow */}
+    
       {isGlow && (
         <Box
           sx={{

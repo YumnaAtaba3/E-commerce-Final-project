@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Fab, Zoom } from "@mui/material";
-import NorthIcon from "@mui/icons-material/North"; // سهم كامل للأعلى
+import NorthIcon from "@mui/icons-material/North"; 
 import { useTheme } from "../../../theme/ThemeProvider";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
@@ -11,12 +11,11 @@ const FixedButton: React.FC = () => {
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
   const [showButton, setShowButton] = useState(false);
 
-  // Scroll smoothly to top
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Show button after scrolling down a bit
+ 
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 400) setShowButton(true);
@@ -32,12 +31,12 @@ const FixedButton: React.FC = () => {
         onClick={scrollToTop}
         sx={{
           position: "fixed",
-          bottom: isMobile ? 70 : 100, // فوق الفوتر قليلاً
+          bottom: isMobile ? 70 : 100, 
           right: isMobile ? 16 : 60,
-          width: isMobile ? 30 : 46, // ✅ حجم الدائرة أصغر
-          height: isMobile ? 30 : 46, // ✅ نفس الطول والعرض للحفاظ على الشكل الدائري
+          width: isMobile ? 30 : 46,
+          height: isMobile ? 30 : 46, 
           minHeight: "auto",
-          bgcolor: "#f5f5f5", // خلفية رمادية فاتحة
+          bgcolor: "#f5f5f5", 
           color: theme.Text1,
           "&:hover": {
             bgcolor: "#e0e0e0",
@@ -51,7 +50,7 @@ const FixedButton: React.FC = () => {
         }}
       >
         <NorthIcon
-          fontSize={isMobile ? "small" : "large"} // ✅ أيقونة صغيرة لتناسب الحجم
+          fontSize={isMobile ? "small" : "large"}
           sx={{
             color: "#555",
           }}

@@ -30,7 +30,7 @@ const LogoutDialog: React.FC<LogoutDialogProps> = ({
       onClose={onCancel}
       PaperProps={{
         sx: {
-          bgcolor: "rgba(0, 0, 0, 0.3)", // glass-card background
+          bgcolor: "rgba(0, 0, 0, 0.3)", 
           backdropFilter: "blur(9px)",
           WebkitBackdropFilter: "blur(9px)",
           borderRadius: 4,
@@ -58,7 +58,7 @@ const LogoutDialog: React.FC<LogoutDialogProps> = ({
           sx={{
             fontSize: 50,
             color: theme.Button2,
-            bgcolor: theme.Button2 + "22", // subtle background behind icon
+            bgcolor: theme.Button2 + "22", 
             borderRadius: "50%",
             p: 1.5,
           }}
@@ -78,7 +78,7 @@ const LogoutDialog: React.FC<LogoutDialogProps> = ({
 
       {/* Description */}
       <DialogContent sx={{ mt: 1 }}>
-        <Typography sx={{ color: theme.Text1|| "#ccc", fontSize: 15 }}>
+        <Typography sx={{ color: "gray", fontSize: 15 }}>
           Are you sure you want to logout? <br />
           Your current session will be ended.
         </Typography>

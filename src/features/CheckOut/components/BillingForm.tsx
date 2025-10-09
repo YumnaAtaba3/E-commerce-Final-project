@@ -12,7 +12,7 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { billingFormSchemaValidation, type BillingFormValues } from "../config";
 
-// ✅ Properly export this type
+
 export interface BillingFormRef {
   submitForm: () => Promise<BillingFormValues | null>;
 }
@@ -40,7 +40,7 @@ const BillingForm = forwardRef<BillingFormRef>((_, ref) => {
     },
   });
 
-  // 👇 Expose validation + data submit
+ 
   useImperativeHandle(ref, () => ({
     async submitForm() {
       const isValid = await trigger();
@@ -64,7 +64,7 @@ const BillingForm = forwardRef<BillingFormRef>((_, ref) => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        gap: 3,
+        gap: 5,
         p: { xs: 1, md: 2 },
       }}
     >
@@ -101,6 +101,7 @@ const BillingForm = forwardRef<BillingFormRef>((_, ref) => {
                   fontSize: "14px",
                   fontFamily: "'Inter', sans-serif",
                   bgcolor: theme.bgColor,
+                  color: theme.Text1, 
                   "& .MuiOutlinedInput-notchedOutline": {
                     border: "1px solid transparent",
                   },

@@ -1,4 +1,4 @@
-// src/components/Search/components/PopularSearches.tsx
+
 import React from "react";
 import { Box, Chip } from "@mui/material";
 import { useTheme as useAppTheme } from "../../../../theme/ThemeProvider";
@@ -7,7 +7,7 @@ interface PopularSearchesProps {
   onClick: (term: string) => void;
 }
 
-const popularSearches = ["PlayStation", "Parfum", "Shirt", "Bluetooth Speaker"];
+const popularSearches = ["PlayStation", "modern", "Shirt", "Bluetooth Speaker","classic"];
 
 const PopularSearches: React.FC<PopularSearchesProps> = ({ onClick }) => {
   const { theme } = useAppTheme();

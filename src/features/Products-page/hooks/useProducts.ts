@@ -3,7 +3,8 @@ import { httpClient } from "../../../lib/axios";
 import ProductServices from "../services/api";
 import type { Product } from "../../../store/state";
 
-// Optional enrichment
+
+
 function enrichProducts(products: Product[]): Product[] {
   return products.map((p) => ({
     ...p,

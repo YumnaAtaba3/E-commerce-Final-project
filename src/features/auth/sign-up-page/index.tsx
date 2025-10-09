@@ -9,7 +9,7 @@ import {
   styled,
 } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
-import { Link as RouterLink, useNavigate } from "react-router";
+import { Link as RouterLink, useNavigate, useLocation } from "react-router";
 import GoogleSvg from "../../../assets/Sign-up/Icon-Google.svg";
 import { appRoutes } from "../../../routes";
 import FormFields from "./components/FormFields";
@@ -55,13 +55,13 @@ const SignUpForm: React.FC = () => {
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const locationState = location.state as { from?: Location } | null;
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  
   } = useForm<SignUpFormValues>({
     resolver: yupResolver(signUpFormSchemaValidation),
     defaultValues: {
@@ -72,29 +72,35 @@ const SignUpForm: React.FC = () => {
     },
   });
 
-  
-
   const { mutateAsync: signUp, isPending } = useSignUpMutation();
 
- const onSubmit = handleSubmit(async (values) => {
-   try {
-     const user = await signUp(values);
-     userStorage.set(user.id);
+  const onSubmit = handleSubmit(async (values) => {
+    try {
+      const user = await signUp(values);
+      userStorage.set(user.id);
 
-     toast.success("Account created successfully!", {
-       className: "toast-success",
-       autoClose: 10000, // same as in your example
-     });
+      toast.success("Account created successfully!", {
+        className: "toast-success",
+        autoClose: 10000,
+      });
 
-     navigate(appRoutes.auth.login);
-   } catch (error: any) {
-     console.error(error);
-     toast.error(error.message || "Sign-up failed. Please try again.", {
-       className: "toast-error",
-       autoClose: false,
-     });
-   }
- });
+    
+      navigate(appRoutes.auth.login, {
+        state: {
+          from: locationState?.from,
+          email: values.email,
+          password: values.password,
+        },
+      });
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.message || "Sign-up failed. Please try again.", {
+        className: "toast-error",
+        autoClose: false,
+      });
+    }
+  });
+
   const headingFont = isMobile ? "24px" : "32px";
   const subHeadingFont = isMobile ? "14px" : "16px";
   const inputFont = isMobile ? "14px" : "16px";

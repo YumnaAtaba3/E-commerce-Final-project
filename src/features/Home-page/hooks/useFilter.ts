@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useProductsState } from "../../../store";
+import { useProductsState } from "../../../store/productStore";
 import { httpClient } from "../../../lib/axios";
 
 interface FilterOptions {

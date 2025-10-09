@@ -4,6 +4,7 @@ import {
   Typography,
   Button,
   useMediaQuery,
+  Skeleton,
   useTheme as useMuiTheme,
 } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -15,8 +16,7 @@ import { useNavigate } from "react-router";
 import { useTheme } from "../../../theme/ThemeProvider";
 import ArrowNavigation from "../../../shared/components/Arrow-navigation";
 import ProductCard from "../../../shared/components/Product-card";
-import { useProductsState } from "../../../store";
-
+import { useProductsState } from "../../../store/productStore";
 
 const calculateTimeLeft = (endDate: Date) => {
   const diff = endDate.getTime() - new Date().getTime();
@@ -32,6 +32,7 @@ const calculateTimeLeft = (endDate: Date) => {
 const FlashSales: React.FC = () => {
   const endDate = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000); // 3 days demo
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(endDate));
+  const [loading, setLoading] = useState(true);
 
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
@@ -40,7 +41,6 @@ const FlashSales: React.FC = () => {
   const { products } = useProductsState();
   const navigate = useNavigate();
 
- 
   const flashProducts = products.filter((p) => p.discount).slice(0, 8);
 
   useEffect(() => {
@@ -50,7 +50,30 @@ const FlashSales: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const Timer = (
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const Timer = loading ? (
+    <Box
+      display="flex"
+      gap={0.5}
+      flexWrap="wrap"
+      mt={isMobile ? 1 : 0}
+      mb={isMobile ? 1 : 0}
+    >
+      {[...Array(4)].map((_, idx) => (
+        <Skeleton
+          key={idx}
+          variant="rectangular"
+          width={50}
+          height={30}
+          sx={{ bgcolor: "#ccc", borderRadius: 1 }}
+        />
+      ))}
+    </Box>
+  ) : (
     <Box
       display="flex"
       alignItems="center"
@@ -89,7 +112,7 @@ const FlashSales: React.FC = () => {
               sx={{
                 fontSize: { xs: 4, md: 4, lg: 4, xl: 20 },
                 fontWeight: 700,
-                color: theme.Button2,
+                color: "gray",
                 mx: 0.5,
               }}
             >
@@ -133,7 +156,6 @@ const FlashSales: React.FC = () => {
         alignItems={isMobile ? "flex-start" : "center"}
         mb={3}
       >
-        {/* Title + arrows row */}
         <Box
           display="flex"
           justifyContent="space-between"
@@ -178,18 +200,28 @@ const FlashSales: React.FC = () => {
         navigation={{ nextEl: ".flash-next", prevEl: ".flash-prev" }}
         modules={[Navigation]}
       >
-        {flashProducts.map((p) => (
-          <SwiperSlide key={p.id}>
-            <ProductCard
-              id={p.id}
-              name={p.title}
-              price={`$${p.price}`}
-              discount={p.discount}
-              rating={p.rating}
-              img={p.images?.[0]}
-            />
-          </SwiperSlide>
-        ))}
+        {loading
+          ? [...Array(4)].map((_, idx) => (
+              <SwiperSlide key={idx}>
+                <Skeleton
+                  variant="rectangular"
+                  height={200}
+                  sx={{ bgcolor: "#ccc", borderRadius: 2, ml: 9 }}
+                />
+              </SwiperSlide>
+            ))
+          : flashProducts.map((p) => (
+              <SwiperSlide key={p.id}>
+                <ProductCard
+                  id={p.id}
+                  name={p.title}
+                  price={`$${p.price}`}
+                  discount={p.discount}
+                  rating={p.rating}
+                  img={p.images?.[0]}
+                />
+              </SwiperSlide>
+            ))}
       </Swiper>
 
       {/* View All Button */}

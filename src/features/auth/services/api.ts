@@ -7,7 +7,7 @@ class AuthServices {
   private readonly usersEndPoint = "/users";
   private readonly authEndPoint = "/auth";
 
-  // --- Sign Up (REST) ---
+ 
   async signUp(payload: ISignUpPayload): Promise<IUser> {
     try {
       const response = await httpClient.post<IUser>(this.usersEndPoint, payload);
@@ -18,7 +18,7 @@ class AuthServices {
     }
   }
 
-  // --- Login (JWT Auth) ---
+
   async login(payload: ILoginPayload): Promise<ILoginResponse> {
     try {
       const response = await httpClient.post<ILoginResponse>(
@@ -33,7 +33,7 @@ class AuthServices {
     }
   }
 
-  // --- Get User Profile ---
+
   async getProfile(accessToken: string): Promise<IUser> {
     try {
       const response = await httpClient.get<IUser>(`${this.authEndPoint}/profile`, {
@@ -49,7 +49,7 @@ class AuthServices {
     }
   }
 
-  // --- Refresh Token ---
+ 
   async refreshToken(refreshToken: string): Promise<ILoginResponse> {
     try {
       const response = await httpClient.post<ILoginResponse>(

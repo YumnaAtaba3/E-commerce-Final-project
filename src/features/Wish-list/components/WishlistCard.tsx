@@ -56,8 +56,8 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
       discount,
       images,
     };
-    addToCart(product, 1);
-    removeFromWishlist(id);
+    addToCart(product, 1); // Add to cart
+    removeFromWishlist(id); // Remove from wishlist
     if (onDelete) onDelete(id);
   };
 

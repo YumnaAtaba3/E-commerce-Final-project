@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-// src/theme/ThemeProvider.tsx
+
 import React, { createContext, useContext, useEffect, useState } from "react";
 import {type Theme, lightTheme, darkTheme } from "./themeTokens";
 
@@ -20,7 +20,7 @@ export const useTheme = () => {
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const prefersDark = window.matchMedia("(prefers-color-scheme:dark)").matches;
+  const prefersDark = window.matchMedia("(prefers-color-scheme:light)").matches;
   const [isDark, setIsDark] = useState(prefersDark);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   const toggleTheme = () => {
     setIsDark((prev) => {
       const next = !prev;
-      localStorage.setItem("theme", next ? "dark" : "light");
+      localStorage.setItem("theme", next ? "light" : "dark");
       return next;
     });
   };

@@ -11,7 +11,7 @@ interface OurStoryProps {
 const OurStory: React.FC<OurStoryProps> = ({ image, title, paragraphs }) => {
   const { theme } = useTheme();
 
-  // Scroll to top on mount
+
   useEffect(() => {
     window.scrollTo({ top: -4, behavior: "smooth" });
   }, []);

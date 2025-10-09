@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -9,6 +9,7 @@ import {
   Link,
   useTheme as useMuiTheme,
   useMediaQuery,
+  Skeleton,
 } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
 
@@ -59,6 +60,40 @@ const HeroSwiper: React.FC = () => {
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
 
+  const [isLoading, setIsLoading] = useState(true);
+
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 2000); 
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    // Skeleton while loading
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          overflowX: "auto",
+          gap: 2,
+          maxWidth: "1020px",
+          marginLeft: isMobile ? 0 : 4,
+          py: 2,
+        }}
+      >
+        {[...Array(3)].map((_, i) => (
+          <Skeleton
+            key={i}
+            variant="rectangular"
+            width={isMobile ? 300 : 450}
+            height={isMobile ? 200 : 400}
+            sx={{ borderRadius: 3,bgcolor:"gray" }}
+          />
+        ))}
+      </Box>
+    );
+  }
+
   return (
     <Swiper
       spaceBetween={20}
@@ -67,8 +102,12 @@ const HeroSwiper: React.FC = () => {
       autoplay={{ delay: 4000 }}
       pagination={{ clickable: true }}
       modules={[Autoplay, Pagination]}
-      style={{ width: "100%", height: isMobile ? 300 : 400, maxWidth:"1020px",marginLeft:isMobile?0:40 }}
-      
+      style={{
+        width: "100%",
+        height: isMobile ? 300 : 400,
+        maxWidth: "1020px",
+        marginLeft: isMobile ? 0 : 40,
+      }}
       className="custom-swiper"
     >
       {slides.map((slide) => (

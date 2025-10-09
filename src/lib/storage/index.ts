@@ -1,4 +1,4 @@
-// src/lib/storage/index.ts
+
 function checkIsBrowser(): boolean {
   return typeof window !== "undefined";
 }

@@ -44,10 +44,10 @@ const RelatedItems: React.FC<RelatedItemsProps> = ({ items }) => {
           sx={{
             minWidth: 20,
             width: { xs: 15, sm: 20 },
-            height: { xs: 30, sm: 40 }, // responsive height
-            bgcolor: theme.Button2 || "#DB4444", // fallback color
+            height: { xs: 30, sm: 40 }, 
+            bgcolor: theme.Button2 || "#DB4444", 
             borderRadius: 1,
-            flexShrink: 0, // prevent shrinking
+            flexShrink: 0,
           }}
         />
         <Typography

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Box,
   Button,
@@ -19,7 +19,6 @@ import { useLoginMutation } from "./hook/mutations";
 import { userStorage } from "../storage/userStorage";
 import { toast } from "react-toastify";
 
-// Styled Components
 const Container = styled(Box)({ maxWidth: 370, width: "100%" });
 const Heading = styled(Typography)({
   fontFamily: "'Inter', sans-serif",
@@ -44,26 +43,24 @@ const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Check if we came from SignUp
-  const fromSignUp = location.state as {
+  const locationState = location.state as {
+    from?: Location;
     email?: string;
     password?: string;
   } | null;
+
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm<LoginFormValues>({
     resolver: yupResolver(loginFormSchemaValidation),
     defaultValues: {
-      email: fromSignUp?.email || "",
-      password: fromSignUp?.password || "",
+      email: locationState?.email || "",
+      password: locationState?.password || "",
     },
   });
-
-
 
   const { mutateAsync: login, isPending } = useLoginMutation();
 
@@ -71,22 +68,21 @@ const LoginForm: React.FC = () => {
     try {
       const data = await login(values);
       userStorage.set(data.access_token);
+
       toast.success("Login successful!", {
         className: "toast-success",
-        autoClose: 10000,
+        autoClose: 1000,
       });
-      navigate(appRoutes.home); // only navigate on success
+
+      navigate(-2);
     } catch (error: any) {
-      // Do not reset the form, keep input values
       toast.error(error.message || "Login failed. Please try again.", {
         className: "toast-error",
-        autoClose:off,
+        autoClose: 1500,
       });
     }
   });
 
-
-  // Responsive fonts
   const headingFont = isMobile ? "24px" : "32px";
   const subHeadingFont = isMobile ? "14px" : "16px";
   const inputFont = isMobile ? "14px" : "16px";
@@ -136,11 +132,11 @@ const LoginForm: React.FC = () => {
             sx={{
               fontSize: buttonFont,
               backgroundColor: theme.Button2,
-              color: "#fff",
+              color: "white",
               "&:hover": { backgroundColor: theme.Button2 },
               px: 5,
             }}
-            disabled={isPending}
+           
           >
             {isPending ? "Loading..." : "Log In"}
           </LoginButton>

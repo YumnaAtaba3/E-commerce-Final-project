@@ -34,13 +34,12 @@ const SearchBar: React.FC<SearchBarProps> = ({
     setQuery("");
   };
 
-  
   useEffect(() => {
     if (open && inputRef.current) {
       setTimeout(() => {
         inputRef.current?.focus();
         setAnimate(true);
-        setTimeout(() => setAnimate(false), 600); 
+        setTimeout(() => setAnimate(false), 600);
       }, 150);
     }
   }, [open]);
@@ -62,7 +61,11 @@ const SearchBar: React.FC<SearchBarProps> = ({
               }
             : { scale: 1, boxShadow: "0 0 0px rgba(0,0,0,0)" }
         }
-        style={{ flex: 1, borderRadius: "8px" }}
+        style={{
+          flex: 1,
+          borderRadius: 16,
+          overflow: "clip",
+        }}
       >
         <TextField
           inputRef={inputRef}
@@ -94,8 +97,18 @@ const SearchBar: React.FC<SearchBarProps> = ({
               fontSize: 16,
               bgcolor: theme.primary1,
               color: theme.Text1,
-              borderRadius: 2,
-              "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+              borderRadius: 16,
+
+              "& .MuiOutlinedInput-notchedOutline": {
+                border: "1px solid grey",
+                borderRadius: 0,
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                border: "1px solid darkgrey",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                border: `1px solid ${theme.Button2}`,
+              },
             },
           }}
         />

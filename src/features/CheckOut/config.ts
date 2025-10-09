@@ -9,7 +9,7 @@ export const billingFormSchemaValidation = Yup.object().shape({
     .min(2, "First name must be at least 2 characters")
     .max(50, "First name cannot exceed 50 characters"),
 
-  companyName: Yup.string().optional().nullable(), // ✅ explicitly optional
+  companyName: Yup.string().optional().nullable(), 
   streetAddress: Yup.string()
     .required("Street address is required")
     .min(5, "Street address must be at least 5 characters"),
@@ -30,7 +30,7 @@ export const billingFormSchemaValidation = Yup.object().shape({
   saveInfo: Yup.boolean().optional().nullable(),
 });
 
-// ✅ Make it stricter for RHF compatibility
+
 export type BillingFormValues = {
   firstName: string;
   companyName?: string;

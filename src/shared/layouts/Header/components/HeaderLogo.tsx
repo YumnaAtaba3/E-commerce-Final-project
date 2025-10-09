@@ -10,6 +10,21 @@ interface HeaderLogoProps {
   theme: any;
 }
 
+
+const logoStyles = (theme: any, isMobile: boolean) => ({
+  textDecoration: "none",
+  fontFamily: theme.font,
+  fontWeight: 600,
+  fontSize: isMobile ? 20 : 26,
+  color: theme.Text1,
+  letterSpacing: 1,
+  pl: isMobile ? 0 : 10,
+  transition: "color 0.3s ease",
+  "&:hover": {
+    color: theme.HoverButton,
+  },
+});
+
 const HeaderLogo: React.FC<HeaderLogoProps> = ({ isMobile, theme }) => (
   <motion.div
     initial={{ opacity: 0, y: -10 }}
@@ -20,15 +35,7 @@ const HeaderLogo: React.FC<HeaderLogoProps> = ({ isMobile, theme }) => (
     <Typography
       component={RouterLink}
       to={appRoutes.home}
-      sx={{
-        textDecoration: "none",
-        fontFamily: theme.font,
-        fontWeight: 600,
-        fontSize: isMobile ? 20 : 26,
-        color: theme.Text1,
-        letterSpacing: 1,
-        pl: isMobile ? 0 : 10,
-      }}
+      sx={logoStyles(theme, isMobile)}
     >
       Exclusive
     </Typography>

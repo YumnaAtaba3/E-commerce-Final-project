@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -9,90 +7,39 @@ import {
   PaginationItem,
   IconButton,
   useMediaQuery,
+  Skeleton,
   useTheme as useMuiTheme,
-  
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-
 import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
-import { useLocation, useNavigate } from "react-router";
-import ProductCard from "../../shared/components/Product-card";
-import LoadingState from "../../shared/components/Loading-state";
-import ErrorState from "../../shared/components/Error-state";
+
 import { useTheme } from "../../theme/ThemeProvider";
 import FilterSidebar from "../Home-page/components/FilterSidebar";
-import { useProductsQuery, type Product } from "./hooks/useProducts";
+import ProductCard from "../../shared/components/Product-card";
+import ErrorState from "../../shared/components/Error-state";
+import { useProductPage } from "./hooks/useProductPage";
 
 const ProductPage: React.FC = () => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
-  const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md"));
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-
-  const categorySlug =
-    queryParams.get("categorySlug") || queryParams.get("category") || undefined;
-  const filterType = queryParams.get("filter");
-
-  const [page, setPage] = useState(1);
-  const itemsPerPage = 8;
+  const [openFilter, setOpenFilter] = useState(false);
 
   const {
-    data: products = [],
+    products,
     isLoading,
     isError,
     refetch,
-  } = useProductsQuery(page, itemsPerPage, categorySlug) as {
-    data: Product[];
-    isLoading: boolean;
-    isError: boolean;
-    refetch: () => void;
-  };
+    page,
+    pageCount,
+    handlePageChange,
+    handleCategorySelect,
+    pageTitle,
+  } = useProductPage();
 
-  const filteredProducts = useMemo(() => {
-    let result = products;
-    if (filterType === "discount") {
-      result = result.filter((p) => p.discount);
-    }
-    return result;
-  }, [products, filterType]);
-
-  const pageCount = Math.ceil((filteredProducts?.length || 0) / itemsPerPage);
-
-  const handlePageChange = (_: any, value: number) => {
-    setPage(value);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const pageTitle =
-    filterType === "discount" && categorySlug
-      ? `Discounted ${
-          categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1)
-        }`
-      : filterType === "discount"
-      ? "Discounted Products"
-      : categorySlug
-      ? categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1)
-      : "All Products";
-
-  const handleCategorySelect = (slug?: string) => {
-    const params = new URLSearchParams(location.search);
-    if (slug) params.set("categorySlug", slug);
-    else params.delete("categorySlug");
-
- 
-    if (filterType === "discount") {
-      params.set("filter", "discount");
-    }
-
-    navigate(`/products?${params.toString()}`);
-  };
-
- 
-  const [openFilter, setOpenFilter] = useState(false);
+  // Skeleton helpers
+  const skeletonArray = Array.from({ length: 8 }, (_, i) => i);
 
   return (
     <Box
@@ -103,30 +50,31 @@ const ProductPage: React.FC = () => {
         bgcolor: theme.primary1,
       }}
     >
-      {/* Desktop sidebar */}
-      {!isMobile && <FilterSidebar onCategorySelect={handleCategorySelect} />}
+      {/* Sidebar */}
+      {!isMobile && (
+        <Box sx={{ width: 250, mr: 3 }}>
+      
+            <FilterSidebar onCategorySelect={handleCategorySelect} />
+         
+        </Box>
+      )}
 
-      {/*  Mobile Drawer Trigger */}
       <Box sx={{ flex: 1, maxWidth: 1200, mx: "auto" }}>
         {isMobile && (
-          <>
-          
-
-         
-            <FilterSidebar
-              onCategorySelect={handleCategorySelect}
-              open={openFilter}
-              setOpen={setOpenFilter}
-            />
-          </>
+          <FilterSidebar
+            onCategorySelect={handleCategorySelect}
+            open={openFilter}
+            setOpen={setOpenFilter}
+          />
         )}
 
-        {/*  Header */}
+        {/* Header */}
         <Box display="flex" alignItems="center" mb={4}>
           <IconButton
-            onClick={() => navigate(-1)}
+            onClick={() => window.history.back()}
             sx={{
-              mr: 1,
+              ml: 6,
+              mr:2,
               bgcolor: theme.primary1,
               color: theme.Text1,
               "&:hover": { bgcolor: theme.Button2 },
@@ -142,13 +90,62 @@ const ProductPage: React.FC = () => {
           </Typography>
         </Box>
 
-        {/*  Loading */}
+        {/* Loading Skeletons */}
         {isLoading && (
-          <LoadingState
-            title="Loading products..."
-            description="Please wait."
-            height={400}
-          />
+          <Grid container spacing={6}  justifyContent="center">
+            {skeletonArray.map((i) => (
+              <Grid item key={i} xs={12} sm={6} md={3}>
+               
+                <Box
+                  sx={{
+                    bgcolor: theme.primary1,
+                    borderRadius: 2,
+                    p: 1,
+                    boxShadow: "0px 2px 10px rgba(0,0,0,0.05)",
+                  }}
+                >
+                 
+                  <Skeleton
+                    variant="rectangular"
+                    height={150}
+                    sx={{ borderRadius: 2 }}
+                  />
+
+                
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      mt: 1,
+                    }}
+                  >
+                   
+                  </Box>
+
+                  
+                  <Skeleton variant="text" height={30} sx={{ mt: 1 }} />
+
+                  
+                  <Box sx={{ display: "flex", gap: 1, mt: 0.5 }}>
+                    <Skeleton variant="text" width="50%" height={25} />
+                    <Skeleton variant="text" width="30%" height={25} />
+                  </Box>
+
+                  
+                  <Box sx={{ display: "flex", gap: 0.5, mt: 1 }}>
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                      <Skeleton
+                        key={idx}
+                        variant="circular"
+                        width={20}
+                        height={20}
+                      />
+                    ))}
+                  </Box>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
         )}
 
         {/* Error */}
@@ -163,22 +160,18 @@ const ProductPage: React.FC = () => {
         {/* Product Grid */}
         {!isLoading && !isError && (
           <>
-            {filteredProducts.length === 0 ? (
+            {products.length === 0 ? (
               <Box
                 sx={{
                   textAlign: "center",
                   mt: 6,
                   p: 4,
                   borderRadius: 4,
-                  bgcolor: theme.primary1 ,
+                  bgcolor: theme.primary1,
                 }}
               >
                 <SentimentDissatisfiedIcon
-                  sx={{
-                    fontSize: 60,
-                    color: theme.Button2,
-                    mb: 2,
-                  }}
+                  sx={{ fontSize: 60, color: theme.Button2, mb: 2 }}
                 />
                 <Typography
                   variant="h6"
@@ -191,12 +184,8 @@ const ProductPage: React.FC = () => {
                 </Typography>
               </Box>
             ) : (
-              <Grid
-                container
-                spacing={3}
-                justifyContent={isMobile ? "center" : "center"}
-              >
-                {filteredProducts.map((product) => (
+              <Grid container spacing={3} justifyContent="center">
+                {products.map((product) => (
                   <Grid
                     item
                     key={product.id}
@@ -221,7 +210,7 @@ const ProductPage: React.FC = () => {
               </Grid>
             )}
 
-            {/*  Pagination */}
+            {/* Pagination */}
             {pageCount > 0 && (
               <Box
                 display="flex"

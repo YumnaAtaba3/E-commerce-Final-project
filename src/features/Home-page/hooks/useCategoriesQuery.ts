@@ -1,4 +1,4 @@
-// src/features/Category-page/hooks/useCategoriesQuery.ts
+
 import { useQuery } from "@tanstack/react-query";
 import CategoryServices, { type Category } from "../services/api";
 

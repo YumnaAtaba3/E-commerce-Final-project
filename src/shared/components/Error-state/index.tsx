@@ -3,8 +3,8 @@ import { Box, Typography, Button } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
 
 interface ErrorStateProps {
-  title?: string; // main error message
-  description?: string; // optional detail message
+  title?: string; 
+  description?: string; 
   onRetry?: () => void;
   height?: string | number;
 }

@@ -13,20 +13,27 @@ const ProductItem = ({ name, price, image }: ProductItemProps) => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        mb: 2,
-        gap: 2,
-        maxWidth: 425,
+        mb: 1.5, // smaller spacing between items
+        gap: 6,
+        maxWidth: 400,
         width: "100%",
       }}
     >
       {/* Image + Name */}
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <Box component="img" src={image} alt={name} sx={{ height: 54 }} />
-        <Typography sx={{ fontSize: 16 }}>{name}</Typography>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+        <Box
+          component="img"
+          src={image}
+          alt={name}
+          sx={{ height: 40, width: 40, objectFit: "contain" }}
+        />
+        <Typography sx={{ fontSize: 13, lineHeight: 1.2, maxWidth: 100 }}>
+          {name}
+        </Typography>
       </Box>
 
       {/* Price */}
-      <Typography sx={{ fontSize: 16 }}>{price}</Typography>
+      <Typography sx={{ fontSize: 14, fontWeight: 500 }}>{price}</Typography>
     </Box>
   );
 };

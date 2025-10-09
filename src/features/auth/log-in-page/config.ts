@@ -9,7 +9,7 @@ const phoneRegex = /^[0-9]{10,15}$/;
 // const passwordSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
 const passwordAlphaNumeric = /^[A-Za-z0-9]+$/;
 
-// Yup schema validation
+
 export const loginFormSchemaValidation = Yup.object().shape({
   email: Yup.string()
     .trim()
@@ -28,5 +28,5 @@ export const loginFormSchemaValidation = Yup.object().shape({
     .min(8, "Password must be at least 8 characters long"),
 });
 
-// Type for React Hook Form
+
 export type LoginFormValues = Yup.InferType<typeof loginFormSchemaValidation>;

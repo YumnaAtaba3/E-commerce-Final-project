@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Container,
@@ -19,19 +19,8 @@ const Contact: React.FC = () => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
 
-  const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm")); // <600px
-  const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md")); // 600-900px
-
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md"));
 
   return (
     <>
@@ -40,7 +29,7 @@ const Contact: React.FC = () => {
       <Container
         maxWidth="xl"
         sx={{
-          bgcolor:theme.primary1,
+          bgcolor: theme.primary1,
           display: "flex",
           justifyContent: "center",
           py: { xs: 6, sm: 8, md: 10 },
@@ -53,19 +42,17 @@ const Contact: React.FC = () => {
             flexDirection: isMobile ? "column" : "row",
             justifyContent: isMobile ? "center" : "flex-start",
             alignItems: "flex-start",
-           
           }}
         >
           {/* Left Info Section */}
           <Grid
-            
             sx={{
               width: isMobile ? "100%" : "auto",
               maxWidth: isMobile ? 450 : "none",
               display: "flex",
               justifyContent: "center",
               mb: isMobile ? 4 : 0,
-              bgcolor:theme.primary1
+              bgcolor: theme.primary1,
             }}
           >
             <Box
@@ -107,7 +94,6 @@ const Contact: React.FC = () => {
 
           {/* Right Form Section */}
           <Grid
-           
             sx={{
               width: isMobile ? "100%" : "auto",
               maxWidth: isMobile ? 450 : "none",
@@ -116,11 +102,7 @@ const Contact: React.FC = () => {
             }}
           >
             <Box sx={{ width: "100%" }}>
-              <ContactForm
-                form={form}
-                handleChange={handleChange}
-                isMobile={isMobile || isTablet}
-              />
+              <ContactForm isMobile={isMobile || isTablet} />
             </Box>
           </Grid>
         </Grid>

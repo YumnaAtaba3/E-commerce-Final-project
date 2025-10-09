@@ -14,7 +14,7 @@ import { useNavigate } from "react-router";
 
 import ProductCard from "../../../shared/components/Product-card";
 import { useTheme } from "../../../theme/ThemeProvider";
-import { useProductsState } from "../../../store";
+import { useProductsState } from "../../../store/productStore";
 import { appRoutes } from "../../../routes";
 
 const BestSelling: React.FC = () => {
@@ -29,8 +29,7 @@ const BestSelling: React.FC = () => {
   const bestProducts = products.slice(0, 8);
 
   const handleViewAll = () => {
-   navigate(appRoutes.products.list);
-
+    navigate(appRoutes.products.list);
   };
 
   return (

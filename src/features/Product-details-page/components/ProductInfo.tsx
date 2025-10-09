@@ -8,6 +8,7 @@ import ProductSizes from "./ProductSizes";
 import QuantityBuyFavorite from "./QuantityBuyFavorite";
 import DeliveryReturnCard from "./DeliveryReturnCard";
 
+
 interface ProductInfoProps {
   product: Product;
   isMobile: boolean;
@@ -83,8 +84,19 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         justifyContent={containerAlign}
         color={theme.Text1}
       >
-        <Rating value={product.rating} readOnly size="medium" />
-        <Typography fontSize={14} color="text.secondary">
+        <Rating
+          value={product.rating}
+          readOnly
+          size="medium"
+          sx={{
+            color: "gold",
+            "& .MuiRating-iconEmpty": {
+              color: theme.Text1 + "55",
+            },
+          }}
+        />
+
+        <Typography fontSize={14} color={theme.Text1}>
           ({Math.floor(Math.random() * 200 + 1)} Reviews)
         </Typography>
         <Box sx={{ width: "1px", height: 16, bgcolor: "#ddd", mx: 1 }} />
@@ -123,7 +135,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
       />
       <ProductSizes sizes={sizes} selected={size} onSelect={onSizeChange} />
       <QuantityBuyFavorite
-        product={product} // ✅ Must pass product
+        product={product}
         quantity={quantity}
         onQuantityChange={onQuantityChange}
         favorite={favorite}

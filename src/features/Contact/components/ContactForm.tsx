@@ -14,6 +14,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { contactFormSchemaValidation, type ContactFormValues } from "../config";
+import { useNavigate } from "react-router";
+import { appRoutes } from "../../../routes";
 
 interface ContactFormProps {
   isMobile: boolean;
@@ -21,6 +23,7 @@ interface ContactFormProps {
 
 const ContactForm: React.FC<ContactFormProps> = ({ isMobile }) => {
   const { theme } = useTheme();
+  const navigate = useNavigate()
   const muiTheme = useMuiTheme();
   const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md"));
 
@@ -42,35 +45,48 @@ const ContactForm: React.FC<ContactFormProps> = ({ isMobile }) => {
   const onSubmit: SubmitHandler<ContactFormValues> = (data) => {
     console.log("Form Submitted:", data);
 
-    // Show success toast
     toast.success("Message sent successfully!", {
-      position: "bottom-right",
+      className:"toast-success",
       autoClose: 3000,
     });
+    
+    reset();
 
-    reset(); // clear form after submission
+    navigate(appRoutes.home)
   };
 
   const labelFontSize = isMobile ? 12 : isTablet ? 13 : 14;
 
   const inputStyle = {
-    bgcolor: theme.bgColor,
     borderRadius: 1,
     "& .MuiOutlinedInput-root": {
+      bgcolor: theme.bgColor,
+      color: theme.Text1,
       "& fieldset": { borderColor: "#F5F5F5" },
       "&:hover fieldset": { borderColor: theme.Button2 },
       "&.Mui-focused fieldset": {
         borderColor: theme.Button2,
         borderWidth: "2px",
       },
-      "& .MuiOutlinedInput-notchedOutline legend": { display: "none" },
+      "&.Mui-error fieldset": {
+        borderColor: theme.error,
+      },
+      "& input": { color: theme.Text1 },
+      "& textarea": { color: theme.Text1, fontSize: labelFontSize },
+    },
+    "& label": {
+      fontSize: labelFontSize,
+      color: theme.Text1,
     },
     "& label.Mui-focused": {
       color: theme.Button2,
       background: theme.bgColor,
       padding: "0 4px",
     },
-    "& label": { fontSize: labelFontSize },
+    "& .MuiFormHelperText-root": {
+      fontSize: 10,
+      color: theme.error,
+    },
   };
 
   return (
@@ -136,7 +152,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isMobile }) => {
           variant="contained"
           sx={{
             bgcolor: theme.Button2,
-            color: theme.primary1,
+            color: "white",
             px: 6,
             py: 1.5,
             textTransform: "none",

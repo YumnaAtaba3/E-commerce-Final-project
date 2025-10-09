@@ -41,6 +41,7 @@ const ProductSizes: React.FC<ProductSizesProps> = ({
               border: "1px solid #ddd",
               borderRadius: "4px",
               fontWeight: 500,
+              color:theme.Text1,
               "&:hover": { bgcolor: theme.Button2, color: "#fff" },
               "&.Mui-selected": {
                 bgcolor: theme.Button2,

@@ -1,25 +1,24 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { appRoutes } from "../../../routes";
-
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useIsLoggedIn } from "../../auth/hooks/is-logged-in";
 
 interface Props {
   subtotal: number;
-  discount: number; 
+  discount: number;
   isMobile: boolean;
 }
 
 const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
   const { theme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const { isLoggedIn, isLoading } = useIsLoggedIn();
 
- 
   const freeShippingThreshold = 50;
   const shippingCost = subtotal > 0 && subtotal < freeShippingThreshold ? 5 : 0;
   const shippingLabel =
@@ -30,16 +29,15 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
     if (isLoading) return;
 
     if (!isLoggedIn) {
-     
       toast.warning("You must log in first!", {
         className: "toast-warning",
         autoClose: 1500,
       });
 
-      navigate(appRoutes.auth.signUp);
+      // Navigate to SignUp with `from` state
+      navigate(appRoutes.auth.signUp, { state: { from: location } });
       return;
     }
-
 
     navigate(appRoutes.checkout);
   };
@@ -65,7 +63,6 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
         Cart Total
       </Typography>
 
-      {/* Subtotal */}
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>Subtotal:</Typography>
         <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>
@@ -73,7 +70,6 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
         </Typography>
       </Box>
 
-      {/* Discount */}
       {discount > 0 && (
         <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
           <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>
@@ -85,7 +81,6 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
         </Box>
       )}
 
-      {/* Shipping */}
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>Shipping:</Typography>
         <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>
@@ -93,7 +88,6 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
         </Typography>
       </Box>
 
-      {/* Divider */}
       <Box
         sx={{
           borderTop: `1px solid ${theme.borderColor}`,
@@ -102,7 +96,6 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
         }}
       />
 
-      {/* Total */}
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 4 }}>
         <Typography sx={{ fontSize: { xs: 16, md: 18 }, fontWeight: 500 }}>
           Total:
@@ -112,7 +105,6 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
         </Typography>
       </Box>
 
-      {/* Checkout Button */}
       <Button
         variant="contained"
         onClick={handleCheckoutClick}
@@ -121,7 +113,7 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
           mx: "auto",
           display: "block",
           bgcolor: theme.Button2,
-          color: theme.bgColor,
+          color: "white",
           textTransform: "none",
           fontSize: { xs: 14, md: 16 },
           py: { xs: 1, md: 1.5 },

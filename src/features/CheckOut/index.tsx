@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, Grid, Typography } from "@mui/material";
 import { useTheme } from "../../theme/ThemeProvider";
 import Breadcrumb from "./components/Breadcrumb";
@@ -89,7 +90,7 @@ const Checkout = () => {
           Billing Details
         </Typography>
 
-        <Grid container spacing={{ xs: 6, md: 35 }} justifyContent="start">
+        <Grid container spacing={{ xs: 6, md: 12 }} justifyContent="start">
           <Grid item xs={12} md={7}>
             <BillingForm ref={formRef} />
           </Grid>

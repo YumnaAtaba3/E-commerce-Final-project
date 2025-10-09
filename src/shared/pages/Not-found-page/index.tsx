@@ -1,4 +1,4 @@
-// src/pages/404/NotFoundPage.tsx
+
 import React from "react";
 import {
   Button,

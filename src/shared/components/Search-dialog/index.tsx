@@ -1,54 +1,73 @@
-// src/components/Search/SearchDialog.tsx
-import React, { useState } from "react";
-import { Dialog, DialogContent, Box, Typography } from "@mui/material";
-import { useSearchStore } from "../../../store/searchStore";
-import { useWishlistStore } from "../../../store/wishlistStore";
-import { useProductsQuery } from "../../../features/Products-page/hooks/useProducts";
+import React from "react";
+import {
+  Dialog,
+  DialogContent,
+  Box,
+  Typography,
+  Skeleton,
+} from "@mui/material";
+import { useTheme as useAppTheme } from "../../../theme/ThemeProvider";
 import SearchBar from "./components/SearchBar";
 import PopularSearches from "./components/PopularSearches";
 import SearchProductCard from "./components/SearchProductCard";
-import { useTheme as useAppTheme } from "../../../theme/ThemeProvider";
-import { useDebounce } from "../../../shared/hooks/debounce";
+import { useSearchDialog } from "./hooks/useSearchDialog";
+import type { Product } from "../../../store/state";
 
 const SearchDialog: React.FC = () => {
   const { theme } = useAppTheme();
-  const { open, setOpen } = useSearchStore();
-  const [query, setQuery] = useState("");
+  const {
+    open,
+    query,
+    setQuery,
+    debouncedQuery,
+    filteredProducts,
+    isLoading,
+    handleClose,
+    handlePopularSearchClick,
+    toggleWishlist,
+    isInWishlist,
+  } = useSearchDialog();
 
-  const debouncedQuery = useDebounce(query, 400);
-
-  const addToWishlist = useWishlistStore((state) => state.addToWishlist);
-  const removeFromWishlist = useWishlistStore(
-    (state) => state.removeFromWishlist
-  );
-  const isInWishlist = useWishlistStore((state) => state.isInWishlist);
-
-  const { data: products, isLoading } = useProductsQuery();
-
-  // ✅ Filter products by debounced query
-  const filteredProducts = products
-    ? products.filter(
-        (p) =>
-          p.title.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
-          p.category?.name.toLowerCase().includes(debouncedQuery.toLowerCase())
-      )
-    : [];
-
-  // ✅ Handle closing the dialog
-  const handleClose = (
-    event: object,
-    reason: "backdropClick" | "escapeKeyDown"
-  ) => {
-    if (reason === "backdropClick" || reason === "escapeKeyDown") {
-      setOpen(false);
-      setQuery("");
-    }
-  };
-
-  // ✅ Clicking a popular search just sets query
-  const handlePopularSearchClick = (term: string) => {
-    setQuery(term);
-  };
+  const renderSkeletonCards = () =>
+    Array.from({ length: 6 }).map((_, i) => (
+      <Box
+        key={i}
+        sx={{
+          borderRadius: 3,
+          bgcolor: theme.primary1,
+          border: `1px solid ${theme.borderColor}`,
+          overflow: "hidden",
+          p: 2,
+        }}
+      >
+        <Skeleton
+          variant="rectangular"
+          width="100%"
+          height={160}
+          sx={{ borderRadius: 2, mb: 1, bgcolor: theme.secound1 }}
+        />
+        <Skeleton
+          variant="text"
+          width="80%"
+          height={24}
+          sx={{ bgcolor: theme.secound1 }}
+        />
+        <Box display="flex" alignItems="center" gap={1}>
+          <Skeleton
+            variant="text"
+            width="30%"
+            height={20}
+            sx={{ bgcolor: theme.secound1 }}
+          />
+          <Skeleton
+            variant="text"
+            width="40%"
+            height={20}
+            sx={{ bgcolor: theme.secound1 }}
+          />
+        </Box>
+      </Box>
+    ));
 
   return (
     <Dialog
@@ -67,14 +86,22 @@ const SearchDialog: React.FC = () => {
     >
       <DialogContent sx={{ p: 2 }}>
         <SearchBar query={query} setQuery={setQuery} isLoading={isLoading} />
-
         {!debouncedQuery && (
           <PopularSearches onClick={handlePopularSearchClick} />
         )}
 
         {isLoading ? (
-          <Box display="flex" justifyContent="center" mt={4}>
-            Loading...
+          <Box
+            display="grid"
+            gridTemplateColumns={{
+              xs: "1fr",
+              sm: "1fr 1fr",
+              md: "1fr 1fr 1fr",
+            }}
+            gap={2}
+            mt={2}
+          >
+            {renderSkeletonCards()}
           </Box>
         ) : filteredProducts.length > 0 ? (
           <Box
@@ -86,16 +113,12 @@ const SearchDialog: React.FC = () => {
             }}
             gap={2}
           >
-            {filteredProducts.map((product) => (
+            {filteredProducts.map((product: Product) => (
               <SearchProductCard
                 key={product.id}
                 product={product}
                 favorite={isInWishlist(product.id)}
-                onWishlistToggle={() =>
-                  isInWishlist(product.id)
-                    ? removeFromWishlist(product.id)
-                    : addToWishlist(product)
-                }
+                onWishlistToggle={() => toggleWishlist(product)}
               />
             ))}
           </Box>

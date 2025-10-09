@@ -36,5 +36,5 @@ export const signUpFormSchemaValidation = Yup.object().shape({
 });
 
 
-// Type for React Hook Form
+
 export type SignUpFormValues = Yup.InferType<typeof signUpFormSchemaValidation>;

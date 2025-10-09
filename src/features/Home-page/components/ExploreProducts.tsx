@@ -13,7 +13,7 @@ import "swiper/css/navigation";
 import "swiper/css/grid";
 
 import { useTheme } from "../../../theme/ThemeProvider";
-import { useProductsState } from "../../../store";
+import { useProductsState } from "../../../store/productStore";
 import ProductCard from "../../../shared/components/Product-card";
 import ArrowNavigation from "../../../shared/components/Arrow-navigation";
 import { useNavigate } from "react-router";
@@ -34,7 +34,6 @@ const ExploreProducts: React.FC = () => {
   const navigate = useNavigate();
 
   const { products } = useProductsState();
-
 
   const productsWithColors = useMemo(
     () =>

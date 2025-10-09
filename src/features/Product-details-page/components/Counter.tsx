@@ -21,7 +21,7 @@ const Counter: React.FC<CounterProps> = ({ quantity, onChange }) => {
           height: 40,
           border: "1px solid #ddd",
           borderRadius: "4px 0 0 4px",
-          color: "black",
+          color: theme.Text1,
         }}
       >
         <RemoveIcon />

@@ -3,8 +3,8 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
 
 interface LoadingStateProps {
-  title?: string; // main loading message
-  description?: string; // optional detailed message
+  title?: string; 
+  description?: string; 
   height?: string | number;
 }
 

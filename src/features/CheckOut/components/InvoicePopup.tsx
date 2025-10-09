@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Dialog,
   DialogTitle,
@@ -33,7 +34,7 @@ const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
   const handlePrint = () => window.print();
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth >
       {/* Header */}
       <DialogTitle sx={{ textAlign: "center", fontWeight: 700 }}>
         <Typography variant="h6" sx={{ mb: 0.5, fontSize: 14 }}>
@@ -80,10 +81,10 @@ const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
               <strong>City:</strong> {billingData.townCity}
             </Typography>
             <Typography sx={{ fontSize: 12 }}>
-              <strong>Email:</strong> {billingData.email}
+              <strong>Email:</strong> {billingData.emailAddress}
             </Typography>
             <Typography sx={{ fontSize: 12 }}>
-              <strong>Phone:</strong> {billingData.phone}
+              <strong>Phone:</strong> {billingData.phoneNumber}
             </Typography>
           </Box>
 

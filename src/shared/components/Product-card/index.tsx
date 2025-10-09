@@ -196,7 +196,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           zIndex: 2,
         }}
       >
-        {/* ❤️ Wishlist */}
+        {/*  Wishlist */}
         <IconButton
           onClick={toggleWishlist}
           sx={{
@@ -214,7 +214,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </IconButton>
 
-        {/* 👁️ View Details */}
+        {/*  View Details */}
         <IconButton
           onClick={handleViewDetails}
           sx={{

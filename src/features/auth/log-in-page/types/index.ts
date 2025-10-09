@@ -1,4 +1,4 @@
-// src/features/auth/types.ts
+
 export interface ILoginPayload {
   email: string;
   password: string;

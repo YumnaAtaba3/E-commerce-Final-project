@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   List,
@@ -7,6 +7,7 @@ import {
   IconButton,
   Drawer,
   Button,
+  Skeleton,
   useMediaQuery,
 } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -15,7 +16,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { useNavigate, useLocation } from "react-router-dom";
-
 
 const categories = [
   { name: "Woman’s Fashion", slug: "clothes" },
@@ -35,25 +35,29 @@ interface FilterSidebarProps {
 const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
   const [active, setActive] = useState<string>("");
   const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
   const navigate = useNavigate();
   const location = useLocation();
 
-  
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleCategoryClick = (slug: string, name: string) => {
     setActive(name);
 
     const params = new URLSearchParams(location.search);
     params.set("category", slug);
 
-   
     const existingFilter = params.get("filter");
     if (existingFilter) {
       params.set("filter", existingFilter);
     }
-
 
     if (onCategorySelect) {
       onCategorySelect(slug);
@@ -64,7 +68,20 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
     setOpen(false);
   };
 
-  const categoryList = (
+  const categoryList = isLoading ? (
+    <List disablePadding>
+      {[...Array(6)].map((_, idx) => (
+        <ListItemButton key={idx} sx={{ py: 1.2, px: 2 }}>
+          <Skeleton
+            variant="text"
+            width="80%"
+            height={25}
+            sx={{ bgcolor: "gray" }}
+          />
+        </ListItemButton>
+      ))}
+    </List>
+  ) : (
     <List disablePadding>
       {categories.map((cat, index) => (
         <ListItemButton
@@ -102,7 +119,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
 
   return (
     <>
-      {/*  Desktop Sidebar */}
+      {/* Desktop Sidebar */}
       {!isMobile && (
         <Box
           sx={{
@@ -118,7 +135,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
         </Box>
       )}
 
-      {/*  Mobile Drawer */}
+      {/* Mobile Drawer */}
       {isMobile && (
         <>
           <Button
@@ -141,7 +158,6 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
           </Button>
 
           <Drawer
-
             anchor="bottom"
             open={open}
             onClose={() => setOpen(false)}

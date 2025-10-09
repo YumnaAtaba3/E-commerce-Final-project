@@ -160,7 +160,7 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
                 </Link>
               ))}
 
-              {/* 🌗 Theme Toggle Button */}
+              {/* Theme Toggle Button */}
               <Box
                 sx={{
                   mt: 1,

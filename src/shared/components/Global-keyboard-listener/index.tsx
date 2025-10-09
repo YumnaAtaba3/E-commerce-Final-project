@@ -1,4 +1,4 @@
-// shared/components/GlobalKeyboardListener.tsx
+
 import { useEffect } from "react";
 import { useSearchStore } from "../../../store/searchStore";
 
