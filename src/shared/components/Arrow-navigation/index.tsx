@@ -35,7 +35,7 @@ const ArrowNavigation: React.FC<ArrowNavigationProps> = ({
           },
         }}
       >
-        <ArrowBackIcon fontSize="large" />
+        <ArrowBackIcon fontSize="medium" />
       </IconButton>
 
       <IconButton
@@ -54,7 +54,7 @@ const ArrowNavigation: React.FC<ArrowNavigationProps> = ({
           },
         }}
       >
-        <ArrowForwardIcon fontSize="large" />
+        <ArrowForwardIcon fontSize="medium" />
       </IconButton>
     </Box>
   );

@@ -6,6 +6,7 @@ import {
   useMediaQuery,
   useTheme as useMuiTheme,
 } from "@mui/material";
+import { motion } from "framer-motion";
 
 import ps5Img from "../../../assets/Home-page/NewArrival/ps5-slim-goedkope-playstation_large1.png.png";
 import womanImg from "../../../assets/Home-page/NewArrival/attractive-woman-wearing-hat-posing-black-background 1.png";
@@ -49,7 +50,6 @@ const NewArrival: React.FC = () => {
         alignItems: "center",
       }}
     >
-    
       <Box
         component="img"
         src={src}
@@ -62,7 +62,6 @@ const NewArrival: React.FC = () => {
         }}
       />
 
-    
       {isGlow && (
         <Box
           sx={{
@@ -81,22 +80,20 @@ const NewArrival: React.FC = () => {
         />
       )}
 
-      {/* Overlay Text */}
       <Box
         sx={{
           position: "absolute",
           left: { xs: 8, md: 16 },
           bottom: { xs: 16, md: 24 },
-          right: { xs: 8, md: "auto" }, 
+          right: { xs: 8, md: "auto" },
           color: "white",
           zIndex: 2,
           display: "flex",
           flexDirection: "column",
-          gap: { xs: 0.5, md: 1 }, 
-          maxWidth: { xs: "90%", md: "auto" }, 
+          gap: { xs: 0.5, md: 1 },
+          maxWidth: { xs: "90%", md: "auto" },
         }}
       >
-        {/* Title */}
         <Typography
           sx={{
             fontWeight: 700,
@@ -107,11 +104,10 @@ const NewArrival: React.FC = () => {
           {title}
         </Typography>
 
-        {/* Subtitle */}
         {subtitle && (
           <Typography
             sx={{
-              maxWidth:300,
+              maxWidth: 300,
               fontWeight: 400,
               fontSize: { xs: 12, md: 16 },
               color: "rgba(255,255,255,0.8)",
@@ -123,7 +119,6 @@ const NewArrival: React.FC = () => {
           </Typography>
         )}
 
-        {/* Shop Now link */}
         {shopLink && (
           <Box
             component="a"
@@ -144,17 +139,20 @@ const NewArrival: React.FC = () => {
     </Box>
   );
 
+  // Motion variant for sliding in from left/right
+  const slideInVariant = (direction: "left" | "right") => ({
+    hidden: { opacity: 0, x: direction === "left" ? -100 : 100 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  });
+
   return (
     <Box
-      sx={{
-        mt: 8,
-        mb: 8,
-        pl: isMobile ? 1 : 8,
-        pr: isMobile ? 1 : 8,
-        py: 4,
-      }}
+      sx={{ mt: 8, mb: 8, pl: isMobile ? 1 : 8, pr: isMobile ? 1 : 8, py: 4 }}
     >
-      {/* Section Header */}
       <Box display="flex" alignItems="center" gap={1} mb={2}>
         <Box
           sx={{
@@ -169,7 +167,6 @@ const NewArrival: React.FC = () => {
         </Typography>
       </Box>
 
-      {/* Section Title */}
       <Typography
         variant="h6"
         sx={{
@@ -184,55 +181,94 @@ const NewArrival: React.FC = () => {
 
       <Grid container spacing={2}>
         {/* Left: PlayStation */}
-        <Grid item xs={12} md={6} ml={isMobile ? 0 : 4} sx={{ minWidth: isMobile?350:600 }}>
-          <CenteredImageBox
-            src={ps5Img}
-            alt="PlayStation 5"
-            title="PlayStation 5"
-            subtitle="Black and White version of the PS5 coming out on sale."
-            height={{ xs: 300, md: 600 }}
-            shopLink="/shop/ps5"
-          />
+        <Grid
+          item
+          xs={12}
+          md={6}
+          ml={isMobile ? 0 : 4}
+          sx={{ minWidth: isMobile ? 350 : 600 }}
+        >
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={slideInVariant("left")}
+          >
+            <CenteredImageBox
+              src={ps5Img}
+              alt="PlayStation 5"
+              title="PlayStation 5"
+              subtitle="Black and White version of the PS5 coming out on sale."
+              height={{ xs: 300, md: 600 }}
+              shopLink="/shop/ps5"
+            />
+          </motion.div>
         </Grid>
 
         {/* Right Column */}
-        <Grid item xs={12} md={6} sx={{ minWidth:isMobile?350: 600 }}>
+        <Grid item xs={12} md={6} sx={{ minWidth: isMobile ? 350 : 600 }}>
           <Grid container spacing={2} direction="column">
             {/* Woman */}
             <Grid item>
-              <CenteredImageBox
-                src={womanImg}
-                alt="Women’s Collections"
-                title="Women’s Collections"
-                subtitle="Featured woman collections that give you another vibe."
-                height={{ xs: 200, md: 300 }}
-                shopLink="/shop/women"
-              />
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={slideInVariant("right")}
+              >
+                <CenteredImageBox
+                  src={womanImg}
+                  alt="Women’s Collections"
+                  title="Women’s Collections"
+                  subtitle="Featured woman collections that give you another vibe."
+                  height={{ xs: 200, md: 300 }}
+                  shopLink="/shop/women"
+                />
+              </motion.div>
             </Grid>
 
             {/* Speakers + Perfume */}
             <Grid item>
               <Grid container spacing={2}>
-                <Grid item xs={6} ml={isMobile?2:0} sx={{ minWidth: isMobile ? 150 : 300 }}>
-                  <CenteredImageBox
-                    src={speakersImg}
-                    alt="Speakers"
-                    title="Speakers"
-                    subtitle="Amazon wireless speakers"
-                    height={{ xs: 180, md: 284 }}
-                    shopLink="/shop/speakers"
-                  />
+                <Grid
+                  item
+                  xs={6}
+                  ml={isMobile ? 2 : 0}
+                  sx={{ minWidth: isMobile ? 150 : 300 }}
+                >
+                  <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={slideInVariant("left")}
+                  >
+                    <CenteredImageBox
+                      src={speakersImg}
+                      alt="Speakers"
+                      title="Speakers"
+                      subtitle="Amazon wireless speakers"
+                      height={{ xs: 180, md: 284 }}
+                      shopLink="/shop/speakers"
+                    />
+                  </motion.div>
                 </Grid>
                 <Grid item xs={6} sx={{ minWidth: isMobile ? 130 : 300 }}>
-                  <CenteredImageBox
-                    src={perfumeImg}
-                    alt="Perfume"
-                    title="Perfume"
-                    subtitle="GUCCI INTENSE OUD EDP"
-                    height={{ xs: 180, md: 284 }}
-                    isGlow
-                    shopLink="/shop/perfume"
-                  />
+                  <motion.div
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={slideInVariant("right")}
+                  >
+                    <CenteredImageBox
+                      src={perfumeImg}
+                      alt="Perfume"
+                      title="Perfume"
+                      subtitle="GUCCI INTENSE OUD EDP"
+                      height={{ xs: 180, md: 284 }}
+                      isGlow
+                      shopLink="/shop/perfume"
+                    />
+                  </motion.div>
                 </Grid>
               </Grid>
             </Grid>

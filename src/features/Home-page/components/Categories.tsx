@@ -13,6 +13,8 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { useNavigate } from "react-router";
+import { motion } from "framer-motion";
+
 import ArrowNavigation from "../../../shared/components/Arrow-navigation";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { useCategoriesQuery } from "../hooks/useCategoriesQuery";
@@ -23,12 +25,12 @@ import CategoryComputer from "../../../assets/Category/Category-Computer.svg";
 import CategoryGamepad from "../../../assets/Category/Category-Gamepad.svg";
 import CategoryWatch from "../../../assets/Category/Category-SmartWatch.svg";
 import CategoryHeadphone from "../../../assets/Category/Category-Headphone.svg";
-import DefaultCategoryIcon from "../../../assets/Category/Category-Gamepad.svg"; 
-import clothes from "../../../assets/Category/clothes.svg"
+import DefaultCategoryIcon from "../../../assets/Category/Category-Gamepad.svg";
+import clothes from "../../../assets/Category/clothes.svg";
 import furniture from "../../../assets/Category/furniture-removebg-preview.svg";
-import luxery from "../../../assets/Category/luxery-removebg-preview.svg"
-import shoes from "../../../assets/Category/shoes-removebg-preview.svg"
-import testCategory from"../../../assets/Category/testing-cate-removebg-preview.svg"
+import luxery from "../../../assets/Category/luxery-removebg-preview.svg";
+import shoes from "../../../assets/Category/shoes-removebg-preview.svg";
+import testCategory from "../../../assets/Category/testing-cate-removebg-preview.svg";
 
 const categoryImageMap: Record<string, string> = {
   camera: CategoryCamera,
@@ -43,6 +45,7 @@ const categoryImageMap: Record<string, string> = {
   shoes: shoes,
   testing: testCategory,
 };
+
 const Categories: React.FC = () => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
@@ -60,18 +63,28 @@ const Categories: React.FC = () => {
     navigate(`/products?categorySlug=${slug}`);
   };
 
-  
-const enrichedCategories = categories.map((cat) => {
+  const enrichedCategories = categories.map((cat) => {
+    const key = (
+      cat.slug?.split("-")[0] || cat.name.split(" ")[0]
+    ).toLowerCase();
+    const localImage = categoryImageMap[key] || DefaultCategoryIcon;
+    return { ...cat, image: localImage };
+  });
 
-  const key = (cat.slug?.split("-")[0] || cat.name.split(" ")[0]).toLowerCase();
-  const localImage =
-    categoryImageMap[key] || 
-    DefaultCategoryIcon;
-
-  return { ...cat, image: localImage }; 
-});
-
-
+  // Motion variants for cards
+  const cardVariants = {
+    hidden: (direction: number) => ({
+      opacity: 0,
+      x: direction * 100, // left (-1) or right (1)
+      scale: 0.8,
+    }),
+    visible: {
+      opacity: 1,
+      x: 0,
+      scale: 1,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
 
   return (
     <Box sx={{ mt: 8, pl: isMobile ? 2 : 8, pr: isMobile ? 2 : 8 }}>
@@ -144,49 +157,56 @@ const enrichedCategories = categories.map((cat) => {
       {!isLoading && !isError && (
         <Swiper
           spaceBetween={0}
-          
           navigation={{ nextEl: ".cat-next", prevEl: ".cat-prev" }}
           modules={[Navigation]}
           breakpoints={{
             1200: { slidesPerView: 6 },
             900: { slidesPerView: 4.1 },
             600: { slidesPerView: 3.1 },
-            0: { slidesPerView: 1 },
+            0: { slidesPerView: 1.5 },
           }}
         >
-          {enrichedCategories.map((cat) => (
+          {enrichedCategories.map((cat, idx) => (
             <SwiperSlide key={cat.id}>
-              <Card
-                onClick={() => handleClick(cat.slug)}
-                sx={{
-                  textAlign: "center",
-                  border: "1px solid #ddd",
-                  cursor: "pointer",
-                  width: 190,
-                  height: 150,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    bgcolor: theme.Button2,
-                    color: "white",
-                    "& img": { filter: "brightness(0) invert(1)" },
-                  },
-                }}
+              <motion.div
+                custom={idx % 2 === 0 ? -1 : 1} // left (-1) or right (1)
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={cardVariants}
               >
-                <CardContent>
-                  <Box
-                    component="img"
-                    src={cat.image}
-                    alt={cat.name} 
-                    sx={{ width: 40, mb: 1, transition: "all 0.3s ease" }}
-                  />
-                  <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
-                    {cat.name}
-                  </Typography>
-                </CardContent>
-              </Card>
+                <Card
+                  onClick={() => handleClick(cat.slug)}
+                  sx={{
+                    textAlign: "center",
+                    border: "1px solid #ddd",
+                    cursor: "pointer",
+                    width: 190,
+                    height: 150,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      bgcolor: theme.Button2,
+                      color: "white",
+                      "& img": { filter: "brightness(0) invert(1)" },
+                    },
+                  }}
+                >
+                  <CardContent>
+                    <Box
+                      component="img"
+                      src={cat.image}
+                      alt={cat.name}
+                      sx={{ width: 40, mb: 1, transition: "all 0.3s ease" }}
+                    />
+                    <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+                      {cat.name}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </SwiperSlide>
           ))}
         </Swiper>

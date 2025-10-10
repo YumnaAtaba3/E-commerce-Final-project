@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   List,
@@ -7,7 +7,6 @@ import {
   IconButton,
   Drawer,
   Button,
-  Skeleton,
   useMediaQuery,
 } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -16,6 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { useNavigate, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const categories = [
   { name: "Woman’s Fashion", slug: "clothes" },
@@ -35,18 +35,11 @@ interface FilterSidebarProps {
 const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
   const [active, setActive] = useState<string>("");
   const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
   const navigate = useNavigate();
   const location = useLocation();
-
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 1500);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleCategoryClick = (slug: string, name: string) => {
     setActive(name);
@@ -68,53 +61,59 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
     setOpen(false);
   };
 
-  const categoryList = isLoading ? (
-    <List disablePadding>
-      {[...Array(6)].map((_, idx) => (
-        <ListItemButton key={idx} sx={{ py: 1.2, px: 2 }}>
-          <Skeleton
-            variant="text"
-            width="80%"
-            height={25}
-            sx={{ bgcolor: "gray" }}
-          />
-        </ListItemButton>
-      ))}
-    </List>
-  ) : (
-    <List disablePadding>
+  const listVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.1, // each item appears 0.1s after the previous
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -30 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { type: "spring", stiffness: 120 },
+    },
+  };
+
+  const categoryList = (
+    <motion.div initial="hidden" animate="visible" variants={listVariants}>
       {categories.map((cat, index) => (
-        <ListItemButton
-          key={`${cat.slug}-${index}`}
-          onClick={() => handleCategoryClick(cat.slug, cat.name)}
-          sx={{
-            py: 1.2,
-            px: 2,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            borderRadius: 0,
-            fontSize: 15,
-            fontWeight: active === cat.name ? 600 : 400,
-            color: active === cat.name ? theme.Button2 : theme.Text1,
-            "&:hover": {
-              bgcolor: "transparent",
-              color: theme.Button2,
-            },
-          }}
-        >
-          <Typography sx={{ fontSize: 15 }}>{cat.name}</Typography>
-          {(index === 0 || index === 1) && (
-            <ArrowForwardIosIcon
-              sx={{
-                fontSize: 14,
-                color: active === cat.name ? theme.Button2 : theme.Text1,
-              }}
-            />
-          )}
-        </ListItemButton>
+        <motion.div key={cat.slug} variants={itemVariants}>
+          <ListItemButton
+            onClick={() => handleCategoryClick(cat.slug, cat.name)}
+            sx={{
+              py: 1.2,
+              px: 2,
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              borderRadius: 0,
+              fontSize: 15,
+              fontWeight: active === cat.name ? 600 : 400,
+              color: active === cat.name ? theme.Button2 : theme.Text1,
+              "&:hover": {
+                bgcolor: "transparent",
+                color: theme.Button2,
+              },
+            }}
+          >
+            <Typography sx={{ fontSize: 15 }}>{cat.name}</Typography>
+            {(index === 0 || index === 1) && (
+              <ArrowForwardIosIcon
+                sx={{
+                  fontSize: 14,
+                  color: active === cat.name ? theme.Button2 : theme.Text1,
+                }}
+              />
+            )}
+          </ListItemButton>
+        </motion.div>
       ))}
-    </List>
+    </motion.div>
   );
 
   return (

@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+  useEffect,
+} from "react";
 import { Box, IconButton, Badge } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -7,6 +13,11 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import { useLocation, Link as RouterLink } from "react-router-dom";
 import { appRoutes } from "../../../../routes";
 import AccountDropdown from "../../../components/Account-dropdown";
+
+// ✅ ForwardRef handle
+export interface HeaderProtectedIconsHandle {
+  cartIconRef: React.RefObject<HTMLButtonElement>;
+}
 
 interface HeaderProtectedIconsProps {
   theme: any;
@@ -48,113 +59,108 @@ const iconStylesConfig = {
   }),
 };
 
-const HeaderProtectedIcons: React.FC<HeaderProtectedIconsProps> = ({
-  theme,
-  isLoggedIn,
-  cart,
-  wishlist,
-  isMobile,
-  iconColor,
-  hoverBg,
-  badgeColor,
-}) => {
-  const [accountOpen, setAccountOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const location = useLocation();
+// ✅ ForwardRef component
+const HeaderProtectedIcons = forwardRef<
+  HeaderProtectedIconsHandle,
+  HeaderProtectedIconsProps
+>(
+  (
+    {
+      theme,
+      isLoggedIn,
+      cart,
+      wishlist,
+      isMobile,
+      iconColor,
+      hoverBg,
+      badgeColor,
+    },
+    ref
+  ) => {
+    const [accountOpen, setAccountOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const cartIconRef = useRef<HTMLButtonElement>(null);
 
-  const hideAllIconsPages =
-    location.pathname === appRoutes.auth.signUp ||
-    location.pathname === appRoutes.auth.login;
+    const location = useLocation();
+    const hideAllIconsPages =
+      location.pathname === appRoutes.auth.signUp ||
+      location.pathname === appRoutes.auth.login;
 
+    // Close dropdown when clicking outside
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          dropdownRef.current &&
+          !dropdownRef.current.contains(event.target as Node)
+        ) {
+          setAccountOpen(false);
+        }
+      };
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setAccountOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    // Expose cart ref to parent
+    useImperativeHandle(ref, () => ({
+      cartIconRef,
+    }));
 
-  const iconButtonSx = iconStylesConfig.iconButton(theme, hoverBg);
-  const badgeSx = iconStylesConfig.badge(theme, badgeColor);
-  const iconSx = iconStylesConfig.icon(theme, iconColor);
+    const iconButtonSx = iconStylesConfig.iconButton(theme, hoverBg);
+    const badgeSx = iconStylesConfig.badge(theme, badgeColor);
+    const iconSx = iconStylesConfig.icon(theme, iconColor);
 
-  return (
-
-  <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-    {/* Wishlist */}
-    <Box
-      sx={{
-        width: 40, // نفس عرض الايقونة تقريبا
-        height: 40,
-        display: hideAllIconsPages ? "inline-block" : "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {!hideAllIconsPages && (
-        <IconButton component={RouterLink} to={appRoutes.wishlist} sx={{ ...iconButtonSx, ...badgeSx }}>
-          <Badge badgeContent={wishlist.length} color="secondary">
-            <FavoriteBorderIcon sx={iconSx} />
-          </Badge>
-        </IconButton>
-      )}
-    </Box>
-
-    {/* Cart */}
-    <Box
-      sx={{
-        width: 40,
-        height: 40,
-        display: hideAllIconsPages ? "inline-block" : "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      {!hideAllIconsPages && (
-        <IconButton component={RouterLink} to={appRoutes.cart} sx={{ ...iconButtonSx, ...badgeSx }}>
-          <Badge badgeContent={cart.length} color="secondary">
-            <ShoppingCartOutlinedIcon sx={iconSx} />
-          </Badge>
-        </IconButton>
-      )}
-    </Box>
-
-    {/* Account */}
-    <Box
-      sx={{
-        width: 40,
-        height: 40,
-        display: hideAllIconsPages || !isLoggedIn ? "inline-block" : "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        position: "relative",
-      }}
-      ref={dropdownRef}
-    >
-      {!hideAllIconsPages && isLoggedIn && (
-        <>
+    return (
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+        {/* Wishlist */}
+        {!hideAllIconsPages && (
           <IconButton
-            onClick={(e) => {
-              e.stopPropagation();
-              setAccountOpen((prev) => !prev);
-            }}
-            sx={iconButtonSx}
+            component={RouterLink}
+            to={appRoutes.wishlist}
+            sx={{ ...iconButtonSx, ...badgeSx }}
           >
-            <PersonOutlineIcon sx={iconSx} />
+            <Badge badgeContent={wishlist.length} color="secondary">
+              <FavoriteBorderIcon sx={iconSx} />
+            </Badge>
           </IconButton>
-          <AccountDropdown open={accountOpen} theme={theme} isMobile={!!isMobile} />
-        </>
-      )}
-    </Box>
-  </Box>
-);
+        )}
 
-};
+        {/* Cart */}
+        {!hideAllIconsPages && (
+          <IconButton
+            ref={cartIconRef}
+            component={RouterLink}
+            to={appRoutes.cart}
+            sx={{ ...iconButtonSx, ...badgeSx }}
+          >
+            <Badge badgeContent={cart.length} color="secondary">
+              <ShoppingCartOutlinedIcon sx={iconSx} />
+            </Badge>
+          </IconButton>
+        )}
+
+        {/* Account Dropdown */}
+        {!hideAllIconsPages && isLoggedIn && (
+          <Box sx={{ position: "relative" }} ref={dropdownRef}>
+            <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                setAccountOpen((prev) => !prev);
+              }}
+              sx={iconButtonSx}
+            >
+              <PersonOutlineIcon sx={iconSx} />
+            </IconButton>
+            <AccountDropdown
+              open={accountOpen}
+              theme={theme}
+              isMobile={!!isMobile}
+            />
+          </Box>
+        )}
+      </Box>
+    );
+  }
+);
 
 export default HeaderProtectedIcons;

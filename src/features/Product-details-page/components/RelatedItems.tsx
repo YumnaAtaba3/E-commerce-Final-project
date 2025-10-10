@@ -6,9 +6,9 @@ import {
   useMediaQuery,
   useTheme as useMuiTheme,
 } from "@mui/material";
-
 import ProductCard from "../../../shared/components/Product-card";
 import { useTheme } from "../../../theme/ThemeProvider";
+import { motion } from "framer-motion";
 
 interface RelatedItem {
   id: number;
@@ -23,6 +23,20 @@ interface RelatedItem {
 interface RelatedItemsProps {
   items: RelatedItem[];
 }
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15, // each child appears one after another
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+};
 
 const RelatedItems: React.FC<RelatedItemsProps> = ({ items }) => {
   const { theme } = useTheme();
@@ -39,13 +53,12 @@ const RelatedItems: React.FC<RelatedItemsProps> = ({ items }) => {
         mb={2}
         sx={{ flexWrap: "wrap" }}
       >
-        {/* Colored bar */}
         <Box
           sx={{
             minWidth: 20,
             width: { xs: 15, sm: 20 },
-            height: { xs: 30, sm: 40 }, 
-            bgcolor: theme.Button2 || "#DB4444", 
+            height: { xs: 30, sm: 40 },
+            bgcolor: theme.Button2 || "#DB4444",
             borderRadius: 1,
             flexShrink: 0,
           }}
@@ -62,18 +75,26 @@ const RelatedItems: React.FC<RelatedItemsProps> = ({ items }) => {
         </Typography>
       </Box>
 
-      {/* Cards Grid */}
-      <Grid
-        container
-        spacing={3}
-        justifyContent={isMobile ? "center" : "flex-start"}
+      {/* Cards Grid with animation */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
       >
-        {items.map((item) => (
-          <Grid item key={item.id} xs={isMobile ? 10 : 3}>
-            <ProductCard {...item} />
-          </Grid>
-        ))}
-      </Grid>
+        <Grid
+          container
+          spacing={3}
+          justifyContent={isMobile ? "center" : "flex-start"}
+        >
+          {items.map((item) => (
+            <Grid item key={item.id} xs={isMobile ? 10 : 3}>
+              <motion.div variants={itemVariants}>
+                <ProductCard {...item} />
+              </motion.div>
+            </Grid>
+          ))}
+        </Grid>
+      </motion.div>
     </Box>
   );
 };

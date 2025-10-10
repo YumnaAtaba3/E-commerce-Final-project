@@ -18,6 +18,7 @@ import { loginFormSchemaValidation, type LoginFormValues } from "./config";
 import { useLoginMutation } from "./hook/mutations";
 import { userStorage } from "../storage/userStorage";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
 const Container = styled(Box)({ maxWidth: 370, width: "100%" });
 const Heading = styled(Typography)({
@@ -36,6 +37,11 @@ const LoginButton = styled(Button)({
   py: 1.2,
 });
 
+const MotionContainer = motion(Container);
+const MotionHeading = motion(Heading);
+const MotionSubHeading = motion(SubHeading);
+const MotionFieldsContainer = motion.div;
+
 const LoginForm: React.FC = () => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
@@ -48,7 +54,6 @@ const LoginForm: React.FC = () => {
     email?: string;
     password?: string;
   } | null;
-
 
   const {
     register,
@@ -64,20 +69,20 @@ const LoginForm: React.FC = () => {
 
   const { mutateAsync: login, isPending } = useLoginMutation();
 
-const onSubmit = handleSubmit(async (values) => {
-  try {
-    const data = await login(values); 
-    userStorage.set(data.access_token);
+  const onSubmit = handleSubmit(async (values) => {
+    try {
+      const data = await login(values);
+      userStorage.set(data.access_token);
 
-    toast.success("Login successful!", { autoClose: 1000 });
-    navigate(-2);
-  } catch (error: any) {
-    console.error("Login error:", error);
-    toast.error(error.message || "Login failed. Please try again.", {
-      autoClose: 1500,
-    });
-  }
-});
+      toast.success("Login successful!", { autoClose: 1000 });
+      navigate(-2);
+    } catch (error: any) {
+      console.error("Login error:", error);
+      toast.error(error.message || "Login failed. Please try again.", {
+        autoClose: 1500,
+      });
+    }
+  });
 
   const headingFont = isMobile ? "24px" : "32px";
   const subHeadingFont = isMobile ? "14px" : "16px";
@@ -86,14 +91,40 @@ const onSubmit = handleSubmit(async (values) => {
   const buttonFont = isMobile ? "14px" : "16px";
   const linkFont = isMobile ? "12px" : "14px";
 
+  // Animation variants: slide in from right
+  const fieldVariants = {
+    hidden: { opacity: 0, x: 50 },
+    visible: (i: number) => ({
+      opacity: 1,
+      x: 0,
+      transition: { delay: i * 0.15 },
+    }),
+  };
+
   return (
-    <Container sx={{ mx: isMobile ? 5 : 0 }}>
-      <Heading sx={{ fontSize: headingFont, color: theme.Text1 }}>
+    <MotionContainer
+      sx={{ mx: isMobile ? 5 : 0 }}
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
+      <MotionHeading
+        sx={{ fontSize: headingFont, color: theme.Text1 }}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
         Log in to Exclusive
-      </Heading>
-      <SubHeading sx={{ fontSize: subHeadingFont, color: theme.Text1 }}>
+      </MotionHeading>
+
+      <MotionSubHeading
+        sx={{ fontSize: subHeadingFont, color: theme.Text1 }}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
         Enter your details below
-      </SubHeading>
+      </MotionSubHeading>
 
       <form
         onSubmit={(e) => {
@@ -104,12 +135,15 @@ const onSubmit = handleSubmit(async (values) => {
           });
         }}
       >
-        <LoginFormFields
-          register={register}
-          errors={errors}
-          inputFont={inputFont}
-          labelFont={labelFont}
-        />
+        <MotionFieldsContainer initial="hidden" animate="visible">
+          <LoginFormFields
+            register={register}
+            errors={errors}
+            inputFont={inputFont}
+            labelFont={labelFont}
+            fieldVariants={fieldVariants}
+          />
+        </MotionFieldsContainer>
 
         <Box
           sx={{
@@ -122,6 +156,9 @@ const onSubmit = handleSubmit(async (values) => {
           }}
         >
           <LoginButton
+            component={motion.button}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             type="submit"
             fullWidth={isMobile}
             variant="contained"
@@ -132,7 +169,6 @@ const onSubmit = handleSubmit(async (values) => {
               "&:hover": { backgroundColor: theme.Button2 },
               px: 5,
             }}
-           
           >
             {isPending ? "Loading..." : "Log In"}
           </LoginButton>
@@ -152,7 +188,7 @@ const onSubmit = handleSubmit(async (values) => {
           </Link>
         </Box>
       </form>
-    </Container>
+    </MotionContainer>
   );
 };
 

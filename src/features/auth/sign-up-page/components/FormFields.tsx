@@ -104,8 +104,8 @@ const FormFields: React.FC<FormFieldsProps> = ({
             }}
             sx={{
               "& .MuiFormHelperText-root": {
-                color: theme.Button2, 
-                fontSize:10
+                color: theme.Button2,
+                fontSize: 10,
               },
               "& .MuiInput-underline:before": {
                 borderBottomColor: theme.disabledText,
@@ -115,6 +115,11 @@ const FormFields: React.FC<FormFieldsProps> = ({
               },
               "& .MuiInput-underline:after": {
                 borderBottomColor: theme.Text1,
+              },
+              "& input:-webkit-autofill": {
+                WebkitBoxShadow: `0 0 0 1000px ${theme.primary1} inset`,
+                WebkitTextFillColor: theme.Text1,
+                transition: "background-color 5000s ease-in-out 0s",
               },
             }}
           />

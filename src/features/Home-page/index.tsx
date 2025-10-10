@@ -18,6 +18,7 @@ import IconCustomer from "../../assets/About/Icon-Customerservice.svg";
 import IconSecure from "../../assets/About/Icon-secure.svg";
 
 import { useHomepageData } from "./hooks/useHomepageData";
+import { motion } from "framer-motion";
 
 const Homepage: React.FC = () => {
   const { theme } = useTheme();
@@ -115,8 +116,8 @@ const Homepage: React.FC = () => {
             my: 6,
             borderColor: theme.Text2,
             opacity: 0.2,
-            width: "80%", 
-            mx: "auto", 
+            width: "80%",
+            mx: "auto",
           }}
         />
 
@@ -167,16 +168,8 @@ const Homepage: React.FC = () => {
         <NewArrival />
 
         {/* Feature Cards */}
-        <Container
-          maxWidth="lg"
-          sx={{
-            py: 8,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Grid container spacing={6}>
+        <Container maxWidth="lg" sx={{ py: 8 }}>
+          <Grid container spacing={6} justifyContent="center">
             {[
               {
                 icon: IconDelivery,
@@ -194,8 +187,15 @@ const Homepage: React.FC = () => {
                 text: "We return money within 30 days",
               },
             ].map((f, i) => (
-              <Grid key={i}>
-                <FeatureCard {...f} />
+              <Grid item key={i}>
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: i * 0.2 }}
+                  viewport={{ once: true }}
+                >
+                  <FeatureCard {...f} />
+                </motion.div>
               </Grid>
             ))}
           </Grid>

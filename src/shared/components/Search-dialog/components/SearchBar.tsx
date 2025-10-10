@@ -61,11 +61,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
               }
             : { scale: 1, boxShadow: "0 0 0px rgba(0,0,0,0)" }
         }
-        style={{
-          flex: 1,
-          borderRadius: 16,
-          overflow: "clip",
-        }}
+        style={{ flex: 1, borderRadius: 16, overflow: "clip" }}
       >
         <TextField
           inputRef={inputRef}
@@ -98,7 +94,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
               bgcolor: theme.primary1,
               color: theme.Text1,
               borderRadius: 16,
-
               "& .MuiOutlinedInput-notchedOutline": {
                 border: "1px solid grey",
                 borderRadius: 0,

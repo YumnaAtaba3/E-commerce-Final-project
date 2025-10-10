@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Box,
@@ -16,6 +15,7 @@ import ErrorState from "../../shared/components/Error-state";
 import DeliveryIcon from "../../assets/Product-details/icon-delivery (2).svg";
 import ReturnIcon from "../../assets/Product-details/Icon-return.svg";
 import { useProductDetails } from "./hooks/useProductDetails";
+import { motion } from "framer-motion";
 
 const ProductDetailsPage: React.FC = () => {
   const { theme } = useTheme();
@@ -114,7 +114,13 @@ const ProductDetailsPage: React.FC = () => {
               height={200}
             />
           ) : relatedItems.length ? (
-            <RelatedItems items={relatedItems} />
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            >
+              <RelatedItems items={relatedItems} />
+            </motion.div>
           ) : (
             <ErrorState
               title="No related items found"

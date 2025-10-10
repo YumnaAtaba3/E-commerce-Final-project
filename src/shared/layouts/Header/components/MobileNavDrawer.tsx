@@ -1,12 +1,27 @@
 import React from "react";
 import { Drawer, Box, Link } from "@mui/material";
 import { Link as RouterLink } from "react-router";
+import { motion } from "framer-motion";
 
 interface MobileNavDrawerProps {
   open: boolean;
   onClose: () => void;
   navLinks: { label: string; to: string; icon: React.ReactNode }[];
 }
+
+const containerVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.1, // each item appears one after another
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, x: 50 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } },
+};
 
 const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({
   open,
@@ -32,35 +47,42 @@ const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({
         },
       }}
     >
-      <Box display="flex" flexDirection="column" gap={2}>
-        {navLinks.map((link) => (
-          <Link
-            key={link.label}
-            component={RouterLink}
-            to={link.to}
-            underline="none"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 1.5,
-              fontSize: 16,
-              fontWeight: 500,
-              color: "#f5f5f5",
-              py: 1,
-              px: 1.5,
-              borderRadius: 1.5,
-              "&:hover": {
-                bgcolor: "rgba(255,255,255,0.08)",
-                transform: "translateX(3px)",
-              },
-            }}
-            onClick={onClose}
-          >
-            {link.icon}
-            {link.label}
-          </Link>
-        ))}
-      </Box>
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate={open ? "visible" : "hidden"}
+      >
+        <Box display="flex" flexDirection="column" gap={2}>
+          {navLinks.map((link) => (
+            <motion.div key={link.label} variants={itemVariants}>
+              <Link
+                component={RouterLink}
+                to={link.to}
+                underline="none"
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.5,
+                  fontSize: 16,
+                  fontWeight: 500,
+                  color: "#f5f5f5",
+                  py: 1,
+                  px: 1.5,
+                  borderRadius: 1.5,
+                  "&:hover": {
+                    bgcolor: "rgba(255,255,255,0.08)",
+                    transform: "translateX(3px)",
+                  },
+                }}
+                onClick={onClose}
+              >
+                {link.icon}
+                {link.label}
+              </Link>
+            </motion.div>
+          ))}
+        </Box>
+      </motion.div>
     </Drawer>
   );
 };

@@ -101,12 +101,17 @@ const BillingForm = forwardRef<BillingFormRef>((_, ref) => {
                   fontSize: "14px",
                   fontFamily: "'Inter', sans-serif",
                   bgcolor: theme.bgColor,
-                  color: theme.Text1, 
+                  color: theme.Text1,
                   "& .MuiOutlinedInput-notchedOutline": {
                     border: "1px solid transparent",
                   },
                   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                     border: `1px solid ${theme.Button2}`,
+                  },
+                  "& input:-webkit-autofill": {
+                    WebkitBoxShadow: `0 0 0 1000px ${theme.primary1} inset`,
+                    WebkitTextFillColor: theme.Text1,
+                    transition: "background-color 5000s ease-in-out 0s",
                   },
                 }}
               />

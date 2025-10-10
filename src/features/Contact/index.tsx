@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
-  Container,
   Grid,
   useMediaQuery,
   useTheme as useMuiTheme,
 } from "@mui/material";
+import { motion } from "framer-motion";
 import { useTheme } from "../../theme/ThemeProvider";
 
 import phoneIcon from "../../assets/Contact/phoneIcon.svg";
@@ -22,17 +22,45 @@ const Contact: React.FC = () => {
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(muiTheme.breakpoints.between("sm", "md"));
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  // InfoCard animation from left
+  const infoCardVariant = {
+    hidden: { opacity: 0, x: -100 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
+  // ContactForm animation from bottom with scale
+  const formVariant = {
+    hidden: { opacity: 0, y: 50, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
   return (
     <>
       <ContactBreadcrumb />
 
-      <Container
-        maxWidth="xl"
+      {/* --- Full-Width Section --- */}
+      <Box
         sx={{
+          width: "100%",
           bgcolor: theme.primary1,
           display: "flex",
           justifyContent: "center",
           py: { xs: 6, sm: 8, md: 10 },
+          px: { xs: 2, sm: 4, md: 8 },
+          overflowX: "hidden",
         }}
       >
         <Grid
@@ -40,33 +68,30 @@ const Contact: React.FC = () => {
           spacing={isMobile ? 4 : isTablet ? 6 : 8}
           sx={{
             flexDirection: isMobile ? "column" : "row",
-            justifyContent: isMobile ? "center" : "flex-start",
+            justifyContent: isMobile ? "center" : "space-between",
             alignItems: "flex-start",
+            maxWidth: "1600px",
+            width: "95%",
           }}
         >
-          {/* Left Info Section */}
+          {/* --- Left Info Section --- */}
           <Grid
+            item
+            xs={12}
+            md={5}
             sx={{
-              width: isMobile ? "100%" : "auto",
-              maxWidth: isMobile ? 450 : "none",
               display: "flex",
               justifyContent: "center",
               mb: isMobile ? 4 : 0,
-              bgcolor: theme.primary1,
+              flexDirection: "column",
+              gap: 4,
             }}
           >
-            <Box
-              sx={{
-                width: "100%",
-                border: "1px solid #e0e0e0",
-                borderRadius: 2,
-                p: 3,
-                bgcolor: theme.primary1,
-                boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.08)",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={infoCardVariant}
             >
               <InfoCard
                 icon={phoneIcon}
@@ -77,7 +102,15 @@ const Contact: React.FC = () => {
                   "Phone: +880611122222",
                 ]}
               />
+            </motion.div>
 
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={infoCardVariant}
+              transition={{ delay: 0.2 }}
+            >
               <InfoCard
                 icon={messageIcon}
                 alt="message"
@@ -89,24 +122,32 @@ const Contact: React.FC = () => {
                 ]}
                 borderTop
               />
-            </Box>
+            </motion.div>
           </Grid>
 
-          {/* Right Form Section */}
+          {/* --- Right Form Section --- */}
           <Grid
+            item
+            xs={12}
+            md={7}
             sx={{
-              width: isMobile ? "100%" : "auto",
-              maxWidth: isMobile ? 450 : "none",
               display: "flex",
               justifyContent: "center",
+              alignItems: "flex-start",
             }}
           >
-            <Box sx={{ width: "100%" }}>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={formVariant}
+              style={{ width: "100%" }}
+            >
               <ContactForm isMobile={isMobile || isTablet} />
-            </Box>
+            </motion.div>
           </Grid>
         </Grid>
-      </Container>
+      </Box>
     </>
   );
 };

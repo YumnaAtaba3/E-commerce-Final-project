@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -18,9 +18,11 @@ import { useTheme } from "../../../theme/ThemeProvider";
 import { useNavigate } from "react-router";
 import { useWishlistStore } from "../../../store/wishlistStore";
 import { useCartStore } from "../../../store/cartStore";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Product } from "../../../store/state";
 import { appRoutes } from "../../../routes";
-
+import { useOutletContext } from "react-router";
+import type { HeaderProtectedIconsHandle } from "../../layouts/Header/components/HeaderProtectedIcons";
 
 interface ProductCardProps {
   id: number;
@@ -47,7 +49,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
 }) => {
   const { theme } = useTheme();
   const navigate = useNavigate();
-
+  const { cartRef } = useOutletContext<{
+    cartRef: React.RefObject<HeaderProtectedIconsHandle>;
+  }>();
 
   // Wishlist
   const addToWishlist = useWishlistStore((state) => state.addToWishlist);
@@ -60,16 +64,26 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const addToCart = useCartStore((state) => state.addToCart);
   const inCart = useCartStore((state) => state.isInCart(id));
 
- 
-  let numericPrice =
-    typeof price === "string" ? parseFloat(price.replace("$", "")) : price;
-  if (isNaN(numericPrice)) numericPrice = 0;
+  // Floating hearts
+  const [hearts, setHearts] = useState<
+    { id: number; x: number; delay: number }[]
+  >([]);
+
+  // Safe numeric price
+  const numericPrice = (() => {
+    if (typeof price === "number") return price;
+    if (typeof price === "string") {
+      const parsed = parseFloat(price.replace(/[^0-9.]/g, ""));
+      return isNaN(parsed) ? 0 : parsed;
+    }
+    return 0;
+  })();
 
   let finalPrice = numericPrice;
   let finalOldPrice = oldPrice;
 
   if (discount) {
-    const discountNum = parseInt(discount.replace("%", "").replace("-", ""));
+    const discountNum = parseInt(discount.replace(/[^0-9]/g, ""));
     if (!isNaN(discountNum)) {
       finalOldPrice = `$${numericPrice.toFixed(2)}`;
       finalPrice = numericPrice * (1 - discountNum / 100);
@@ -81,7 +95,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     finalOldPrice && finalOldPrice !== displayPrice ? finalOldPrice : undefined;
   const imageToShow = Array.isArray(img) ? img[0] : img;
 
- 
+  // Wishlist toggle
   const toggleWishlist = () => {
     favorite
       ? removeFromWishlist(id)
@@ -96,9 +110,18 @@ const ProductCard: React.FC<ProductCardProps> = ({
           colors,
           isNew,
         } as Product);
+
+    if (!favorite) {
+      const newHearts = Array.from({ length: 5 }).map(() => ({
+        id: Date.now() + Math.random(),
+        x: Math.random() * 60 - 30,
+        delay: Math.random() * 0.3,
+      }));
+      setHearts((prev) => [...prev, ...newHearts]);
+    }
   };
 
-
+  // Fly-to-cart animation
   const handleAddToCart = () => {
     if (!inCart) {
       addToCart(
@@ -115,13 +138,43 @@ const ProductCard: React.FC<ProductCardProps> = ({
         } as Product,
         1
       );
+
+      if (cartRef?.current?.cartIconRef?.current) {
+        const cartIcon = cartRef.current.cartIconRef.current;
+        const productImage = document.getElementById(`product-img-${id}`);
+        if (productImage) {
+          const imgRect = productImage.getBoundingClientRect();
+          const cartRect = cartIcon.getBoundingClientRect();
+
+          const flyingImg = productImage.cloneNode(true) as HTMLElement;
+          flyingImg.style.position = "fixed";
+          flyingImg.style.left = `${imgRect.left}px`;
+          flyingImg.style.top = `${imgRect.top}px`;
+          flyingImg.style.width = `${imgRect.width}px`;
+          flyingImg.style.height = `${imgRect.height}px`;
+          flyingImg.style.zIndex = "1000";
+          flyingImg.style.pointerEvents = "none";
+          flyingImg.style.borderRadius = "8px";
+          document.body.appendChild(flyingImg);
+
+          flyingImg.animate(
+            [
+              { transform: `translate(0, 0) scale(1)` },
+              {
+                transform: `translate(${cartRect.left - imgRect.left}px, ${
+                  cartRect.top - imgRect.top
+                }px) scale(0.2)`,
+                opacity: 0.5,
+              },
+            ],
+            { duration: 800, easing: "ease-in-out" }
+          ).onfinish = () => flyingImg.remove();
+        }
+      }
     }
   };
 
-
-  const handleViewDetails = () => {
-    navigate(appRoutes.products.details(id));
-  };
+  const handleViewDetails = () => navigate(appRoutes.products.details(id));
 
   return (
     <Card
@@ -196,7 +249,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
           zIndex: 2,
         }}
       >
-        {/*  Wishlist */}
         <IconButton
           onClick={toggleWishlist}
           sx={{
@@ -214,7 +266,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </IconButton>
 
-        {/*  View Details */}
         <IconButton
           onClick={handleViewDetails}
           sx={{
@@ -238,12 +289,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
         }}
       >
         <CardMedia
+          id={`product-img-${id}`}
           component="img"
           height="180"
           image={imageToShow}
           alt={name}
           sx={{ objectFit: "contain", mx: "auto" }}
         />
+
+        {/* Hover Add to Cart */}
         <Box
           className="hoverOverlay"
           sx={{
@@ -273,6 +327,33 @@ const ProductCard: React.FC<ProductCardProps> = ({
             {inCart ? "In Cart" : "Add To Cart"}
           </Button>
         </Box>
+
+        {/* Floating Hearts */}
+        <AnimatePresence>
+          {hearts.map((heart) => (
+            <motion.div
+              key={heart.id}
+              initial={{ opacity: 1, scale: 1, y: 0, x: heart.x }}
+              animate={{ opacity: 0, scale: 1.5, y: -150 }}
+              transition={{
+                duration: 1.2,
+                ease: "easeOut",
+                delay: heart.delay,
+              }}
+              style={{
+                position: "absolute",
+                bottom: 50,
+                left: "50%",
+                pointerEvents: "none",
+              }}
+              onAnimationComplete={() =>
+                setHearts((prev) => prev.filter((h) => h.id !== heart.id))
+              }
+            >
+              <FavoriteIcon sx={{ color: theme.Button2, fontSize: 28 }} />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </Box>
 
       {/* Content */}
@@ -283,7 +364,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
           {name}
         </Typography>
 
-        {/* Price + rating */}
         <Box display="flex" alignItems="center" gap={1} mb={1}>
           <Typography
             sx={{ fontSize: 16, color: theme.Button2, fontWeight: 600 }}
@@ -331,6 +411,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
                   borderRadius: "50%",
                   bgcolor: color,
                   cursor: "pointer",
+                  border: `1px solid ${theme.Text1}`,
                 }}
               />
             ))}

@@ -8,6 +8,7 @@ import {
   useTheme as useMuiTheme,
   styled,
 } from "@mui/material";
+import { motion } from "framer-motion";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { Link as RouterLink, useNavigate, useLocation } from "react-router";
 import GoogleSvg from "../../../assets/Sign-up/Icon-Google.svg";
@@ -18,7 +19,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { signUpFormSchemaValidation, type SignUpFormValues } from "./config";
 import { useSignUpMutation } from "./hook/mutations";
 import { toast } from "react-toastify";
-import { userStorage } from "../storage/userStorage";
 
 const Container = styled(Box)({ maxWidth: 370, width: "100%" });
 const Heading = styled(Typography)({
@@ -74,26 +74,26 @@ const SignUpForm: React.FC = () => {
 
   const { mutateAsync: signUp, isPending } = useSignUpMutation();
 
-   const onSubmit = handleSubmit(async (values) => {
-     try {
-       const user = await signUp(values); // user = IUser
-       toast.success("Account created successfully!", { autoClose: 2000 });
+  const onSubmit = handleSubmit(async (values) => {
+    try {
+      const user = await signUp(values);
+      toast.success("Account created successfully!", { autoClose: 2000 });
 
-       // التوجيه لصفحة تسجيل الدخول مع prefill
-       navigate(appRoutes.auth.login, {
-         state: {
-           from: locationState?.from,
-           email: values.email,
-           password: values.password,
-         },
-       });
-     } catch (error: any) {
-       console.error("Sign-up error:", error);
-       toast.error(error.message || "Sign-up failed. Please try again.", {
-         autoClose: 4000,
-       });
-     }
-   });
+      navigate(appRoutes.auth.login, {
+        state: {
+          from: locationState?.from,
+          email: values.email,
+          password: values.password,
+        },
+      });
+    } catch (error: any) {
+      console.error("Sign-up error:", error);
+      toast.error(error.message || "Sign-up failed. Please try again.", {
+        autoClose: 4000,
+      });
+    }
+  });
+
   const headingFont = isMobile ? "24px" : "32px";
   const subHeadingFont = isMobile ? "14px" : "16px";
   const inputFont = isMobile ? "14px" : "16px";
@@ -101,77 +101,89 @@ const SignUpForm: React.FC = () => {
   const buttonFont = isMobile ? "14px" : "16px";
   const linkFont = isMobile ? "12px" : "14px";
 
+  // Motion variants for slide from right
+  const formVariants = {
+    hidden: { opacity: 0, x: 100 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
   return (
-    <Container sx={{ mx: isMobile ? 5 : 0 }}>
-      <Heading sx={{ fontSize: headingFont, color: theme.Text1 }}>
-        Create an account
-      </Heading>
-      <SubHeading sx={{ fontSize: subHeadingFont, color: theme.Text1 }}>
-        Enter your details below
-      </SubHeading>
+    <motion.div initial="hidden" animate="visible" variants={formVariants}>
+      <Container sx={{ mx: isMobile ? 5 : 0 }}>
+        <Heading sx={{ fontSize: headingFont, color: theme.Text1 }}>
+          Create an account
+        </Heading>
+        <SubHeading sx={{ fontSize: subHeadingFont, color: theme.Text1 }}>
+          Enter your details below
+        </SubHeading>
 
-      <form onSubmit={onSubmit}>
-        <FormFields
-          inputFont={inputFont}
-          labelFont={labelFont}
-          register={register}
-          errors={errors}
-        />
-        <input type="hidden" {...register("avatar")} />
+        <form onSubmit={onSubmit}>
+          <FormFields
+            inputFont={inputFont}
+            labelFont={labelFont}
+            register={register}
+            errors={errors}
+          />
+          <input type="hidden" {...register("avatar")} />
 
-        <PrimaryButton
+          <PrimaryButton
+            fullWidth
+            sx={{
+              fontSize: buttonFont,
+              backgroundColor: theme.Button2,
+              color: "#fff",
+              "&:hover": { backgroundColor: theme.error },
+            }}
+            type="submit"
+            disabled={isPending}
+          >
+            {isPending ? "Creating..." : "Create Account"}
+          </PrimaryButton>
+        </form>
+
+        <GoogleButton
           fullWidth
+          variant="outlined"
+          startIcon={
+            <Box
+              component="img"
+              src={GoogleSvg}
+              alt="Google"
+              sx={{ width: 20, height: 20 }}
+            />
+          }
           sx={{
             fontSize: buttonFont,
-            backgroundColor: theme.Button2,
-            color: "#fff",
-            "&:hover": { backgroundColor: theme.error },
-          }}
-          type="submit"
-          disabled={isPending}
-        >
-          {isPending ? "Creating..." : "Create Account"}
-        </PrimaryButton>
-      </form>
-
-      <GoogleButton
-        fullWidth
-        variant="outlined"
-        startIcon={
-          <Box
-            component="img"
-            src={GoogleSvg}
-            alt="Google"
-            sx={{ width: 20, height: 20 }}
-          />
-        }
-        sx={{
-          fontSize: buttonFont,
-          color: theme.secondaryText,
-          borderColor: theme.borderColor,
-          "&:hover": { borderColor: theme.primaryText },
-        }}
-      >
-        Sign up with Google
-      </GoogleButton>
-
-      <FooterText sx={{ fontSize: linkFont, color: theme.secondaryText }}>
-        Already have an account?
-        <Link
-          component={RouterLink}
-          to={appRoutes.auth.login}
-          underline="hover"
-          sx={{
-            ml: 1,
-            fontFamily: "'Inter', sans-serif",
-            fontSize: linkFont,
-            color: theme.primaryText,
+            color: theme.secondaryText,
+            borderColor: theme.borderColor,
+            "&:hover": { borderColor: theme.primaryText },
           }}
         >
-          Log in
-        </Link>
-      </FooterText>
-    </Container>
+          Sign up with Google
+        </GoogleButton>
+
+        <FooterText sx={{ fontSize: linkFont, color: theme.secondaryText }}>
+          Already have an account?
+          <Link
+            component={RouterLink}
+            to={appRoutes.auth.login}
+            underline="hover"
+            sx={{
+              ml: 1,
+              fontFamily: "'Inter', sans-serif",
+              fontSize: linkFont,
+              color: theme.primaryText,
+            }}
+          >
+            Log in
+          </Link>
+        </FooterText>
+      </Container>
+    </motion.div>
   );
 };
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -17,6 +17,42 @@ import "swiper/css";
 import "swiper/css/navigation";
 import ErrorState from "../../shared/components/Error-state";
 import { useWishlistPage } from "./hooks/useWishlistPage";
+import { motion, AnimatePresence } from "framer-motion";
+
+// Animated count for wishlist
+const AnimatedCount: React.FC<{
+  count: number;
+  color?: string;
+  fontSize?: number;
+}> = ({ count, color = "inherit", fontSize = 18 }) => {
+  const [prevCount, setPrevCount] = useState(count);
+
+  useEffect(() => {
+    setPrevCount(count);
+  }, [count]);
+
+  return (
+    <Box sx={{ display: "inline-block", position: "relative", minWidth: 10 }}>
+      <AnimatePresence mode="popLayout">
+        <motion.span
+          key={count}
+          initial={{ scale: 0 }}
+          animate={{ scale: 1.2 }}
+          exit={{ scale: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          style={{
+            display: "inline-block",
+            color,
+            fontWeight: 600,
+            fontSize,
+          }}
+        >
+          {count}
+        </motion.span>
+      </AnimatePresence>
+    </Box>
+  );
+};
 
 const WishlistPage: React.FC = () => {
   const { theme } = useTheme();
@@ -46,14 +82,26 @@ const WishlistPage: React.FC = () => {
     fontWeight: 500,
     textTransform: "none" as const,
     boxShadow: "none",
+    transition: "0.2s",
     "&:hover": {
       bgcolor: theme.Button2,
       color: "white",
       borderColor: theme.Button2,
+      transform: "scale(1.05)",
     },
   };
 
   const headingFont = isMobile ? 18 : isTablet ? 22 : 24;
+
+  const cardVariants = {
+    hiddenLeft: { opacity: 0, x: -50 },
+    hiddenRight: { opacity: 0, x: 50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { type: "spring", stiffness: 120 },
+    },
+  };
 
   return (
     <Box
@@ -77,14 +125,33 @@ const WishlistPage: React.FC = () => {
         >
           <Typography
             variant="h5"
-            sx={{ fontWeight: 300, color: theme.Text1, fontSize: headingFont }}
+            sx={{
+              fontWeight: 300,
+              color: theme.Text1,
+              fontSize: headingFont,
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+            }}
           >
-            Wishlist ({wishlist.length})
+            Wishlist (
+            <AnimatedCount
+              count={wishlist.length}
+              color={theme.Button2}
+              fontSize={headingFont}
+            />
+            )
           </Typography>
           {wishlist.length > 0 && (
-            <Button variant="outlined" sx={buttonStyle} onClick={moveAllToBag}>
-              Move All To Bag
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }}>
+              <Button
+                variant="outlined"
+                sx={buttonStyle}
+                onClick={moveAllToBag}
+              >
+                Move All To Bag
+              </Button>
+            </motion.div>
           )}
         </Box>
 
@@ -102,21 +169,27 @@ const WishlistPage: React.FC = () => {
                     <WishlistSkeletonCard />
                   </Grid>
                 ))
-              : wishlist.map((item) => (
+              : wishlist.map((item, idx) => (
                   <Grid key={item.id} item>
-                    <WishlistCard
-                      id={item.id}
-                      name={item.title || "Unnamed Product"}
-                      price={item.price}
-                      oldPrice={item.oldPrice}
-                      discount={item.discount}
-                      images={
-                        item.images?.length
-                          ? item.images
-                          : [item.img || "/placeholder.png"]
-                      }
-                      onDelete={handleDelete}
-                    />
+                    <motion.div
+                      initial={idx % 2 === 0 ? "hiddenLeft" : "hiddenRight"}
+                      animate="visible"
+                      variants={cardVariants}
+                    >
+                      <WishlistCard
+                        id={item.id}
+                        name={item.title || "Unnamed Product"}
+                        price={item.price}
+                        oldPrice={item.oldPrice}
+                        discount={item.discount}
+                        images={
+                          item.images?.length
+                            ? item.images
+                            : [item.img || "/placeholder.png"]
+                        }
+                        onDelete={handleDelete}
+                      />
+                    </motion.div>
                   </Grid>
                 ))}
           </Grid>
@@ -161,9 +234,15 @@ const WishlistPage: React.FC = () => {
                 Just For You
               </Typography>
             </Box>
-            <Button variant="outlined" sx={buttonStyle} onClick={handleViewAll}>
-              View All
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }}>
+              <Button
+                variant="outlined"
+                sx={buttonStyle}
+                onClick={handleViewAll}
+              >
+                View All
+              </Button>
+            </motion.div>
           </Box>
 
           {isLoading ? (
@@ -190,26 +269,33 @@ const WishlistPage: React.FC = () => {
               }}
               modules={[Navigation]}
             >
-              {justForYou.map((product) => (
+              {justForYou.map((product, idx) => (
                 <SwiperSlide key={product.id}>
-                  <ProductCard
-                    id={product.id}
-                    name={product.title}
-                    price={`$${product.price.toFixed(2)}`}
-                    oldPrice={
-                      product.oldPrice
-                        ? `$${
-                            typeof product.oldPrice === "number"
-                              ? product.oldPrice.toFixed(2)
-                              : product.oldPrice
-                          }`
-                        : undefined
-                    }
-                    discount={product.discount}
-                    rating={product.rating}
-                    img={product.images?.[0] || "/placeholder.png"}
-                    isNew={product.isNew}
-                  />
+                  <motion.div
+                    initial={idx % 2 === 0 ? "hiddenLeft" : "hiddenRight"}
+                    animate="visible"
+                    variants={cardVariants}
+                    transition={{ duration: 0.5, delay: idx * 0.15 }}
+                  >
+                    <ProductCard
+                      id={product.id}
+                      name={product.title}
+                      price={`$${product.price.toFixed(2)}`}
+                      oldPrice={
+                        product.oldPrice
+                          ? `${
+                              typeof product.oldPrice === "number"
+                                ? product.oldPrice.toFixed(2)
+                                : product.oldPrice
+                            }`
+                          : undefined
+                      }
+                      discount={product.discount}
+                      rating={product.rating}
+                      img={product.images?.[0] || "/placeholder.png"}
+                      isNew={product.isNew}
+                    />
+                  </motion.div>
                 </SwiperSlide>
               ))}
             </Swiper>

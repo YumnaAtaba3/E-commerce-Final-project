@@ -44,7 +44,7 @@ const Footer: React.FC = () => {
         sx={{
           maxWidth: 1200,
           mx: "auto",
-          px: { xs: 2, sm: 3, md: 6 },
+          px: { xs: 2, sm: 3, md: 5 },
           width: "100%",
           boxSizing: "border-box",
           overflowX: "hidden",
