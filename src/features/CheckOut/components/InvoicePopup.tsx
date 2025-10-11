@@ -21,7 +21,6 @@ const MotionBox = motion(Box);
 
 const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
   const { theme } = useTheme();
-
   if (!invoice) return null;
 
   const {
@@ -30,6 +29,7 @@ const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
     subtotal,
     shipping,
     total,
+    discountPercent,
     paymentMethod,
     date,
   } = invoice;
@@ -38,7 +38,6 @@ const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      {/* Header */}
       <DialogTitle sx={{ textAlign: "center", fontWeight: 700 }}>
         <Typography variant="h6" sx={{ mb: 0.5, fontSize: 14 }}>
           Company Name
@@ -143,8 +142,12 @@ const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
                 fontSize: 12,
               }}
             >
-              <Typography>{item.title}</Typography>
-              <Typography align="right">${item.price.toFixed(2)}</Typography>
+              <Typography>
+                {item.title} x {item.quantity || 1}
+              </Typography>
+              <Typography align="right">
+                ${(item.price * (item.quantity || 1)).toFixed(2)}
+              </Typography>
             </MotionBox>
           ))}
         </Box>
@@ -178,6 +181,20 @@ const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
               {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
             </Typography>
           </Box>
+          {discountPercent > 0 && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontSize: 12,
+              }}
+            >
+              <Typography>Discount ({discountPercent}%)</Typography>
+              <Typography>
+                -${(((subtotal + shipping) * discountPercent) / 100).toFixed(2)}
+              </Typography>
+            </Box>
+          )}
           <Box
             sx={{
               display: "flex",

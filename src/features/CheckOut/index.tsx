@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { useTheme } from "../../theme/ThemeProvider";
 import Breadcrumb from "./components/Breadcrumb";
@@ -9,15 +9,18 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { appRoutes } from "../../routes";
 import { useCartStore } from "../../store/cartStore";
-import { useRef, useState } from "react";
+import { useCouponStore } from "../../store/couponStore";
 import { motion } from "framer-motion";
 
 const Checkout = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
-  const clearCart = useCartStore((state) => state.clearCart);
-  const formRef = useRef<BillingFormRef>(null);
 
+  // ✅ use the reactive state here instead of getState()
+  const cartItems = useCartStore((state) => state.cart);
+  const clearCart = useCartStore((state) => state.clearCart);
+
+  const formRef = useRef<BillingFormRef>(null);
   const [invoicePopupOpen, setInvoicePopupOpen] = useState(false);
   const [invoiceData, setInvoiceData] = useState<any>(null);
 
@@ -31,10 +34,22 @@ const Checkout = () => {
       return;
     }
 
-    const cartItems = useCartStore.getState().cart;
-    const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
+    // ✅ cartItems already has latest data
+    if (cartItems.length === 0) {
+      toast.error("Your cart is empty!", { autoClose: 2000 });
+      return;
+    }
+
+    const discountPercent = useCouponStore.getState().discountPercent || 0;
+
+    const subtotal = cartItems.reduce(
+      (sum, item) => sum + item.price * (item.quantity || 1),
+      0
+    );
     const shipping = subtotal > 0 ? 20 : 0;
-    const total = subtotal + shipping;
+    const totalBeforeDiscount = subtotal + shipping;
+    const total =
+      totalBeforeDiscount - (totalBeforeDiscount * discountPercent) / 100;
 
     const invoice = {
       billingData,
@@ -42,19 +57,20 @@ const Checkout = () => {
       subtotal,
       shipping,
       total,
+      discountPercent,
       paymentMethod,
       date: new Date().toISOString(),
     };
 
+    // ✅ Set invoice BEFORE clearing
     setInvoiceData(invoice);
     setInvoicePopupOpen(true);
 
-    toast.success("Order placed successfully!", {
-      className: "toast-success",
-      autoClose: 2000,
-    });
-
+    // ✅ Clear stores AFTER invoice is shown
+    useCouponStore.getState().clearCoupon();
     clearCart();
+
+    toast.success("Order placed successfully!", { autoClose: 2000 });
   };
 
   // Animation variants
@@ -123,7 +139,7 @@ const Checkout = () => {
         </Grid>
       </Box>
 
-      {/* Invoice Popup */}
+      {/* 🧾 Invoice Popup */}
       <InvoicePopup
         open={invoicePopupOpen}
         onClose={() => {

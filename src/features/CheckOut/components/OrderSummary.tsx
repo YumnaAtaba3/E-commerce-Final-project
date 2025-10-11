@@ -27,8 +27,8 @@ interface OrderSummaryProps {
 
 const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
   const { theme } = useCustomTheme();
-    const muiTheme = useMuiTheme();
-    const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
+  const muiTheme = useMuiTheme();
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
   const cart = useCartStore((state) => state.cart);
   const clearCart = useCartStore((state) => state.clearCart);
   const clearCoupon = useCouponStore((state) => state.clearCoupon);
@@ -41,7 +41,9 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
   const total = subtotal + shipping;
 
   const [selectedPayment, setSelectedPayment] = useState("bank");
-  const [discountPercent, setDiscountPercent] = useState(0);
+  const [discountPercent, setDiscountPercent] = useState(
+    useCouponStore.getState().discountPercent || 0
+  );
   const discountedTotal = total - (total * discountPercent) / 100;
 
   const handlePlaceOrder = (paymentMethod: string) => {
@@ -55,14 +57,9 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
 
   return (
     <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 3.5,
-        width: "100%",
-      }}
+      sx={{ display: "flex", flexDirection: "column", gap: 3.5, width: "100%" }}
     >
-      {/* Product Summary Box */}
+      {/* Product Summary */}
       <Box
         sx={{
           p: 1.5,
@@ -96,7 +93,7 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
         )}
       </Box>
 
-      {/* Totals and Payment */}
+      {/* Totals */}
       <Box
         sx={{
           p: 1.5,
@@ -109,7 +106,6 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
           maxWidth: 500,
         }}
       >
-        {/* Totals */}
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography sx={{ fontSize: 15 }}>Subtotal</Typography>
@@ -125,6 +121,20 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
             </Typography>
           </Box>
           <Divider sx={{ borderColor: theme.borderColor, my: 0.5 }} />
+          {discountPercent > 0 && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontSize: 15,
+              }}
+            >
+              <Typography>Discount ({discountPercent}%)</Typography>
+              <Typography>
+                -${((total * discountPercent) / 100).toFixed(2)}
+              </Typography>
+            </Box>
+          )}
           <Box
             sx={{
               display: "flex",
@@ -163,7 +173,7 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
                   alignItems: "center",
                   justifyContent: "space-between",
                   width: "100%",
-                  gap:isMobile?12: 28,
+                  gap: isMobile ? 12 : 28,
                 }}
               >
                 <Typography sx={{ fontSize: 15, flex: 1 }}>Bank</Typography>

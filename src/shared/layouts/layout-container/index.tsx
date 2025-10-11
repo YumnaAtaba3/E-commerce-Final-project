@@ -3,7 +3,7 @@ import Header from "../Header";
 import PromoBar from "../../components/Promo-bar";
 import Box from "@mui/material/Box";
 import { Outlet } from "react-router";
-import React, { useRef } from "react";
+import  { useRef } from "react";
 import type { HeaderProtectedIconsHandle } from "../Header/components/HeaderProtectedIcons";
 
 export function LayoutContainer() {

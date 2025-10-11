@@ -29,7 +29,6 @@ export function AppRouterProvider({
       element: (
         <>
           <LayoutContainer />
-         
           {children}
         </>
       ),
@@ -51,7 +50,10 @@ export function AppRouterProvider({
     },
   ];
 
-  const router = createBrowserRouter(routes);
+  // ✅ Add basename here
+  const router = createBrowserRouter(routes, {
+    basename: "/e-commerce-final-project",
+  });
 
   return (
     <Suspense

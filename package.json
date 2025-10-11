@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-   "homepage": "https://github.com/YumnaAtaba3/E-commerce-Final-project.git",
+   "homepage": "https://yumnaataba3.github.io/e-commerce-final-project",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  forwardRef,
-  useImperativeHandle,
-  useRef,
-} from "react";
+import { useState, forwardRef, useImperativeHandle, useRef } from "react";
 import { AppBar, Toolbar, Box, useMediaQuery, IconButton } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
@@ -26,6 +21,7 @@ import HeaderSearchBar from "./components/HeaderSearchBar";
 import HeaderNavLinks from "./components/HeaderNavLinks";
 import HeaderLogo from "./components/HeaderLogo";
 
+// 🧭 Navigation Links
 const navLinks = [
   { label: "Home", to: appRoutes.home, icon: <HomeIcon /> },
   { label: "About", to: appRoutes.about, icon: <InfoIcon /> },
@@ -33,6 +29,7 @@ const navLinks = [
   { label: "Sign Up", to: appRoutes.auth.signUp, icon: <PersonAddIcon /> },
 ];
 
+// 🧱 Header Component
 const Header = forwardRef<HeaderProtectedIconsHandle>((_, ref) => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
@@ -44,8 +41,11 @@ const Header = forwardRef<HeaderProtectedIconsHandle>((_, ref) => {
   const searchStore = useSearchStore();
 
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // ✅ Internal ref for protected icons
   const internalRef = useRef<HeaderProtectedIconsHandle>(null);
 
+  // ✅ Expose ref to parent component
   useImperativeHandle(ref, () => ({
     cartIconRef: internalRef.current?.cartIconRef || null,
   }));
@@ -63,15 +63,21 @@ const Header = forwardRef<HeaderProtectedIconsHandle>((_, ref) => {
       }}
     >
       <Toolbar sx={{ justifyContent: "space-between", gap: 2 }}>
+        {/* 🏠 Logo */}
         <HeaderLogo isMobile={isMobile} theme={theme} />
+
+        {/* 🔗 Desktop Navigation Links */}
         <HeaderNavLinks isMobile={isMobile} theme={theme} />
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          {/* 🔍 Search Bar */}
           <HeaderSearchBar
             theme={theme}
             searchStore={searchStore}
             isMobile={isMobile}
           />
+
+          {/* 🛒 Wishlist, Cart, Account */}
           <HeaderProtectedIcons
             ref={internalRef}
             theme={theme}
@@ -79,21 +85,23 @@ const Header = forwardRef<HeaderProtectedIconsHandle>((_, ref) => {
             cart={cart}
             wishlist={wishlist}
           />
-          {/* Mobile menu icon next to account */}
+
+          {/* 📱 Mobile Drawer Menu */}
           {isMobile && (
-            <IconButton
-              onClick={() => setMenuOpen(true)}
-              sx={{ color: theme.Text1 }}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
-          {isMobile && (
-            <MobileNavDrawer
-              open={menuOpen}
-              onClose={() => setMenuOpen(false)}
-              navLinks={navLinks}
-            />
+            <>
+              <IconButton
+                onClick={() => setMenuOpen(true)}
+                sx={{ color: theme.Text1 }}
+              >
+                <MenuIcon />
+              </IconButton>
+
+              <MobileNavDrawer
+                open={menuOpen}
+                onClose={() => setMenuOpen(false)}
+                navLinks={navLinks}
+              />
+            </>
           )}
         </Box>
       </Toolbar>
@@ -101,4 +109,5 @@ const Header = forwardRef<HeaderProtectedIconsHandle>((_, ref) => {
   );
 });
 
+Header.displayName = "Header";
 export default Header;

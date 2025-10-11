@@ -14,10 +14,11 @@ import { useLocation, Link as RouterLink } from "react-router-dom";
 import { appRoutes } from "../../../../routes";
 import AccountDropdown from "../../../components/Account-dropdown";
 
-// ✅ ForwardRef handle
+
 export interface HeaderProtectedIconsHandle {
-  cartIconRef: React.RefObject<HTMLButtonElement>;
+  cartIconRef: React.RefObject<HTMLButtonElement> | null; 
 }
+
 
 interface HeaderProtectedIconsProps {
   theme: any;
