@@ -44,12 +44,12 @@ const NotFoundPage: React.FC = () => {
 
       {/* 404 Title */}
       <Typography
-        variant={isSmall ? "h3" : "h1"}
+        variant={isSmall ? "h5" : "h1"}
         sx={{
-          fontSize: 90,
+          fontSize: isSmall ? 40 : 90,
           fontFamily: `'Roboto', Arial, sans-serif`,
-         
-          color: theme.ButtonCard,
+
+          color: theme.Text1,
         }}
       >
         404 Not Found
@@ -57,10 +57,11 @@ const NotFoundPage: React.FC = () => {
 
       {/* Subtitle */}
       <Typography
-        variant="h5"
+        variant={isSmall ? "h6" : "h5"}
         sx={{
-          color: theme.ButtonCard,
+          color: theme.Text1,
           fontFamily: theme.font,
+          fontSize: isSmall ? 12 : 20,
         }}
       >
         Your visited page not found. You may go home page.

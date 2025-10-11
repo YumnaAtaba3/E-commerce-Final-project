@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Dialog,
   DialogTitle,
@@ -9,12 +8,16 @@ import {
   Divider,
 } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
+import { motion } from "framer-motion";
 
 interface InvoicePopupProps {
   open: boolean;
   onClose: () => void;
   invoice: any;
 }
+
+const MotionDialogContent = motion(DialogContent);
+const MotionBox = motion(Box);
 
 const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
   const { theme } = useTheme();
@@ -34,7 +37,7 @@ const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
   const handlePrint = () => window.print();
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth >
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       {/* Header */}
       <DialogTitle sx={{ textAlign: "center", fontWeight: 700 }}>
         <Typography variant="h6" sx={{ mb: 0.5, fontSize: 14 }}>
@@ -49,7 +52,12 @@ const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
         </Typography>
       </DialogTitle>
 
-      <DialogContent>
+      <MotionDialogContent
+        initial={{ opacity: 0, y: -30 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
         {/* Billing & Payment Info */}
         <Box
           sx={{
@@ -119,8 +127,11 @@ const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
             <Typography align="right">Price</Typography>
           </Box>
           {cartItems.map((item: any, idx: number) => (
-            <Box
+            <MotionBox
               key={idx}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, delay: idx * 0.05 }}
               sx={{
                 display: "grid",
                 gridTemplateColumns: "4fr 1fr",
@@ -134,12 +145,17 @@ const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
             >
               <Typography>{item.title}</Typography>
               <Typography align="right">${item.price.toFixed(2)}</Typography>
-            </Box>
+            </MotionBox>
           ))}
         </Box>
 
         {/* Totals */}
-        <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 0.5 }}>
+        <MotionBox
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 0.5 }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -177,10 +193,13 @@ const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
             <Typography>Total</Typography>
             <Typography>${total.toFixed(2)}</Typography>
           </Box>
-        </Box>
+        </MotionBox>
 
         {/* Action Buttons */}
-        <Box
+        <MotionBox
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
           sx={{
             display: "flex",
             justifyContent: "center",
@@ -221,8 +240,8 @@ const InvoicePopup = ({ open, onClose, invoice }: InvoicePopupProps) => {
           >
             Print
           </Button>
-        </Box>
-      </DialogContent>
+        </MotionBox>
+      </MotionDialogContent>
     </Dialog>
   );
 };

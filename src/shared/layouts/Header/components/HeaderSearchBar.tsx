@@ -54,7 +54,7 @@ const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
   if (isMobile) {
     return (
       <IconButton onClick={() => searchStore.setOpen(true)}>
-        <SearchIcon fontSize="large" sx={{ color: color || theme.Text1 }} />
+        <SearchIcon fontSize="medium" sx={{ color: color || theme.Text1 }} />
       </IconButton>
     );
   }

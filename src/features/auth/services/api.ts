@@ -1,67 +1,50 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { httpClient } from "../../../lib/axios";
 import type { ILoginPayload, ILoginResponse } from "../log-in-page/types";
 import type { ISignUpPayload, IUser } from "../sign-up-page/types";
+import { userStorage } from "../storage/userStorage";
 
 class AuthServices {
   private readonly usersEndPoint = "/users";
   private readonly authEndPoint = "/auth";
 
- 
   async signUp(payload: ISignUpPayload): Promise<IUser> {
-    try {
-      const response = await httpClient.post<IUser>(this.usersEndPoint, payload);
-      return response.data;
-    } catch (error: any) {
-      const message = error?.response?.data?.message || "Sign up failed";
-      throw new Error(message);
-    }
+    const response = await httpClient.post<IUser>(this.usersEndPoint, payload);
+    return response.data;
   }
-
 
   async login(payload: ILoginPayload): Promise<ILoginResponse> {
-    try {
-      const response = await httpClient.post<ILoginResponse>(
-        `${this.authEndPoint}/login`,
-        payload
-      );
-      return response.data;
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message || "Login failed";
-      throw new Error(message);
-    }
+    const response = await httpClient.post<ILoginResponse>(
+      `${this.authEndPoint}/login`,
+      payload
+    );
+
+    // ✅ Store only the access token string
+    const token = response.data.access_token;
+    if (token) userStorage.set(token);
+
+    return response.data;
   }
 
+  async getProfile(): Promise<IUser> {
+    // ✅ Automatically use the token from userStorage
+    const token = userStorage.get();
+    if (!token) throw new Error("No access token found — please log in again.");
 
-  async getProfile(accessToken: string): Promise<IUser> {
-    try {
-      const response = await httpClient.get<IUser>(`${this.authEndPoint}/profile`, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      return response.data;
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message || "Failed to fetch user profile";
-      throw new Error(message);
-    }
+    const response = await httpClient.get<IUser>(`${this.authEndPoint}/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
   }
 
- 
   async refreshToken(refreshToken: string): Promise<ILoginResponse> {
-    try {
-      const response = await httpClient.post<ILoginResponse>(
-        `${this.authEndPoint}/refresh-token`,
-        { refreshToken }
-      );
-      return response.data;
-    } catch (error: any) {
-      const message =
-        error?.response?.data?.message || "Token refresh failed";
-      throw new Error(message);
-    }
+    const response = await httpClient.post<ILoginResponse>(
+      `${this.authEndPoint}/refresh-token`,
+      { refreshToken }
+    );
+    return response.data;
   }
 }
 

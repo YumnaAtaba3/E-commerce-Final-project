@@ -15,7 +15,7 @@ const ProductItem = ({ name, price, image }: ProductItemProps) => {
         alignItems: "center",
         mb: 1.5,
         gap: 6,
-        maxWidth: 400,
+        maxWidth: 500,
         width: "100%",
       }}
     >
@@ -27,7 +27,7 @@ const ProductItem = ({ name, price, image }: ProductItemProps) => {
           alt={name}
           sx={{ height: 40, width: 40, objectFit: "contain" }}
         />
-        <Typography sx={{ fontSize: 13, lineHeight: 1.2, maxWidth: 100 }}>
+        <Typography sx={{ fontSize: 13, lineHeight: 1.2}}>
           {name}
         </Typography>
       </Box>

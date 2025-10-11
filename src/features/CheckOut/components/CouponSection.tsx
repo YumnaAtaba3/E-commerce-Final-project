@@ -1,18 +1,19 @@
 import React from "react";
 import { Box, TextField, Button } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
-import { useCouponLogic } from "../hooks/useCoupon";
+import { useCouponLogic } from "../../Cart/hooks/useCoupon";
+
 
 interface Props {
   isMobile: boolean;
   setDiscountPercent: (discount: number) => void;
-  sx?: any; // allow extra styles
+  
 }
 
-const CouponSection: React.FC<Props> = ({
+const CkeckOutCouponSection: React.FC<Props> = ({
   isMobile,
   setDiscountPercent,
-  sx,
+
 }) => {
   const { theme } = useTheme();
   const { couponCode, setCouponCode, isCouponApplied, handleApplyCoupon } =
@@ -22,14 +23,14 @@ const CouponSection: React.FC<Props> = ({
     <Box
       sx={{
         display: "flex",
-        gap: 3,
+        gap: 2,
         flexWrap: isMobile ? "wrap" : "nowrap",
         pr: isMobile ? 0 : 30,
         justifyContent: isMobile ? "center" : "flex-start",
         mx: isMobile ? "auto" : 0,
-        width: isMobile ? "70%" : "auto",
+        width: isMobile ? "90%" : "auto",
         maxWidth: isMobile ? 360 : "none",
-        ...sx, // merge extra styles
+       
       }}
     >
       <TextField
@@ -41,7 +42,7 @@ const CouponSection: React.FC<Props> = ({
         variant="outlined"
         sx={{
           flex: "1 1 auto",
-          minWidth: { xs: "100%", sm: "260px" },
+          minWidth: { xs: "100%", sm: "360px" },
           maxWidth: { sm: 300 },
           "& input": {
             color: theme.Text1,
@@ -95,4 +96,4 @@ const CouponSection: React.FC<Props> = ({
 };
 
 
-export default CouponSection;
+export default CkeckOutCouponSection;

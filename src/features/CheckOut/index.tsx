@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import React from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { useTheme } from "../../theme/ThemeProvider";
 import Breadcrumb from "./components/Breadcrumb";
@@ -10,6 +10,7 @@ import { useNavigate } from "react-router";
 import { appRoutes } from "../../routes";
 import { useCartStore } from "../../store/cartStore";
 import { useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 const Checkout = () => {
   const { theme } = useTheme();
@@ -20,44 +21,52 @@ const Checkout = () => {
   const [invoicePopupOpen, setInvoicePopupOpen] = useState(false);
   const [invoiceData, setInvoiceData] = useState<any>(null);
 
- const handlePlaceOrder = async (paymentMethod: string) => {
-   const billingData = await formRef.current?.submitForm();
-   if (!billingData) {
-     toast.error("Please fill all required fields correctly!", {
-       className: "toast-error",
-       autoClose: 2000,
-     });
-     return;
-   }
+  const handlePlaceOrder = async (paymentMethod: string) => {
+    const billingData = await formRef.current?.submitForm();
+    if (!billingData) {
+      toast.error("Please fill all required fields correctly!", {
+        className: "toast-error",
+        autoClose: 2000,
+      });
+      return;
+    }
 
-   const cartItems = useCartStore.getState().cart;
-   const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
-   const shipping = subtotal > 0 ? 20 : 0;
-   const total = subtotal + shipping;
+    const cartItems = useCartStore.getState().cart;
+    const subtotal = cartItems.reduce((sum, item) => sum + item.price, 0);
+    const shipping = subtotal > 0 ? 20 : 0;
+    const total = subtotal + shipping;
 
-   const invoice = {
-     billingData,
-     cartItems,
-     subtotal,
-     shipping,
-     total,
-     paymentMethod,
-     date: new Date().toISOString(),
-   };
+    const invoice = {
+      billingData,
+      cartItems,
+      subtotal,
+      shipping,
+      total,
+      paymentMethod,
+      date: new Date().toISOString(),
+    };
 
-   setInvoiceData(invoice);
-   setInvoicePopupOpen(true);
+    setInvoiceData(invoice);
+    setInvoicePopupOpen(true);
 
+    toast.success("Order placed successfully!", {
+      className: "toast-success",
+      autoClose: 2000,
+    });
 
-   toast.success("Order placed successfully!", {
-     className: "toast-success",
-     autoClose: 2000,
-   });
+    clearCart();
+  };
 
+  // Animation variants
+  const billingVariant = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
+  };
 
-   clearCart();
- };
-
+  const summaryVariant = {
+    hidden: { opacity: 0, x: 50 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.6, delay: 0.3 } },
+  };
 
   return (
     <Box
@@ -75,7 +84,7 @@ const Checkout = () => {
         bgcolor: theme.primary1,
       }}
     >
-      <Box sx={{ width: "100%", maxWidth: 1200 }}>
+      <Box sx={{ width: "100%", maxWidth: "auto", pl: { xs: 1, md: 6 } }}>
         <Breadcrumb />
 
         <Typography
@@ -85,18 +94,31 @@ const Checkout = () => {
             mb: 4,
             color: theme.Text1,
             textAlign: "start",
+            pl: { xs: 1, md: 8 },
           }}
         >
           Billing Details
         </Typography>
 
-        <Grid container spacing={{ xs: 6, md: 12 }} justifyContent="start">
+        <Grid container spacing={{ xs: 6, md: 15 }} justifyContent="start">
           <Grid item xs={12} md={7}>
-            <BillingForm ref={formRef} />
+            <motion.div
+              variants={billingVariant}
+              initial="hidden"
+              animate="visible"
+            >
+              <BillingForm ref={formRef} />
+            </motion.div>
           </Grid>
 
           <Grid item xs={12} md={5}>
-            <OrderSummary onPlaceOrder={handlePlaceOrder} />
+            <motion.div
+              variants={summaryVariant}
+              initial="hidden"
+              animate="visible"
+            >
+              <OrderSummary onPlaceOrder={handlePlaceOrder} />
+            </motion.div>
           </Grid>
         </Grid>
       </Box>
@@ -105,8 +127,8 @@ const Checkout = () => {
       <InvoicePopup
         open={invoicePopupOpen}
         onClose={() => {
-          setInvoicePopupOpen(false); 
-          navigate(appRoutes.home); 
+          setInvoicePopupOpen(false);
+          navigate(appRoutes.home);
         }}
         invoice={invoiceData}
       />

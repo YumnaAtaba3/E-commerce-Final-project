@@ -47,7 +47,7 @@ const HeroSwiper: React.FC = () => {
       <Swiper
         spaceBetween={20}
         slidesPerView={1}
-        loop
+       
         autoplay={{ delay: 4000 }}
         centeredSlides
         pagination={{ clickable: true }}
@@ -187,7 +187,7 @@ const HeroSwiper: React.FC = () => {
                 transition={{ duration: 2, ease: "easeInOut" }}
                 style={{
                   flex: 1,
-                  maxWidth: isMobile ? "100%" : "45%",
+                  maxWidth: isMobile ? "100%" : "100%%",
                   display: "flex",
                   justifyContent: "center",
                 }}

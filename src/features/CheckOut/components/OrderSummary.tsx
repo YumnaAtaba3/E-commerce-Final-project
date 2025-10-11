@@ -6,10 +6,11 @@ import {
   Radio,
   Button,
   Divider,
+  useMediaQuery,
 } from "@mui/material";
 import { useTheme as useCustomTheme } from "../../../theme/ThemeProvider";
 import ProductItem from "./ProductItem";
-import CouponSection from "../../Cart/components/CouponSection";
+import CkeckOutCouponSection from "../components/CouponSection";
 import { useCartStore } from "../../../store/cartStore";
 import { useCouponStore } from "../../../store/couponStore";
 import MasterCard from "../../../assets/CheckOut/masterCard.svg";
@@ -17,6 +18,8 @@ import ChinaLogo from "../../../assets/CheckOut/chinalogo.svg";
 import Bkash from "../../../assets/CheckOut/Bkash.svg";
 import visaLogo from "../../../assets/CheckOut/Visa.svg";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { useTheme as useMuiTheme } from "@mui/material/styles";
 
 interface OrderSummaryProps {
   onPlaceOrder: (paymentMethod: string) => void;
@@ -24,6 +27,8 @@ interface OrderSummaryProps {
 
 const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
   const { theme } = useCustomTheme();
+    const muiTheme = useMuiTheme();
+    const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
   const cart = useCartStore((state) => state.cart);
   const clearCart = useCartStore((state) => state.clearCart);
   const clearCoupon = useCouponStore((state) => state.clearCoupon);
@@ -41,12 +46,12 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
 
   const handlePlaceOrder = (paymentMethod: string) => {
     onPlaceOrder(paymentMethod);
-
-    // Clear cart and coupon after placing the order
     clearCart();
     clearCoupon();
     setDiscountPercent(0);
   };
+
+  const MotionButton = motion(Button);
 
   return (
     <Box
@@ -55,8 +60,6 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
         flexDirection: "column",
         gap: 3.5,
         width: "100%",
-        
-        alignItems: "flex-start",
       }}
     >
       {/* Product Summary Box */}
@@ -66,7 +69,7 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
           borderRadius: 2,
           bgcolor: theme.primary1,
           width: "100%",
-          maxWidth: 400,
+          maxWidth: 500,
           maxHeight: 200,
           overflowY: "auto",
           "&::-webkit-scrollbar": { width: "6px" },
@@ -103,7 +106,7 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
           flexDirection: "column",
           gap: 1.5,
           width: "100%",
-          maxWidth: 400,
+          maxWidth: 500,
         }}
       >
         {/* Totals */}
@@ -114,18 +117,14 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
               ${subtotal.toFixed(2)}
             </Typography>
           </Box>
-
           <Divider sx={{ borderColor: theme.borderColor, my: 0.5 }} />
-
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography sx={{ fontSize: 15 }}>Shipping</Typography>
             <Typography sx={{ fontSize: 15, fontWeight: 500 }}>
               {shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}
             </Typography>
           </Box>
-
           <Divider sx={{ borderColor: theme.borderColor, my: 0.5 }} />
-
           <Box
             sx={{
               display: "flex",
@@ -164,7 +163,7 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
                   alignItems: "center",
                   justifyContent: "space-between",
                   width: "100%",
-                  gap: 20,
+                  gap:isMobile?12: 28,
                 }}
               >
                 <Typography sx={{ fontSize: 15, flex: 1 }}>Bank</Typography>
@@ -197,7 +196,6 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
               </Box>
             }
           />
-
           <FormControlLabel
             value="cod"
             control={
@@ -216,10 +214,13 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
       </Box>
 
       {/* Coupon Section */}
-      <CouponSection isMobile={false} setDiscountPercent={setDiscountPercent} />
+      <CkeckOutCouponSection
+        isMobile={isMobile}
+        setDiscountPercent={setDiscountPercent}
+      />
 
-      {/* Place Order Button */}
-      <Button
+      {/* Animated Place Order Button */}
+      <MotionButton
         variant="contained"
         sx={{
           width: 190,
@@ -229,13 +230,15 @@ const OrderSummary = ({ onPlaceOrder }: OrderSummaryProps) => {
           fontSize: "14px",
           fontWeight: 500,
           textTransform: "none",
-          "&:hover": { bgcolor: theme.error },
           alignSelf: "flex-start",
+          "&:hover": { bgcolor: theme.error },
         }}
         onClick={() => handlePlaceOrder(selectedPayment)}
+        animate={{ scale: [1, 1.05, 1] }}
+        transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
       >
         Place Order
-      </Button>
+      </MotionButton>
     </Box>
   );
 };

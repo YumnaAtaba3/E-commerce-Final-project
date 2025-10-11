@@ -112,9 +112,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
         } as Product);
 
     if (!favorite) {
-      const newHearts = Array.from({ length: 5 }).map(() => ({
+      const newHearts = Array.from({ length: 30 }).map(() => ({
         id: Date.now() + Math.random(),
-        x: Math.random() * 60 - 30,
+        x: Math.random() * 400 - 60,
         delay: Math.random() * 0.3,
       }));
       setHearts((prev) => [...prev, ...newHearts]);

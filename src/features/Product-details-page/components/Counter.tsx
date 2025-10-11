@@ -7,9 +7,11 @@ import { useTheme } from "../../../theme/ThemeProvider";
 interface CounterProps {
   quantity: number;
   onChange: (type: "inc" | "dec") => void;
+  isMobile:boolean
 }
 
-const Counter: React.FC<CounterProps> = ({ quantity, onChange }) => {
+
+const Counter: React.FC<CounterProps> = ({ quantity, onChange ,isMobile}) => {
   const { theme } = useTheme();
 
   return (
@@ -28,7 +30,7 @@ const Counter: React.FC<CounterProps> = ({ quantity, onChange }) => {
       </Button>
       <Box
         sx={{
-          width: 60,
+          width: isMobile?40:60,
           height: 40,
           borderTop: "1px solid #ddd",
           borderBottom: "1px solid #ddd",

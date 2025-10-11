@@ -20,9 +20,9 @@ const ProductImages: React.FC<ProductImagesProps> = ({
   const [currentImage, setCurrentImage] = useState(mainImage);
 
   const mainImageVariants = {
-    initial: { opacity: 0, x: -200 },
-    animate: { opacity: 1, x: 4},
-    exit: { opacity: 0, x: 200 },
+    initial: { opacity: 0, x: -100 },
+    animate: { opacity: 1, x: 0 },
+    exit: { opacity: 0, x: 100 },
   };
 
   return (
@@ -30,14 +30,16 @@ const ProductImages: React.FC<ProductImagesProps> = ({
       sx={{
         width: "100%",
         maxWidth: "100%",
-        height: isMobile ? 300 : isTablet ? 400 : 600,
+        height: isMobile ? "auto" : isTablet ? 500 : 600,
         display: "flex",
+        flexDirection: isMobile ? "column" : "row", 
         justifyContent: "center",
         alignItems: "center",
         bgcolor: theme.primary1,
         borderRadius: 2,
-        p: 0,
-        pl: isMobile ? 0 : 20,
+        p: isMobile ? 2 : 3,
+        pl:isMobile?0:20,
+        gap: isMobile ? 2 : 4,
         overflow: "hidden",
       }}
     >
@@ -46,11 +48,13 @@ const ProductImages: React.FC<ProductImagesProps> = ({
         sx={{
           display: "flex",
           flexDirection: isMobile ? "row" : "column",
+          justifyContent: isMobile ? "center" : "flex-start",
+          alignItems: "center",
           gap: 2,
           flexShrink: 0,
-          overflowX: "auto",
-          maxWidth: "100%",
-          pb: 1,
+          overflowX: isMobile ? "auto" : "hidden",
+          width: isMobile ? "100%" : "auto",
+          pb: isMobile ? 1 : 0,
         }}
       >
         {thumbnails.map((src, idx) => (
@@ -67,13 +71,16 @@ const ProductImages: React.FC<ProductImagesProps> = ({
             }}
             transition={{ duration: 0.3 }}
             style={{
-              width: isMobile ? 80 : 140,
-              height: isMobile ? 80 : 140,
+              width: isMobile ? 70 : 120,
+              height: isMobile ? 70 : 120,
               borderRadius: 8,
               background: theme.primary1,
               cursor: "pointer",
               objectFit: "contain",
-              border: currentImage === src ? "2px solid #DB4444" : "none",
+              border:
+                currentImage === src
+                  ? "2px solid #DB4444"
+                  : "1px solid transparent",
             }}
           />
         ))}
@@ -91,6 +98,9 @@ const ProductImages: React.FC<ProductImagesProps> = ({
           style={{
             width: isMobile ? "100%" : isTablet ? 400 : 550,
             height: isMobile ? 300 : isTablet ? 400 : 600,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
           <Box

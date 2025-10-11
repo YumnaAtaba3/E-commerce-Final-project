@@ -38,6 +38,7 @@ const BillingForm = forwardRef<BillingFormRef>((_, ref) => {
       emailAddress: "",
       saveInfo: false,
     },
+      mode: "onChange", 
   });
 
  
@@ -66,6 +67,7 @@ const BillingForm = forwardRef<BillingFormRef>((_, ref) => {
         flexDirection: "column",
         gap: 5,
         p: { xs: 1, md: 2 },
+        pl: { xs: 1, md: 8 },
       }}
     >
       {fields.map((field, i) => (
@@ -98,10 +100,12 @@ const BillingForm = forwardRef<BillingFormRef>((_, ref) => {
                 onBlur={() => setFocusedIndex(null)}
                 error={Boolean(errors[field.name as keyof BillingFormValues])}
                 sx={{
-                  fontSize: "14px",
+                  fontSize: { xs: "14px", md: "16px" }, // bigger font on desktop
                   fontFamily: "'Inter', sans-serif",
                   bgcolor: theme.bgColor,
                   color: theme.Text1,
+                  width: { xs: "100%", md: "400px" }, // responsive width
+                  height: { xs: 40, md: 50 }, // responsive height
                   "& .MuiOutlinedInput-notchedOutline": {
                     border: "1px solid transparent",
                   },

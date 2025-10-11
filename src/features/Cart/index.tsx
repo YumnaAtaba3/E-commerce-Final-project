@@ -16,6 +16,7 @@ import CartActions from "./components/CartActions";
 import { useCartStore } from "../../store/cartStore";
 import { useNavigate } from "react-router";
 import { appRoutes } from "../../routes";
+import { motion } from "framer-motion";
 
 const CartPage = () => {
   const { theme } = useTheme();
@@ -32,6 +33,51 @@ const CartPage = () => {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+
+  // ---------- Animations ----------
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15, delayChildren: 0.3 },
+    },
+  };
+
+  const headerVariants = {
+    hidden: { y: -40, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  const itemLeftVariants = {
+    hidden: { x: -80, opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
+  };
+
+  const couponVariants = {
+    hidden: { x: -100, opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.7, ease: "easeOut" },
+    },
+  };
+
+  const summaryVariants = {
+    hidden: { x: 100, opacity: 0 },
+    visible: {
+      x: 0,
+      opacity: 1,
+      transition: { duration: 0.7, ease: "easeOut" },
+    },
+  };
 
   return (
     <Box
@@ -50,9 +96,10 @@ const CartPage = () => {
     >
       {/* Breadcrumb */}
       <Breadcrumbs
-        separator="›"
+        separator="/"
         aria-label="breadcrumb"
         sx={{
+          color:theme.Text1,
           width: "100%",
           justifyContent: "flex-start",
           mt: 2,
@@ -72,8 +119,6 @@ const CartPage = () => {
           Cart
         </Typography>
       </Breadcrumbs>
-
-
 
       {cart.length === 0 ? (
         <Box
@@ -102,42 +147,56 @@ const CartPage = () => {
           />
         </Box>
       ) : (
-        <Box
-          sx={{
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          style={{
             width: "100%",
             maxWidth: 1200,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 2,
-            mt:2
+            gap: "16px",
+            marginTop: "16px",
           }}
         >
-          {/* Header only on desktop */}
+          {/* Header */}
           {!isMobile && (
-            <CartHeader gridCols="1.5fr 1fr 1fr 1.5fr" isMobile={isMobile}  theme={theme}/>
+            <motion.div variants={headerVariants} style={{ width: "100%" }}>
+              <CartHeader
+                gridCols="1.5fr 1fr 1fr 1.5fr"
+                isMobile={isMobile}
+                theme={theme}
+              />
+            </motion.div>
           )}
 
-          {/* Cart Items */}
-          {cart.map((item) => (
-            <CartItem
+          {/* Items */}
+          {cart.map((item, index) => (
+            <motion.div
               key={item.id}
-              item={item}
-              gridCols={isMobile ? "1fr" : "1.5fr 1fr 1fr 1.5fr"}
-              onRemove={removeItem}
-              onQtyChange={updateQuantity}
-              theme={theme}
-              isMobile={isMobile}
-            />
+              variants={itemLeftVariants}
+              style={{ width: "100%" }}
+            >
+              <CartItem
+                item={item}
+                gridCols={isMobile ? "1fr" : "1.5fr 1fr 1fr 1.5fr"}
+                onRemove={removeItem}
+                onQtyChange={updateQuantity}
+                theme={theme}
+                isMobile={isMobile}
+              />
+            </motion.div>
           ))}
 
-          {/* Action Buttons */}
+          {/* Buttons */}
           <CartActions
             isMobile={isMobile}
             returnToShop={() => navigate(appRoutes.home)}
           />
 
-          {/* Coupon + Summary row */}
+          {/* Coupon + Summary */}
           <Box
             sx={{
               display: "flex",
@@ -149,18 +208,28 @@ const CartPage = () => {
               mt: 5,
             }}
           >
-            <CouponSection
-              isMobile={isMobile}
-              setDiscountPercent={setDiscountPercent}
-            />
+            <motion.div
+              variants={couponVariants}
+              style={{ flex: 1, width: "100%" }}
+            >
+              <CouponSection
+                isMobile={isMobile}
+                setDiscountPercent={setDiscountPercent}
+              />
+            </motion.div>
 
-            <CartSummary
-              subtotal={subtotal}
-              discount={discountPercent}
-              isMobile={isMobile}
-            />
+            <motion.div
+              variants={summaryVariants}
+              style={{ flex: 1, width: "100%" }}
+            >
+              <CartSummary
+                subtotal={subtotal}
+                discount={discountPercent}
+                isMobile={isMobile}
+              />
+            </motion.div>
           </Box>
-        </Box>
+        </motion.div>
       )}
     </Box>
   );

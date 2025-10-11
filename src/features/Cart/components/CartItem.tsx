@@ -57,14 +57,14 @@ const CartItem: React.FC<Props> = ({
         <IconButton
           size="small"
           onClick={() => onQtyChange(item.id, item.quantity + 1)}
-          sx={{ padding: 0, height: "50%" }}
+          sx={{ padding: 0, height: "50%", color: theme.Text1 }}
         >
           <KeyboardArrowUpIcon fontSize="small" />
         </IconButton>
         <IconButton
           size="small"
           onClick={() => onQtyChange(item.id, Math.max(1, item.quantity - 1))}
-          sx={{ padding: 0, height: "50%" }}
+          sx={{ padding: 0, height: "50%", color: theme.Text1 }}
         >
           <KeyboardArrowDownIcon fontSize="small" />
         </IconButton>

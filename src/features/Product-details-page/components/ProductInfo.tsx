@@ -45,12 +45,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   ReturnIcon,
 }) => {
   const { theme } = useTheme();
-  const textAlign = isMobile ? "center" : isTablet ? "center" : "left";
-  const containerAlign = isMobile
-    ? "center"
-    : isTablet
-    ? "center"
-    : "flex-start";
+  const textAlign = isMobile || isTablet ? "center" : "left";
+  const alignItems = isMobile || isTablet ? "center" : "flex-start";
+  const justifyContent = isMobile || isTablet ? "center" : "flex-start";
   const containerWidth = isMobile ? "100%" : isTablet ? "80%" : "100%";
 
   // Framer Motion variants
@@ -58,7 +55,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.15, // stagger each child by 0.15s
+        staggerChildren: 0.15,
       },
     },
   };
@@ -78,18 +75,19 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
         sx={{
           display: "flex",
           flexDirection: "column",
-          alignItems: containerAlign,
+          alignItems,
+          justifyContent,
           width: containerWidth,
           mx: isTablet ? "auto" : 0,
-          pl: isMobile ? 2 : 0,
+          px: isMobile ? 2 : 0,
         }}
       >
         {/* Title */}
         <motion.div variants={itemVariants}>
           <Typography
-            fontSize={isMobile ? 20 : 24}
+            fontSize={isMobile ? 16 : 24}
             fontWeight={550}
-            maxWidth={350}
+            maxWidth={isMobile ? "100%" : 350}
             mb={1}
             textAlign={textAlign}
             color={theme.Text1}
@@ -103,16 +101,18 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
           <Box
             display="flex"
             alignItems="center"
+            justifyContent={justifyContent}
             gap={1}
             mb={2}
             flexWrap="wrap"
-            justifyContent={containerAlign}
+            width="100%"
+            textAlign={textAlign}
             color={theme.Text1}
           >
             <Rating
               value={product.rating}
               readOnly
-              size="medium"
+              size={isMobile ? "small" : "medium"}
               sx={{
                 color: "gold",
                 "& .MuiRating-iconEmpty": {
@@ -123,13 +123,19 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             <Typography fontSize={14} color={theme.Text1}>
               ({Math.floor(Math.random() * 200 + 1)} Reviews)
             </Typography>
-            <Box sx={{ width: "1px", height: 16, bgcolor: "#ddd", mx: 1 }} />
-            <Typography
-              fontSize={14}
-              sx={{ color: theme.Button1, fontWeight: 500 }}
-            >
-              In Stock
-            </Typography>
+            {!isMobile && (
+              <>
+                <Box
+                  sx={{ width: "1px", height: 16, bgcolor: "#ddd", mx: 1 }}
+                />
+                <Typography
+                  fontSize={14}
+                  sx={{ color: theme.Button1, fontWeight: 500 }}
+                >
+                  In Stock
+                </Typography>
+              </>
+            )}
           </Box>
         </motion.div>
 
@@ -163,35 +169,72 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
 
         {/* Colors */}
         <motion.div variants={itemVariants}>
-          <ProductColors
-            colors={colors}
-            selected={color}
-            onSelect={onColorChange}
-          />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent,
+              width: "100%",
+            }}
+          >
+            <ProductColors
+              colors={colors}
+              selected={color}
+              onSelect={onColorChange}
+            />
+          </Box>
         </motion.div>
 
         {/* Sizes */}
         <motion.div variants={itemVariants}>
-          <ProductSizes sizes={sizes} selected={size} onSelect={onSizeChange} />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent,
+              width: "100%",
+            }}
+          >
+            <ProductSizes
+              sizes={sizes}
+              selected={size}
+              onSelect={onSizeChange}
+            />
+          </Box>
         </motion.div>
 
         {/* Quantity & Favorite */}
         <motion.div variants={itemVariants}>
-          <QuantityBuyFavorite
-            product={product}
-            quantity={quantity}
-            onQuantityChange={onQuantityChange}
-            favorite={favorite}
-            onFavoriteToggle={onFavoriteToggle}
-          />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent,
+              width: "100%",
+            }}
+          >
+            <QuantityBuyFavorite
+              product={product}
+              quantity={quantity}
+              onQuantityChange={onQuantityChange}
+              favorite={favorite}
+              onFavoriteToggle={onFavoriteToggle}
+              isMobile={isMobile}
+            />
+          </Box>
         </motion.div>
 
         {/* Delivery & Return */}
         <motion.div variants={itemVariants}>
-          <DeliveryReturnCard
-            deliveryIcon={DeliveryIcon}
-            returnIcon={ReturnIcon}
-          />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent,
+              width: "100%",
+            }}
+          >
+            <DeliveryReturnCard
+              deliveryIcon={DeliveryIcon}
+              returnIcon={ReturnIcon}
+            />
+          </Box>
         </motion.div>
       </Box>
     </motion.div>

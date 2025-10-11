@@ -53,7 +53,7 @@ const AuthLayout: React.FC = () => {
             sx={{
               pl: 0,
               ml: 0,
-              width: "100%",
+              width: "95%",
               maxWidth: "500rem",
               height: "auto",
               borderRadius: 0,
@@ -72,13 +72,14 @@ const AuthLayout: React.FC = () => {
           alignItems: "center",
           flex: hideImage ? 1 : undefined,
           p: { xs: 2, md: 13 },
-          Pl: { xs: 2, md: 20 },
+          Pl: { xs: 2, md: 0 },
           pr: { xs: 10, md: 0 },
+          mr: { xs: 0, md: 10 },
         }}
       >
         <motion.div
-          initial={{ opacity: 0, x: 300 }} 
-          animate={{ opacity: 1, x: 0 }} 
+          initial={{ opacity: 0, x: 300 }}
+          animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
           style={{ width: "100%" }}
         >
