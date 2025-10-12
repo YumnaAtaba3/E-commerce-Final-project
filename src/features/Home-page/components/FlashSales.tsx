@@ -1,8 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
-  Button,
   useMediaQuery,
   Skeleton,
   useTheme as useMuiTheme,
@@ -50,7 +50,7 @@ const FlashSales: React.FC = () => {
       1000
     );
     return () => clearInterval(timer);
-  }, []);
+  }, [endDate]);
 
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 1500);

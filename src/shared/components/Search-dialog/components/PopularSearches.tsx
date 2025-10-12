@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Chip } from "@mui/material";
 import { useTheme as useAppTheme } from "../../../../theme/ThemeProvider";
-import { motion } from "framer-motion";
+import { motion, type Variants, easeOut } from "framer-motion";
 
 interface PopularSearchesProps {
   onClick: (term: string) => void;
@@ -19,21 +19,19 @@ const PopularSearches: React.FC<PopularSearchesProps> = ({ onClick }) => {
   const { theme } = useAppTheme();
 
   // Container animation — staggered entrance
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: {},
-    visible: {
-      transition: { staggerChildren: 0.08 },
-    },
+    visible: { transition: { staggerChildren: 0.08 } },
   };
 
   // Each chip animation — smooth float-in
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 15, scale: 0.9 },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.4, ease: "easeOut" },
+      transition: { duration: 0.4, ease: easeOut }, // ✅ typed easing
     },
   };
 
@@ -72,9 +70,7 @@ const PopularSearches: React.FC<PopularSearchesProps> = ({ onClick }) => {
                 fontWeight: 500,
                 borderRadius: "12px",
                 px: 1,
-                "&:hover": {
-                  bgcolor: theme.Button2,
-                },
+                "&:hover": { bgcolor: theme.Button2 },
               }}
             />
           </motion.div>

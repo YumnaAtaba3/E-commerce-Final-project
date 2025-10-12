@@ -146,7 +146,9 @@ const ExploreProducts: React.FC = () => {
                 id={p.id}
                 name={p.title}
                 price={`$${p.price}`}
-                oldPrice={p.oldPrice ?? undefined}
+                oldPrice={
+                  p.oldPrice !== undefined ? `$${p.oldPrice}` : undefined
+                } // <-- convert to string
                 discount={p.discount}
                 rating={p.rating ?? 0}
                 img={p.images?.[0] ?? ""}

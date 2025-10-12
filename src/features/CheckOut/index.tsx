@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useRef, useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { useTheme } from "../../theme/ThemeProvider";
@@ -117,7 +118,7 @@ const Checkout = () => {
         </Typography>
 
         <Grid container spacing={{ xs: 6, md: 15 }} justifyContent="start">
-          <Grid item xs={12} md={7}>
+          <Grid >
             <motion.div
               variants={billingVariant}
               initial="hidden"
@@ -127,7 +128,7 @@ const Checkout = () => {
             </motion.div>
           </Grid>
 
-          <Grid item xs={12} md={5}>
+          <Grid >
             <motion.div
               variants={summaryVariant}
               initial="hidden"

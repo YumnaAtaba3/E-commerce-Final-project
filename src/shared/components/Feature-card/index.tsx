@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { motion } from "framer-motion";
+import { motion, type Variants, easeOut } from "framer-motion";
 import { useTheme } from "../../../theme/ThemeProvider";
 
 interface FeatureCardProps {
@@ -12,13 +12,13 @@ interface FeatureCardProps {
 const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, text }) => {
   const { theme } = useTheme();
 
-  // Motion variant for entrance
-  const cardVariant = {
+  // Motion variant for entrance (typed correctly)
+  const cardVariant: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
+      transition: { duration: 0.6, ease: easeOut }, // ✅ use imported easeOut
     },
   };
 

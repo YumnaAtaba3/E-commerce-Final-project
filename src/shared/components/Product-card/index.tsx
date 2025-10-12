@@ -15,13 +15,12 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { useTheme } from "../../../theme/ThemeProvider";
-import { useNavigate } from "react-router";
+import { useNavigate, useOutletContext } from "react-router";
 import { useWishlistStore } from "../../../store/wishlistStore";
 import { useCartStore } from "../../../store/cartStore";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Product } from "../../../store/state";
 import { appRoutes } from "../../../routes";
-import { useOutletContext } from "react-router";
 import type { HeaderProtectedIconsHandle } from "../../layouts/Header/components/HeaderProtectedIcons";
 
 interface ProductCardProps {
@@ -53,32 +52,23 @@ const ProductCard: React.FC<ProductCardProps> = ({
     cartRef: React.RefObject<HeaderProtectedIconsHandle>;
   }>();
 
-  // Wishlist
   const addToWishlist = useWishlistStore((state) => state.addToWishlist);
   const removeFromWishlist = useWishlistStore(
     (state) => state.removeFromWishlist
   );
   const favorite = useWishlistStore((state) => state.isInWishlist(id));
 
-  // Cart
   const addToCart = useCartStore((state) => state.addToCart);
   const inCart = useCartStore((state) => state.isInCart(id));
 
-  // Floating hearts
   const [hearts, setHearts] = useState<
     { id: number; x: number; delay: number }[]
   >([]);
 
-  // Safe numeric price
-  const numericPrice = (() => {
-    if (typeof price === "number") return price;
-    if (typeof price === "string") {
-      const parsed = parseFloat(price.replace(/[^0-9.]/g, ""));
-      return isNaN(parsed) ? 0 : parsed;
-    }
-    return 0;
-  })();
-
+  const numericPrice =
+    typeof price === "number"
+      ? price
+      : parseFloat(`${price}`.replace(/[^0-9.]/g, "")) || 0;
   let finalPrice = numericPrice;
   let finalOldPrice = oldPrice;
 
@@ -95,7 +85,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
     finalOldPrice && finalOldPrice !== displayPrice ? finalOldPrice : undefined;
   const imageToShow = Array.isArray(img) ? img[0] : img;
 
-  // Wishlist toggle
   const toggleWishlist = () => {
     favorite
       ? removeFromWishlist(id)
@@ -121,7 +110,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
     }
   };
 
-  // Fly-to-cart animation
   const handleAddToCart = () => {
     if (!inCart) {
       addToCart(
@@ -139,37 +127,35 @@ const ProductCard: React.FC<ProductCardProps> = ({
         1
       );
 
-      if (cartRef?.current?.cartIconRef?.current) {
-        const cartIcon = cartRef.current.cartIconRef.current;
-        const productImage = document.getElementById(`product-img-${id}`);
-        if (productImage) {
-          const imgRect = productImage.getBoundingClientRect();
-          const cartRect = cartIcon.getBoundingClientRect();
+      const cartIcon = cartRef?.current?.cartIcon;
+      const productImage = document.getElementById(`product-img-${id}`);
+      if (cartIcon && productImage) {
+        const imgRect = productImage.getBoundingClientRect();
+        const cartRect = cartIcon.getBoundingClientRect();
 
-          const flyingImg = productImage.cloneNode(true) as HTMLElement;
-          flyingImg.style.position = "fixed";
-          flyingImg.style.left = `${imgRect.left}px`;
-          flyingImg.style.top = `${imgRect.top}px`;
-          flyingImg.style.width = `${imgRect.width}px`;
-          flyingImg.style.height = `${imgRect.height}px`;
-          flyingImg.style.zIndex = "1000";
-          flyingImg.style.pointerEvents = "none";
-          flyingImg.style.borderRadius = "8px";
-          document.body.appendChild(flyingImg);
+        const flyingImg = productImage.cloneNode(true) as HTMLElement;
+        flyingImg.style.position = "fixed";
+        flyingImg.style.left = `${imgRect.left}px`;
+        flyingImg.style.top = `${imgRect.top}px`;
+        flyingImg.style.width = `${imgRect.width}px`;
+        flyingImg.style.height = `${imgRect.height}px`;
+        flyingImg.style.zIndex = "1000";
+        flyingImg.style.pointerEvents = "none";
+        flyingImg.style.borderRadius = "8px";
+        document.body.appendChild(flyingImg);
 
-          flyingImg.animate(
-            [
-              { transform: `translate(0, 0) scale(1)` },
-              {
-                transform: `translate(${cartRect.left - imgRect.left}px, ${
-                  cartRect.top - imgRect.top
-                }px) scale(0.2)`,
-                opacity: 0.5,
-              },
-            ],
-            { duration: 800, easing: "ease-in-out" }
-          ).onfinish = () => flyingImg.remove();
-        }
+        flyingImg.animate(
+          [
+            { transform: `translate(0, 0) scale(1)` },
+            {
+              transform: `translate(${cartRect.left - imgRect.left}px, ${
+                cartRect.top - imgRect.top
+              }px) scale(0.2)`,
+              opacity: 0.5,
+            },
+          ],
+          { duration: 800, easing: "ease-in-out" }
+        ).onfinish = () => flyingImg.remove();
       }
     }
   };
@@ -179,7 +165,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <Card
       sx={{
-        alignItems: "center",
         width: 280,
         height: 350,
         borderRadius: 2,
@@ -188,12 +173,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
         "&:hover .hoverOverlay": { opacity: 1, bottom: 0 },
         bgcolor: theme.primary1,
         mt: 5,
-        boxShadow: "none",
-        border: "none !important",
-        outline: "none",
       }}
     >
-      {/* Top Badges */}
+      {/* Top badges */}
       {(discount || isNew) && (
         <Box
           sx={{
@@ -319,7 +301,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
               color: "white",
               fontSize: 16,
               fontWeight: 500,
-              "&:hover": { bgcolor: inCart ? "#222" : "#222" },
             }}
             startIcon={<ShoppingCartOutlinedIcon />}
             onClick={handleAddToCart}

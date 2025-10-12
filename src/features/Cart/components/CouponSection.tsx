@@ -6,13 +6,13 @@ import { useCouponLogic } from "../hooks/useCoupon";
 interface Props {
   isMobile: boolean;
   setDiscountPercent: (discount: number) => void;
-  sx?: any; // allow extra styles
+ 
 }
 
 const CouponSection: React.FC<Props> = ({
   isMobile,
   setDiscountPercent,
-  sx,
+
 }) => {
   const { theme } = useTheme();
   const { couponCode, setCouponCode, isCouponApplied, handleApplyCoupon } =
@@ -29,7 +29,7 @@ const CouponSection: React.FC<Props> = ({
         mx: isMobile ? "auto" : 0,
         width: isMobile ? "70%" : "auto",
         maxWidth: isMobile ? 360 : "none",
-        ...sx, // merge extra styles
+       
       }}
     >
       <TextField

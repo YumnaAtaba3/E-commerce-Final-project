@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, easeOut } from "framer-motion";
 import { Box, Container, Grid, Typography } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
 
@@ -24,7 +24,7 @@ const OurStory: React.FC<OurStoryProps> = ({ image, title, paragraphs }) => {
       x: 0,
       transition: {
         duration: 0.8,
-        ease: "easeOut",
+        ease: easeOut,
       },
     },
   };
@@ -37,7 +37,7 @@ const OurStory: React.FC<OurStoryProps> = ({ image, title, paragraphs }) => {
       transition: {
         delay: i * 0.15 + 0.5,
         duration: 0.6,
-        ease: "easeOut",
+        ease: easeOut,
       },
     }),
   };
@@ -50,7 +50,7 @@ const OurStory: React.FC<OurStoryProps> = ({ image, title, paragraphs }) => {
       x: 0,
       transition: {
         duration: 0.8,
-        ease: "easeOut",
+        ease: easeOut,
       },
     },
   };
@@ -65,7 +65,7 @@ const OurStory: React.FC<OurStoryProps> = ({ image, title, paragraphs }) => {
     >
       <Grid container spacing={8} alignItems="center" justifyContent="center">
         {/* --- Left Side (Text Content) --- */}
-        <Grid item xs={12} md={6}>
+        <Grid>
           <motion.div
             variants={textVariants}
             initial="hidden"
@@ -113,7 +113,7 @@ const OurStory: React.FC<OurStoryProps> = ({ image, title, paragraphs }) => {
         </Grid>
 
         {/* --- Right Side (Image) --- */}
-        <Grid item xs={12} md={6}>
+        <Grid>
           <motion.div
             variants={imageVariants}
             initial="hidden"

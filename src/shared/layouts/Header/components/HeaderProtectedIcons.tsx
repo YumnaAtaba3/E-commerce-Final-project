@@ -14,11 +14,10 @@ import { useLocation, Link as RouterLink } from "react-router-dom";
 import { appRoutes } from "../../../../routes";
 import AccountDropdown from "../../../components/Account-dropdown";
 
-
+// Ref now stores actual HTML element
 export interface HeaderProtectedIconsHandle {
-  cartIconRef: React.RefObject<HTMLButtonElement> | null; 
+  cartIcon: HTMLAnchorElement | null;
 }
-
 
 interface HeaderProtectedIconsProps {
   theme: any;
@@ -36,12 +35,8 @@ const iconStylesConfig = {
     bgcolor: "transparent",
     borderRadius: "50%",
     transition: "all 0.3s ease",
-    "&:hover": {
-      bgcolor: hoverBg || theme.Button2,
-      color: "white",
-    },
+    "&:hover": { bgcolor: hoverBg || theme.Button2, color: "white" },
   }),
-
   badge: (theme: any, badgeColor?: string) => ({
     "& .MuiBadge-badge": {
       bgcolor: badgeColor || theme.Button2,
@@ -49,18 +44,14 @@ const iconStylesConfig = {
       fontWeight: 600,
     },
   }),
-
   icon: (theme: any, iconColor?: string) => ({
     fontSize: 20,
     color: iconColor || theme.Text1,
     transition: "color 0.3s ease",
-    "&:hover": {
-      color: "white",
-    },
+    "&:hover": { color: "white" },
   }),
 };
 
-// ✅ ForwardRef component
 const HeaderProtectedIcons = forwardRef<
   HeaderProtectedIconsHandle,
   HeaderProtectedIconsProps
@@ -80,32 +71,27 @@ const HeaderProtectedIcons = forwardRef<
   ) => {
     const [accountOpen, setAccountOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const cartIconRef = useRef<HTMLButtonElement>(null);
+    const cartIconRef = useRef<HTMLAnchorElement>(null);
 
     const location = useLocation();
     const hideAllIconsPages =
       location.pathname === appRoutes.auth.signUp ||
       location.pathname === appRoutes.auth.login;
 
-    // Close dropdown when clicking outside
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
         if (
           dropdownRef.current &&
           !dropdownRef.current.contains(event.target as Node)
-        ) {
+        )
           setAccountOpen(false);
-        }
       };
       document.addEventListener("mousedown", handleClickOutside);
       return () =>
         document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    // Expose cart ref to parent
-    useImperativeHandle(ref, () => ({
-      cartIconRef,
-    }));
+    useImperativeHandle(ref, () => ({ cartIcon: cartIconRef.current }));
 
     const iconButtonSx = iconStylesConfig.iconButton(theme, hoverBg);
     const badgeSx = iconStylesConfig.badge(theme, badgeColor);
@@ -113,7 +99,6 @@ const HeaderProtectedIcons = forwardRef<
 
     return (
       <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-        {/* Wishlist */}
         {!hideAllIconsPages && (
           <IconButton
             component={RouterLink}
@@ -126,7 +111,6 @@ const HeaderProtectedIcons = forwardRef<
           </IconButton>
         )}
 
-        {/* Cart */}
         {!hideAllIconsPages && (
           <IconButton
             ref={cartIconRef}
@@ -140,7 +124,6 @@ const HeaderProtectedIcons = forwardRef<
           </IconButton>
         )}
 
-        {/* Account Dropdown */}
         {!hideAllIconsPages && isLoggedIn && (
           <Box sx={{ position: "relative" }} ref={dropdownRef}>
             <IconButton

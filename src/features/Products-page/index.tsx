@@ -53,9 +53,7 @@ const ProductPage: React.FC = () => {
       {/* Sidebar */}
       {!isMobile && (
         <Box sx={{ width: 250, mr: 3 }}>
-      
-            <FilterSidebar onCategorySelect={handleCategorySelect} />
-         
+          <FilterSidebar onCategorySelect={handleCategorySelect} />
         </Box>
       )}
 
@@ -74,7 +72,7 @@ const ProductPage: React.FC = () => {
             onClick={() => window.history.back()}
             sx={{
               ml: 6,
-              mr:2,
+              mr: 2,
               bgcolor: theme.primary1,
               color: theme.Text1,
               "&:hover": { bgcolor: theme.Button2 },
@@ -92,25 +90,32 @@ const ProductPage: React.FC = () => {
 
         {/* Loading Skeletons */}
         {isLoading && (
-          <Grid container spacing={6}  justifyContent="center">
+          <Grid container spacing={6} justifyContent="center">
             {skeletonArray.map((i) => (
-              <Grid item key={i} xs={12} sm={6} md={3}>
-               
+              <Grid key={i}>
                 <Box
-                     sx={{
-                       width: 200,
-                       bgcolor: "background.paper",
-                       borderRadius: 2,
-                       p: 1,
-                       boxShadow: "0px 2px 10px rgba(0,0,0,0.05)",
-                     }}
-                   >
-                     <Skeleton variant="rectangular" height={140} sx={{ borderRadius: 1 }} />
-                     <Skeleton variant="text" width="80%" height={25} sx={{ mt: 1 }} />
-                     <Skeleton variant="text" width="50%" height={20} />
-                     <Skeleton variant="text" width="60%" height={20} />
-                   </Box>
-
+                  sx={{
+                    width: 200,
+                    bgcolor: "background.paper",
+                    borderRadius: 2,
+                    p: 1,
+                    boxShadow: "0px 2px 10px rgba(0,0,0,0.05)",
+                  }}
+                >
+                  <Skeleton
+                    variant="rectangular"
+                    height={140}
+                    sx={{ borderRadius: 1 }}
+                  />
+                  <Skeleton
+                    variant="text"
+                    width="80%"
+                    height={25}
+                    sx={{ mt: 1 }}
+                  />
+                  <Skeleton variant="text" width="50%" height={20} />
+                  <Skeleton variant="text" width="60%" height={20} />
+                </Box>
               </Grid>
             ))}
           </Grid>
@@ -155,17 +160,16 @@ const ProductPage: React.FC = () => {
               <Grid container spacing={3} justifyContent="center">
                 {products.map((product) => (
                   <Grid
-                    item
                     key={product.id}
                     sx={{ display: "flex", justifyContent: "center" }}
                   >
                     <ProductCard
                       id={product.id}
                       name={product.title}
-                      price={`$${product.price.toFixed(2)}`}
+                      price={`$${Number(product.price).toFixed(2)}`}
                       oldPrice={
-                        product.oldPrice
-                          ? `$${product.oldPrice.toFixed(2)}`
+                        product.oldPrice !== undefined
+                          ? `$${Number(product.oldPrice).toFixed(2)}`
                           : undefined
                       }
                       discount={product.discount}

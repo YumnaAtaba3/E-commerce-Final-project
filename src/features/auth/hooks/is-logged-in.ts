@@ -4,17 +4,13 @@ import AuthServices from "../services/api";
 import { userStorage } from "../storage/userStorage";
 
 export function useIsLoggedIn() {
-
-
-const [accessToken, setAccessToken] = useState<string | null>(userStorage.get() || null);
-
+  const [accessToken, setAccessToken] = useState<string | null>(userStorage.get() ?? null);
 
   useEffect(() => {
-const handleStorageChange = () => {
-  setAccessToken(userStorage.get() || null);
-};
+    const handleStorageChange = () => {
+      setAccessToken(userStorage.get() ?? null);
+    };
 
- 
     window.addEventListener("storage", handleStorageChange);
 
     const originalSetItem = localStorage.setItem;

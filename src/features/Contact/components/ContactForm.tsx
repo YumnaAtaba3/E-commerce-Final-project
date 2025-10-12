@@ -130,7 +130,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ isMobile }) => {
             }}
           >
             {["name", "email", "phone"].map((field) => (
-              <Grid item xs={12} md key={field}>
+              <Grid  key={field}>
                 <motion.div
                   whileHover={{
                     y: -3,

@@ -8,7 +8,7 @@ export function useHomepageData() {
   const { setProducts } = useProductsState();
   const [retryIndex, setRetryIndex] = useState(0);
 
-  const { data: products, isLoading, isError } = useProductsQuery(0, 50, retryIndex);
+  const { data: products, isLoading, isError } = useProductsQuery(0, 50,undefined, retryIndex);
 
   useEffect(() => {
     if (products) {

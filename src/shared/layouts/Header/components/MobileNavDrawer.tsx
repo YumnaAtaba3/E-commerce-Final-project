@@ -1,7 +1,7 @@
 import React from "react";
 import { Drawer, Box, Link } from "@mui/material";
-import { Link as RouterLink } from "react-router";
-import { motion } from "framer-motion";
+import { Link as RouterLink } from "react-router-dom";
+import { motion, type Variants, easeOut } from "framer-motion";
 
 interface MobileNavDrawerProps {
   open: boolean;
@@ -9,7 +9,7 @@ interface MobileNavDrawerProps {
   navLinks: { label: string; to: string; icon: React.ReactNode }[];
 }
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
@@ -18,9 +18,13 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, x: 50 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: "easeOut" } },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.4, ease: easeOut }, // ✅ use imported easeOut
+  },
 };
 
 const MobileNavDrawer: React.FC<MobileNavDrawerProps> = ({

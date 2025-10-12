@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { httpClient } from "../../../lib/axios";
 import type { ILoginPayload, ILoginResponse } from "../log-in-page/types";
 import type { ISignUpPayload, IUser } from "../sign-up-page/types";
@@ -25,7 +26,7 @@ class AuthServices {
     return response.data;
   }
 
-  async getProfile(): Promise<IUser> {
+  async getProfile(p0?: string): Promise<IUser> {
     // ✅ Automatically use the token from userStorage
     const token = userStorage.get();
     if (!token) throw new Error("No access token found — please log in again.");

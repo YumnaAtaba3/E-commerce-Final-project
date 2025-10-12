@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState, useCallback } from "react";
 import { useProductsState } from "../../../store/productStore";
 import { httpClient } from "../../../lib/axios";
@@ -38,7 +39,7 @@ export function useFilter(options: FilterOptions = {}) {
       setIsError(true);
       setIsLoading(false);
     }
-  }, [options, setProducts, retryIndex]);
+  }, [options, setProducts]);
 
   useEffect(() => {
     fetchProducts();

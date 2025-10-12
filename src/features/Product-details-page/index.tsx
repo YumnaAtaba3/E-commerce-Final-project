@@ -81,11 +81,11 @@ const ProductDetailsPage: React.FC = () => {
           alignItems="flex-start"
           sx={{ flexDirection: { xs: "column", md: "row" } }}
         >
-          <Grid item xs={12} md={6}>
+          <Grid >
             <ProductImages thumbnails={thumbnails} mainImage={thumbnails[0]} />
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid >
             <ProductInfo
               product={product}
               isMobile={isMobile}

@@ -6,7 +6,7 @@ import { appRoutes } from "../../../routes";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useIsLoggedIn } from "../../auth/hooks/is-logged-in";
-import { motion } from "framer-motion";
+import { motion, easeOut, easeInOut } from "framer-motion";
 
 interface Props {
   subtotal: number;
@@ -42,13 +42,13 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
     navigate(appRoutes.checkout);
   };
 
-  // Framer Motion variants
+  // Framer Motion variants (TypeScript-safe)
   const textVariant = (delay: number) => ({
     hidden: { opacity: 0, x: 30 },
     visible: {
       opacity: 1,
       x: 0,
-      transition: { delay, duration: 0.6, ease: "easeOut" },
+      transition: { delay, duration: 0.6, ease: easeOut },
     },
   });
 
@@ -67,7 +67,6 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
         overflow: "hidden",
       }}
     >
-      {/* Animated Heading */}
       <motion.div initial="hidden" animate="visible">
         <motion.div variants={textVariant(0.1)}>
           <Typography
@@ -76,6 +75,7 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
             Cart Total
           </Typography>
         </motion.div>
+
         <motion.div variants={textVariant(0.3)}>
           <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
             <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>
@@ -86,6 +86,7 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
             </Typography>
           </Box>
         </motion.div>
+
         {discount > 0 && (
           <motion.div variants={textVariant(0.5)}>
             <Box
@@ -100,6 +101,7 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
             </Box>
           </motion.div>
         )}
+
         <motion.div variants={textVariant(0.7)}>
           <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
             <Typography sx={{ fontSize: { xs: 14, md: 16 } }}>
@@ -110,6 +112,7 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
             </Typography>
           </Box>
         </motion.div>
+
         <motion.div variants={textVariant(0.9)}>
           <Box
             sx={{
@@ -129,7 +132,6 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
         </motion.div>
       </motion.div>
 
-      {/* Animated Checkout Button */}
       <Box textAlign="center">
         <MotionButton
           variant="contained"
@@ -151,7 +153,7 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
           transition={{
             duration: 1.2,
             repeat: Infinity,
-            ease: "easeInOut",
+            ease: easeInOut,
           }}
         >
           Proceed to checkout

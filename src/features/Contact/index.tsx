@@ -5,7 +5,7 @@ import {
   useMediaQuery,
   useTheme as useMuiTheme,
 } from "@mui/material";
-import { motion } from "framer-motion";
+import { motion, type Variants, easeOut } from "framer-motion";
 import { useTheme } from "../../theme/ThemeProvider";
 
 import phoneIcon from "../../assets/Contact/phoneIcon.svg";
@@ -27,23 +27,23 @@ const Contact: React.FC = () => {
   }, []);
 
   // InfoCard animation from left
-  const infoCardVariant = {
+  const infoCardVariant: Variants = {
     hidden: { opacity: 0, x: -100 },
     visible: {
       opacity: 1,
       x: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
+      transition: { duration: 0.8, ease: easeOut },
     },
   };
 
   // ContactForm animation from bottom with scale
-  const formVariant = {
+  const formVariant: Variants = {
     hidden: { opacity: 0, y: 50, scale: 0.95 },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.8, ease: "easeOut" },
+      transition: { duration: 0.8, ease: easeOut },
     },
   };
 
@@ -76,9 +76,6 @@ const Contact: React.FC = () => {
         >
           {/* --- Left Info Section --- */}
           <Grid
-            item
-            xs={12}
-            md={5}
             sx={{
               display: "flex",
               justifyContent: "center",
@@ -127,9 +124,6 @@ const Contact: React.FC = () => {
 
           {/* --- Right Form Section --- */}
           <Grid
-            item
-            xs={12}
-            md={7}
             sx={{
               display: "flex",
               justifyContent: "center",

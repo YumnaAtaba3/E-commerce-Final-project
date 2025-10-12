@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import {
   Box,
-  List,
   ListItemButton,
   Typography,
   IconButton,
@@ -15,7 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useTheme as useMuiTheme } from "@mui/material/styles";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { useNavigate, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
 const categories = [
   { name: "Woman’s Fashion", slug: "clothes" },
@@ -30,16 +30,24 @@ const categories = [
 
 interface FilterSidebarProps {
   onCategorySelect?: (slug?: string) => void;
+  open?: boolean;
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
+const FilterSidebar: React.FC<FilterSidebarProps> = ({
+  onCategorySelect,
+  open = false,
+  setOpen,
+}) => {
   const [active, setActive] = useState<string>("");
-  const [open, setOpen] = useState(false);
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleOpen = () => setOpen?.(true);
+  const handleClose = () => setOpen?.(false);
 
   const handleCategoryClick = (slug: string, name: string) => {
     setActive(name);
@@ -47,30 +55,24 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
     const params = new URLSearchParams(location.search);
     params.set("category", slug);
 
-    const existingFilter = params.get("filter");
-    if (existingFilter) {
-      params.set("filter", existingFilter);
-    }
-
     if (onCategorySelect) {
       onCategorySelect(slug);
     } else {
       navigate({ pathname: "/products", search: `?${params.toString()}` });
     }
 
-    setOpen(false);
+    handleClose();
   };
 
-  const listVariants = {
+  // Framer Motion animation variants
+  const listVariants: Variants = {
     hidden: {},
     visible: {
-      transition: {
-        staggerChildren: 0.1, // each item appears 0.1s after the previous
-      },
+      transition: { staggerChildren: 0.1 },
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, x: -30 },
     visible: {
       opacity: 1,
@@ -95,10 +97,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
               fontSize: 15,
               fontWeight: active === cat.name ? 600 : 400,
               color: active === cat.name ? theme.Button2 : theme.Text1,
-              "&:hover": {
-                bgcolor: "transparent",
-                color: theme.Button2,
-              },
+              "&:hover": { bgcolor: "transparent", color: theme.Button2 },
             }}
           >
             <Typography sx={{ fontSize: 15 }}>{cat.name}</Typography>
@@ -134,23 +133,20 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
         </Box>
       )}
 
-      {/* Mobile Drawer */}
+      {/* Mobile Sidebar */}
       {isMobile && (
         <>
           <Button
             variant="outlined"
             startIcon={<FilterListIcon />}
-            onClick={() => setOpen(true)}
+            onClick={handleOpen}
             sx={{
               mb: 2,
               textTransform: "none",
               fontSize: 14,
               borderColor: theme.Text2,
               color: theme.Text1,
-              "&:hover": {
-                borderColor: theme.Button2,
-                color: theme.Button2,
-              },
+              "&:hover": { borderColor: theme.Button2, color: theme.Button2 },
             }}
           >
             Filters
@@ -159,7 +155,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
           <Drawer
             anchor="bottom"
             open={open}
-            onClose={() => setOpen(false)}
+            onClose={handleClose}
             PaperProps={{
               sx: {
                 height: "80%",
@@ -182,7 +178,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ onCategorySelect }) => {
               <Typography sx={{ fontWeight: 600, fontSize: 16 }}>
                 Filters
               </Typography>
-              <IconButton onClick={() => setOpen(false)}>
+              <IconButton onClick={handleClose}>
                 <CloseIcon sx={{ color: theme.Text1 }} />
               </IconButton>
             </Box>

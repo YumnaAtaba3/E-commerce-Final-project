@@ -21,7 +21,7 @@ import HeaderSearchBar from "./components/HeaderSearchBar";
 import HeaderNavLinks from "./components/HeaderNavLinks";
 import HeaderLogo from "./components/HeaderLogo";
 
-// 🧭 Navigation Links
+// Navigation Links
 const navLinks = [
   { label: "Home", to: appRoutes.home, icon: <HomeIcon /> },
   { label: "About", to: appRoutes.about, icon: <InfoIcon /> },
@@ -29,7 +29,6 @@ const navLinks = [
   { label: "Sign Up", to: appRoutes.auth.signUp, icon: <PersonAddIcon /> },
 ];
 
-// 🧱 Header Component
 const Header = forwardRef<HeaderProtectedIconsHandle>((_, ref) => {
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
@@ -42,12 +41,10 @@ const Header = forwardRef<HeaderProtectedIconsHandle>((_, ref) => {
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // ✅ Internal ref for protected icons
   const internalRef = useRef<HeaderProtectedIconsHandle>(null);
 
-  // ✅ Expose ref to parent component
   useImperativeHandle(ref, () => ({
-    cartIconRef: internalRef.current?.cartIconRef || null,
+    cartIcon: internalRef.current?.cartIcon || null,
   }));
 
   return (
@@ -63,21 +60,15 @@ const Header = forwardRef<HeaderProtectedIconsHandle>((_, ref) => {
       }}
     >
       <Toolbar sx={{ justifyContent: "space-between", gap: 2 }}>
-        {/* 🏠 Logo */}
         <HeaderLogo isMobile={isMobile} theme={theme} />
-
-        {/* 🔗 Desktop Navigation Links */}
         <HeaderNavLinks isMobile={isMobile} theme={theme} />
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-          {/* 🔍 Search Bar */}
           <HeaderSearchBar
             theme={theme}
             searchStore={searchStore}
             isMobile={isMobile}
           />
-
-          {/* 🛒 Wishlist, Cart, Account */}
           <HeaderProtectedIcons
             ref={internalRef}
             theme={theme}
@@ -86,7 +77,6 @@ const Header = forwardRef<HeaderProtectedIconsHandle>((_, ref) => {
             wishlist={wishlist}
           />
 
-          {/* 📱 Mobile Drawer Menu */}
           {isMobile && (
             <>
               <IconButton

@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography, Rating } from "@mui/material";
 import type { Product } from "../../../store/state";
 import { useTheme } from "../../../theme/ThemeProvider";
-import { motion } from "framer-motion";
+import { motion, type Variants, type Easing } from "framer-motion";
 
 import ProductColors from "./ProductColors";
 import ProductSizes from "./ProductSizes";
@@ -50,8 +50,8 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   const justifyContent = isMobile || isTablet ? "center" : "flex-start";
   const containerWidth = isMobile ? "100%" : isTablet ? "80%" : "100%";
 
-  // Framer Motion variants
-  const containerVariants = {
+  // ✅ Framer Motion variants (type-safe)
+  const containerVariants: Variants = {
     hidden: {},
     visible: {
       transition: {
@@ -60,12 +60,15 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, x: 100 },
     visible: {
       opacity: 1,
       x: 0,
-      transition: { duration: 0.5, ease: "easeOut" },
+      transition: {
+        duration: 0.5,
+        ease: "easeOut" as Easing, // ✅ fixed typing issue
+      },
     },
   };
 
@@ -233,6 +236,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             <DeliveryReturnCard
               deliveryIcon={DeliveryIcon}
               returnIcon={ReturnIcon}
+              isMobile={isMobile}
             />
           </Box>
         </motion.div>

@@ -6,7 +6,7 @@ import {
   useMediaQuery,
   useTheme as useMuiTheme,
 } from "@mui/material";
-import { motion } from "framer-motion";
+import { motion, type Variants, easeOut } from "framer-motion";
 
 import ps5Img from "../../../assets/Home-page/NewArrival/ps5-slim-goedkope-playstation_large1.png.png";
 import womanImg from "../../../assets/Home-page/NewArrival/attractive-woman-wearing-hat-posing-black-background 1.png";
@@ -139,13 +139,13 @@ const NewArrival: React.FC = () => {
     </Box>
   );
 
-  // Motion variant for sliding in from left/right
-  const slideInVariant = (direction: "left" | "right") => ({
+  // Fixed Framer Motion variant
+  const slideInVariant = (direction: "left" | "right"): Variants => ({
     hidden: { opacity: 0, x: direction === "left" ? -100 : 100 },
     visible: {
       opacity: 1,
       x: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
+      transition: { duration: 0.8, ease: easeOut }, // TS-safe easing
     },
   });
 
@@ -180,11 +180,9 @@ const NewArrival: React.FC = () => {
       </Typography>
 
       <Grid container spacing={2}>
-        {/* Left: PlayStation */}
         <Grid
-          item
-          xs={12}
-          md={6}
+          
+         
           ml={isMobile ? 0 : 4}
           sx={{ minWidth: isMobile ? 350 : 600 }}
         >
@@ -205,11 +203,9 @@ const NewArrival: React.FC = () => {
           </motion.div>
         </Grid>
 
-        {/* Right Column */}
-        <Grid item xs={12} md={6} sx={{ minWidth: isMobile ? 350 : 600 }}>
+        <Grid sx={{ minWidth: isMobile ? 350 : 600 }}>
           <Grid container spacing={2} direction="column">
-            {/* Woman */}
-            <Grid item>
+            <Grid>
               <motion.div
                 initial="hidden"
                 whileInView="visible"
@@ -227,12 +223,9 @@ const NewArrival: React.FC = () => {
               </motion.div>
             </Grid>
 
-            {/* Speakers + Perfume */}
-            <Grid item>
+            <Grid>
               <Grid container spacing={2}>
                 <Grid
-                  item
-                  xs={6}
                   ml={isMobile ? 2 : 0}
                   sx={{ minWidth: isMobile ? 150 : 300 }}
                 >
@@ -252,7 +245,7 @@ const NewArrival: React.FC = () => {
                     />
                   </motion.div>
                 </Grid>
-                <Grid item xs={6} sx={{ minWidth: isMobile ? 130 : 300 }}>
+                <Grid sx={{ minWidth: isMobile ? 130 : 300 }}>
                   <motion.div
                     initial="hidden"
                     whileInView="visible"

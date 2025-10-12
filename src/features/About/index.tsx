@@ -92,7 +92,7 @@ const AboutPage: React.FC = () => {
               },
               { icon: IconMoneybag, value: "25k", text: "Annual Gross Sale" },
             ].map((item, i) => (
-              <Grid item key={i}>
+              <Grid  key={i}>
                 <motion.div
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -190,7 +190,7 @@ const AboutPage: React.FC = () => {
               text: "We return money within 30 days",
             },
           ].map((f, i) => (
-            <Grid item key={i}>
+            <Grid  key={i}>
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}

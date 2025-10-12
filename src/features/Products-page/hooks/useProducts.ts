@@ -1,9 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { httpClient } from "../../../lib/axios";
 import ProductServices from "../services/api";
 import type { Product } from "../../../store/state";
-
-
 
 function enrichProducts(products: Product[]): Product[] {
   return products.map((p) => ({
@@ -45,12 +44,13 @@ export function useRelatedProductsQuery(id: number | undefined, limit = 4) {
 export const useProductsQuery = (
   page: number = 1,
   limit: number = 10,
-  categorySlug?: string
+  categorySlug?: string,
+  retryIndex?: number
 ) => {
   const offset = (page - 1) * limit;
 
   return useQuery<Product[], Error>({
-    queryKey: ["products", page, limit, categorySlug],
+    queryKey: ["products", page, limit, categorySlug, retryIndex], // 👈 added here
     queryFn: async () => {
       const params: any = { limit, offset };
       if (categorySlug) params.categorySlug = categorySlug;
@@ -58,6 +58,7 @@ export const useProductsQuery = (
       const res = await httpClient.get("/products", { params });
       return enrichProducts(res.data);
     },
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 };
+

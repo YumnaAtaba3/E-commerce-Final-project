@@ -13,7 +13,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { useNavigate } from "react-router";
-import { motion } from "framer-motion";
+import { motion, type Variants, easeOut } from "framer-motion";
 
 import ArrowNavigation from "../../../shared/components/Arrow-navigation";
 import { useTheme } from "../../../theme/ThemeProvider";
@@ -72,17 +72,17 @@ const Categories: React.FC = () => {
   });
 
   // Motion variants for cards
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: (direction: number) => ({
       opacity: 0,
-      x: direction * 100, // left (-1) or right (1)
+      x: direction * 100,
       scale: 0.8,
     }),
     visible: {
       opacity: 1,
       x: 0,
       scale: 1,
-      transition: { duration: 0.6, ease: "easeOut" },
+      transition: { duration: 0.6, ease: easeOut },
     },
   };
 
@@ -169,7 +169,7 @@ const Categories: React.FC = () => {
           {enrichedCategories.map((cat, idx) => (
             <SwiperSlide key={cat.id}>
               <motion.div
-                custom={idx % 2 === 0 ? -1 : 1} // left (-1) or right (1)
+                custom={idx % 2 === 0 ? -1 : 1}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}

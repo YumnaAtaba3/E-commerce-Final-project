@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import {
   Box,
@@ -8,7 +10,7 @@ import {
   useTheme as useMuiTheme,
   styled,
 } from "@mui/material";
-import { motion } from "framer-motion";
+import { motion, type Variants, easeOut } from "framer-motion";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { Link as RouterLink, useNavigate, useLocation } from "react-router";
 import GoogleSvg from "../../../assets/Sign-up/Icon-Google.svg";
@@ -101,13 +103,16 @@ const SignUpForm: React.FC = () => {
   const buttonFont = isMobile ? "14px" : "16px";
   const linkFont = isMobile ? "12px" : "14px";
 
-  // Motion variants for slide from right
-  const formVariants = {
+  // Motion variants for slide from right (TypeScript-safe)
+  const formVariants: Variants = {
     hidden: { opacity: 0, x: 100 },
     visible: {
       opacity: 1,
       x: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
+      transition: {
+        duration: 0.8,
+        ease: easeOut, // ✅ TypeScript-safe
+      },
     },
   };
 

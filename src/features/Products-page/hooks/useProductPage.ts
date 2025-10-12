@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useProductsQuery, type Product } from "../hooks/useProducts";
+import { useProductsQuery} from "../hooks/useProducts";
+import type { Product } from "../../../store/state";
 
 export const useProductPage = (itemsPerPage: number = 8) => {
   const navigate = useNavigate();

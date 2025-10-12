@@ -92,7 +92,9 @@ import { toast } from "react-toastify";
 import { userStorage } from "../../features/auth/storage/userStorage";
 import { logoutHelper } from "../../features/auth/utilities/auth";
 
-const statusesConfig = {
+type StatusKey = 401 | 403 | 404 | 500;
+
+const statusesConfig: Record<StatusKey, { message: string; action(): void }> = {
   401: {
     message: "You are not authorized to access this resource",
     action() {
@@ -135,20 +137,23 @@ export const httpClient: AxiosInstance = axios.create({
 httpClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = userStorage.get();
+
     if (token && token.startsWith("ey")) {
       if (config.headers instanceof AxiosHeaders) {
         config.headers.set("Authorization", `Bearer ${token}`);
       } else {
-        config.headers = new AxiosHeaders({
-          ...config.headers,
-          Authorization: `Bearer ${token}`,
-        });
+        // Create new AxiosHeaders instance with previous headers
+        config.headers = new AxiosHeaders(config.headers as Record<string, string>);
+        config.headers.set("Authorization", `Bearer ${token}`);
       }
     } else if (token) {
       console.warn("⚠️ Invalid token format detected:", token);
     }
 
-    console.log("🚀 Request:", config.method?.toUpperCase(), config.baseURL + config.url);
+    const method = config.method?.toUpperCase() ?? "UNKNOWN";
+    const url = `${config.baseURL ?? ""}${config.url ?? ""}`;
+    console.log("🚀 Request:", method, url);
+
     return config;
   },
   (error: AxiosError) => Promise.reject(error)
@@ -162,14 +167,15 @@ httpClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const status = error.response?.status;
+    const status = error.response?.status as StatusKey | undefined;
     console.error("Axios Error:", error);
 
     if (status && statusesConfig[status]) {
       statusesConfig[status].action();
-    }
-     else if (!status) {
-      toast.error("Network error. Please check your connection or CORS settings.");
+    } else if (!status) {
+      toast.error(
+        "Network error. Please check your connection or CORS settings."
+      );
     }
 
     return Promise.reject(error);

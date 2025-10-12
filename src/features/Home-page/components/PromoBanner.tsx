@@ -112,7 +112,7 @@ const PromoBanner: React.FC = () => {
           spacing={{ xs: 4, md: 4, lg: 4, xl: 20 }}
         >
           {/* Left Content */}
-          <Grid item xs={12} md={6}>
+          <Grid >
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -193,7 +193,7 @@ const PromoBanner: React.FC = () => {
           </Grid>
 
           {/* Right Image */}
-          <Grid item xs={12} md={6} textAlign="center">
+          <Grid  textAlign="center">
             <motion.div
               initial={{ opacity: 0, x: 80 }}
               whileInView={{ opacity: 1, x: 0 }}

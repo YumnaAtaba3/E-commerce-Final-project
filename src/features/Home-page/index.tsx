@@ -187,7 +187,7 @@ const Homepage: React.FC = () => {
                 text: "We return money within 30 days",
               },
             ].map((f, i) => (
-              <Grid item key={i}>
+              <Grid key={i}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}

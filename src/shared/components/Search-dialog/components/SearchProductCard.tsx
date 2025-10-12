@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 import {
   Card,
@@ -21,9 +20,10 @@ import ProductCardIcons from "./ProductCardIcons";
 import { motion, AnimatePresence } from "framer-motion";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import type { Product } from "../../../../store/state";
 
 interface SearchProductCardProps {
-  product: any;
+  product: Product;
 }
 
 const SearchProductCard: React.FC<SearchProductCardProps> = ({ product }) => {
@@ -54,15 +54,11 @@ const SearchProductCard: React.FC<SearchProductCardProps> = ({ product }) => {
     if (favorite) {
       removeFromWishlist(product.id);
       toast.info(`${product.title} removed from wishlist!`, {
-        className: "toast-info",
         autoClose: 1200,
       });
     } else {
       addToWishlist(product);
-      toast.success(`${product.title} added to wishlist!`, {
-        className: "toast-success",
-        autoClose: 1200,
-      });
+      toast.success(`${product.title} added to wishlist!`, { autoClose: 1200 });
 
       const newHearts = Array.from({ length: 12 }).map(() => ({
         id: Date.now() + Math.random(),
@@ -80,16 +76,12 @@ const SearchProductCard: React.FC<SearchProductCardProps> = ({ product }) => {
         title: product.title,
         price: product.price,
         images: product.images || [productImage],
-        oldPrice: undefined,
-        discount: "",
+        oldPrice: product.oldPrice,
+        discount: product.discount || "",
       },
       1
     );
-
-    toast.success(`${product.title} added to cart!`, {
-      className: "toast-success",
-      autoClose: 1200,
-    });
+    toast.success(`${product.title} added to cart!`, { autoClose: 1200 });
 
     const newCarts = Array.from({ length: 6 }).map(() => ({
       id: Date.now() + Math.random(),
@@ -108,7 +100,7 @@ const SearchProductCard: React.FC<SearchProductCardProps> = ({ product }) => {
     <motion.div
       whileHover={{ scale: 1.04 }}
       transition={{ duration: 0.25 }}
-      style={{ display: "inline-block", width: isMobile ? "100%" : "250px" }}
+      style={{ display: "inline-block", width: isMobile ? "100%" : 250 }}
     >
       <Card
         sx={{
@@ -227,7 +219,7 @@ const SearchProductCard: React.FC<SearchProductCardProps> = ({ product }) => {
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
               fontSize: isMobile ? "0.8rem" : "1rem",
-              maxWidth: isMobile ? "140px" : "100%",
+              maxWidth: isMobile ? 140 : "100%",
             }}
           >
             {product.title}

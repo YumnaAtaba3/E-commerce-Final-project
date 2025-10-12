@@ -5,21 +5,26 @@ import SearchBar from "./components/SearchBar";
 import PopularSearches from "./components/PopularSearches";
 import SearchProductCard from "./components/SearchProductCard";
 import { useSearchDialog } from "./hooks/useSearchDialog";
-import { motion } from "framer-motion";
+import { motion, type Variants, easeOut } from "framer-motion";
 import type { Product } from "../../../store/state";
 
-const containerVariants = {
+// Motion variants
+const containerVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { staggerChildren: 0.1, duration: 0.5, ease: "easeOut" },
+    transition: { staggerChildren: 0.1 },
   },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: easeOut },
+  },
 };
 
 const SearchDialog: React.FC = () => {
@@ -33,8 +38,6 @@ const SearchDialog: React.FC = () => {
     isLoading,
     handleClose,
     handlePopularSearchClick,
-    toggleWishlist,
-    isInWishlist,
   } = useSearchDialog();
 
   return (
@@ -58,7 +61,7 @@ const SearchDialog: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: easeOut }}
         >
           <SearchBar query={query} setQuery={setQuery} isLoading={isLoading} />
         </motion.div>
@@ -140,11 +143,7 @@ const SearchDialog: React.FC = () => {
                 ))
               : filteredProducts.map((product: Product) => (
                   <motion.div key={product.id} variants={itemVariants}>
-                    <SearchProductCard
-                      product={product}
-                      favorite={isInWishlist(product.id)}
-                      onWishlistToggle={() => toggleWishlist(product)}
-                    />
+                    <SearchProductCard product={product} />
                   </motion.div>
                 ))}
           </Box>
@@ -153,7 +152,7 @@ const SearchDialog: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
+              transition={{ duration: 0.4, ease: easeOut }}
             >
               <Typography textAlign="center" color="gray" mt={3}>
                 No results found for "{debouncedQuery}"

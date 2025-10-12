@@ -35,7 +35,7 @@ const AuthLayout: React.FC = () => {
       {/* Left side image (hidden on tablet and mobile) */}
       {!hideImage && (
         <Grid
-          item
+          
           sx={{
             display: "flex",
             justifyContent: "flex-start",
@@ -65,7 +65,7 @@ const AuthLayout: React.FC = () => {
 
       {/* Right side form */}
       <Grid
-        item
+       
         sx={{
           display: "flex",
           justifyContent: "center",

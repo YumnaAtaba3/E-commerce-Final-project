@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import {
   Box,
@@ -30,17 +31,12 @@ const SubHeading = styled(Typography)({
   fontWeight: 400,
   marginBottom: "32px",
 });
-const LoginButton = styled(Button)({
-  fontFamily: "'Inter', sans-serif",
-  fontWeight: 500,
-  textTransform: "none",
-  py: 1.2,
-});
 
 const MotionContainer = motion(Container);
 const MotionHeading = motion(Heading);
 const MotionSubHeading = motion(SubHeading);
 const MotionFieldsContainer = motion.div;
+const MotionButton = motion(Button); // ✅ motion-enabled MUI button
 
 const LoginForm: React.FC = () => {
   const { theme } = useTheme();
@@ -91,16 +87,6 @@ const LoginForm: React.FC = () => {
   const buttonFont = isMobile ? "14px" : "16px";
   const linkFont = isMobile ? "12px" : "14px";
 
-  // Animation variants: slide in from right
-  const fieldVariants = {
-    hidden: { opacity: 0, x: 50 },
-    visible: (i: number) => ({
-      opacity: 1,
-      x: 0,
-      transition: { delay: i * 0.15 },
-    }),
-  };
-
   return (
     <MotionContainer
       sx={{ mx: isMobile ? 5 : 0 }}
@@ -141,7 +127,6 @@ const LoginForm: React.FC = () => {
             errors={errors}
             inputFont={inputFont}
             labelFont={labelFont}
-            fieldVariants={fieldVariants}
           />
         </MotionFieldsContainer>
 
@@ -155,13 +140,12 @@ const LoginForm: React.FC = () => {
             gap: isMobile ? 2 : 0,
           }}
         >
-          <LoginButton
-            component={motion.button}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <MotionButton
             type="submit"
             fullWidth={isMobile}
             variant="contained"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             sx={{
               fontSize: buttonFont,
               backgroundColor: theme.Button2,
@@ -171,7 +155,7 @@ const LoginForm: React.FC = () => {
             }}
           >
             {isPending ? "Loading..." : "Log In"}
-          </LoginButton>
+          </MotionButton>
 
           <Link
             component={RouterLink}

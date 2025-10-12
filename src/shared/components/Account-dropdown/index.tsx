@@ -24,7 +24,7 @@ import { appRoutes } from "../../../routes";
 
 import "./AccountDropdown.css";
 import LogoutDialog from "../Logout-dialog";
-import { ClassNames } from "@emotion/react";
+
 import { toast } from "react-toastify";
 
 interface AccountDropdownProps {

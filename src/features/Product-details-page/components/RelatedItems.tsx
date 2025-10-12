@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import ProductCard from "../../../shared/components/Product-card";
 import { useTheme } from "../../../theme/ThemeProvider";
-import { motion } from "framer-motion";
+import { motion, type Variants, type Easing } from "framer-motion";
 
 interface RelatedItem {
   id: number;
@@ -24,7 +24,8 @@ interface RelatedItemsProps {
   items: RelatedItem[];
 }
 
-const containerVariants = {
+// ✅ Typed variants
+const containerVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
@@ -33,9 +34,17 @@ const containerVariants = {
   },
 };
 
-const itemVariants = {
+// ✅ Fix typing for "ease"
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut" as Easing, // ✅ TypeScript-safe fix
+    },
+  },
 };
 
 const RelatedItems: React.FC<RelatedItemsProps> = ({ items }) => {
@@ -87,7 +96,7 @@ const RelatedItems: React.FC<RelatedItemsProps> = ({ items }) => {
           justifyContent={isMobile ? "center" : "flex-start"}
         >
           {items.map((item) => (
-            <Grid item key={item.id} xs={isMobile ? 10 : 3}>
+            <Grid key={item.id}>
               <motion.div variants={itemVariants}>
                 <ProductCard {...item} />
               </motion.div>
