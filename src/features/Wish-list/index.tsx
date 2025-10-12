@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -26,7 +26,7 @@ const AnimatedCount: React.FC<{
   color?: string;
   fontSize?: number;
 }> = ({ count, color = "inherit", fontSize = 18 }) => {
-  const [prevCount, setPrevCount] = useState(count);
+  const [, setPrevCount] = useState(count);
 
   useEffect(() => {
     setPrevCount(count);

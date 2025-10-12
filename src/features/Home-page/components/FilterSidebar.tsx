@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 import React, { useState } from "react";
 import {
   Box,
@@ -40,14 +40,21 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   setOpen,
 }) => {
   const [active, setActive] = useState<string>("");
+  const [localOpen, setLocalOpen] = useState(false);
+
   const { theme } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down("md"));
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleOpen = () => setOpen?.(true);
-  const handleClose = () => setOpen?.(false);
+  // Determine controlled vs local state
+  const isControlled =
+    typeof open === "boolean" && typeof setOpen === "function";
+  const drawerOpen = isControlled ? open : localOpen;
+  const handleOpen = () => (isControlled ? setOpen!(true) : setLocalOpen(true));
+  const handleClose = () =>
+    isControlled ? setOpen!(false) : setLocalOpen(false);
 
   const handleCategoryClick = (slug: string, name: string) => {
     setActive(name);
@@ -67,9 +74,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   // Framer Motion animation variants
   const listVariants: Variants = {
     hidden: {},
-    visible: {
-      transition: { staggerChildren: 0.1 },
-    },
+    visible: { transition: { staggerChildren: 0.1 } },
   };
 
   const itemVariants: Variants = {
@@ -154,7 +159,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
           <Drawer
             anchor="bottom"
-            open={open}
+            open={drawerOpen}
             onClose={handleClose}
             PaperProps={{
               sx: {

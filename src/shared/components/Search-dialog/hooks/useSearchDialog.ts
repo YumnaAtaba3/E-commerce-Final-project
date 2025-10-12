@@ -27,7 +27,7 @@ export const useSearchDialog = () => {
     [products, debouncedQuery]
   );
 
-  const handleClose = (event: object, reason: "backdropClick" | "escapeKeyDown") => {
+  const handleClose = (_event: object, reason: "backdropClick" | "escapeKeyDown") => {
     if (reason === "backdropClick" || reason === "escapeKeyDown") {
       setOpen(false);
       setQuery("");

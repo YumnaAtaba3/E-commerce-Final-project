@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import { useEffect, useState, useCallback } from "react";
 import { useProductsState } from "../../../store/productStore";
 import { httpClient } from "../../../lib/axios";
@@ -16,7 +16,7 @@ export function useFilter(options: FilterOptions = {}) {
   const { setProducts } = useProductsState();
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [retryIndex, setRetryIndex] = useState(0);
+  const [, setRetryIndex] = useState(0);
 
   const fetchProducts = useCallback(async () => {
     setIsLoading(true);

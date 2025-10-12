@@ -60,9 +60,9 @@ const SearchProductCard: React.FC<SearchProductCardProps> = ({ product }) => {
       addToWishlist(product);
       toast.success(`${product.title} added to wishlist!`, { autoClose: 1200 });
 
-      const newHearts = Array.from({ length: 12 }).map(() => ({
+      const newHearts = Array.from({ length: 30 }).map(() => ({
         id: Date.now() + Math.random(),
-        x: Math.random() * 100 - 30,
+        x: Math.random() * 400 - 60,
         delay: Math.random() * 0.3,
       }));
       setHearts((prev) => [...prev, ...newHearts]);
@@ -83,9 +83,9 @@ const SearchProductCard: React.FC<SearchProductCardProps> = ({ product }) => {
     );
     toast.success(`${product.title} added to cart!`, { autoClose: 1200 });
 
-    const newCarts = Array.from({ length: 6 }).map(() => ({
+    const newCarts = Array.from({ length: 30 }).map(() => ({
       id: Date.now() + Math.random(),
-      x: Math.random() * 80 - 40,
+      x: Math.random() * 400 - 60,
       delay: Math.random() * 0.2,
     }));
     setCartBursts((prev) => [...prev, ...newCarts]);
