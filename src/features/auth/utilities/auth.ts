@@ -11,7 +11,6 @@ export function logoutHelper(fallbackUrl = appRoutes.auth.login) {
   }
 
   if (typeof window !== "undefined") {
-
-    window.location.href = `/#${fallbackUrl}`;
+    window.location.href = `/E-commerce-Final-project${fallbackUrl}`;
   }
 }

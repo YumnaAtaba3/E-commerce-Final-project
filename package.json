@@ -1,12 +1,11 @@
-{
-  "name": "e-commerce-final-project",
+ {"name": "e-commerce-final-project",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "homepage": "https://YumnaAtaba3.github.io/E-commerce-Final-project",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && cp dist/index.html dist/404.html",
     "lint": "eslint .",
     "preview": "vite preview",
     "predeploy": "npm run build",
