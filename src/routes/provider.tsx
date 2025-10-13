@@ -16,23 +16,8 @@ import { useTheme } from "../theme/ThemeProvider";
 
 const NotFoundPage = lazy(() => import("../shared/pages/Not-found-page"));
 
-export function AppRouterProvider({
-  children,
-}: {
-  children?: React.ReactNode;
-}) {
+export function AppRouterProvider() {
   const { theme } = useTheme();
-
-  const allRoutes = [
-    ...AboutRoutes,
-    ...CartRoutes,
-    ...ContactRoutes,
-    ...CheckOutRoutes,
-    ...HomepageRoutes,
-    ...ProductsRoutes,
-    ...ProductDetailsRoutes,
-    ...WishlistRoutes,
-  ];
 
   return (
     <Suspense
@@ -50,23 +35,32 @@ export function AppRouterProvider({
     >
       <HashRouter>
         <Routes>
-          {/* Main Layout Routes */}
+         
           <Route path="/" element={<LayoutContainer />}>
-            {children}
-            {allRoutes.map((r) => (
+         
+            {[
+              ...AboutRoutes,
+              ...CartRoutes,
+              ...ContactRoutes,
+              ...CheckOutRoutes,
+              ...HomepageRoutes,
+              ...ProductsRoutes,
+              ...ProductDetailsRoutes,
+              ...WishlistRoutes,
+            ].map((r) => (
               <Route key={r.path} {...r} />
             ))}
-          </Route>
 
-          {/* Auth Routes wrapped with AuthLayout */}
-          <Route element={<AuthLayout />}>
-            {authRoutes.map((r) => (
-              <Route key={r.path} {...r} />
-            ))}
-          </Route>
+          
+            <Route element={<AuthLayout />}>
+              {authRoutes.map((r) => (
+                <Route key={r.path} {...r} />
+              ))}
+            </Route>
 
-          {/* 404 Page */}
-          <Route path="*" element={<NotFoundPage />} />
+           
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
         </Routes>
       </HashRouter>
     </Suspense>
