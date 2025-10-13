@@ -95,6 +95,7 @@ The project includes the following pages:
 - **Product Details**
 - **Cart**
 - **Checkout**
+- **Wish List**
 - **Login / Register**
 - **404 Page**
 
