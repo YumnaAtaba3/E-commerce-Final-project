@@ -50,21 +50,23 @@ export function AppRouterProvider({
     >
       <HashRouter>
         <Routes>
+          {/* Main Layout Routes */}
           <Route path="/" element={<LayoutContainer />}>
             {children}
-
             {allRoutes.map((r) => (
               <Route key={r.path} {...r} />
             ))}
-
-            <Route element={<AuthLayout />}>
-              {authRoutes.map((r) => (
-                <Route key={r.path} {...r} />
-              ))}
-            </Route>
-
-            <Route path="*" element={<NotFoundPage />} />
           </Route>
+
+          {/* Auth Routes wrapped with AuthLayout */}
+          <Route element={<AuthLayout />}>
+            {authRoutes.map((r) => (
+              <Route key={r.path} {...r} />
+            ))}
+          </Route>
+
+          {/* 404 Page */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </HashRouter>
     </Suspense>

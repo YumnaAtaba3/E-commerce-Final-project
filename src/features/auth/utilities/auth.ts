@@ -1,6 +1,5 @@
 import { userStorage } from "../storage/userStorage";
 
-
 export function logoutHelper(fallbackUrl = "/login") {
   try {
     userStorage.remove();
@@ -11,6 +10,7 @@ export function logoutHelper(fallbackUrl = "/login") {
   }
 
   if (typeof window !== "undefined") {
+    // Use hash routing
     window.location.href = `/#${fallbackUrl}`;
   }
 }
