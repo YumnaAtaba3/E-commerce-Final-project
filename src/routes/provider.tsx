@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { CircularProgress, Box } from "@mui/material";
 import { LayoutContainer } from "../shared/layouts/layout-container";
@@ -48,18 +48,18 @@ export function AppRouterProvider({ children }: Props) {
         </Box>
       }
     >
-      <BrowserRouter basename="/E-commerce-Final-project">
+      <HashRouter>
         <Routes>
-          {/* Main Layout wraps everything */}
+          {/* Main layout wraps everything */}
           <Route path="/" element={<LayoutContainer />}>
             {children}
 
-            {/* Normal Routes */}
+            {/* Normal routes */}
             {allRoutes.map((r) => (
               <Route key={r.path} {...r} />
             ))}
 
-            {/* Auth Routes inside AuthLayout */}
+            {/* Auth routes wrapped in AuthLayout */}
             <Route element={<AuthLayout />}>
               {authRoutes.map((r) => (
                 <Route key={r.path} {...r} />
@@ -70,7 +70,7 @@ export function AppRouterProvider({ children }: Props) {
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </Suspense>
   );
 }

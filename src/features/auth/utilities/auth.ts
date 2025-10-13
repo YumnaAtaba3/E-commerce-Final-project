@@ -11,6 +11,6 @@ export function logoutHelper(fallbackUrl = "/login") {
 
   if (typeof window !== "undefined") {
 
-    window.location.href = fallbackUrl;
+    window.location.href = `/#${fallbackUrl}`;
   }
 }

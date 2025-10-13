@@ -7,6 +7,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
+import { appRoutes } from "../../../routes";
 
 const NotFoundPage: React.FC = () => {
   const { theme } = useTheme();
@@ -69,7 +70,7 @@ const NotFoundPage: React.FC = () => {
 
       {/* Back Button */}
       <Button
-        href="/"
+        href={appRoutes.home}
         variant="contained"
         sx={{
           mt: 3,
