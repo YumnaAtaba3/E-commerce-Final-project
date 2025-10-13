@@ -79,8 +79,9 @@ const SignUpForm: React.FC = () => {
   const onSubmit = handleSubmit(async (values) => {
     try {
       const user = await signUp(values);
+      console.log("user"+user.id)
       toast.success("Account created successfully!", { autoClose: 2000 });
-
+      
       navigate(appRoutes.auth.login, {
         state: {
           from: locationState?.from,
