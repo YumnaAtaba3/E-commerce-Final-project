@@ -13,6 +13,7 @@ import { ProductsRoutes } from "../features/Products-page/routes";
 import { ProductDetailsRoutes } from "../features/Product-details-page/routes";
 import { WishlistRoutes } from "../features/Wish-list/routes";
 import { useTheme } from "../theme/ThemeProvider";
+import { REPO_NAME } from "../features/auth/utilities/auth";
 
 const NotFoundPage = lazy(() => import("../shared/pages/Not-found-page"));
 
@@ -52,7 +53,7 @@ export function AppRouterProvider({
 
   
   const router = createBrowserRouter(routes, {
-    basename: "/e-commerce-final-project",
+    basename: `/${REPO_NAME}`,
   });
 
   return (

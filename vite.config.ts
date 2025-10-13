@@ -1,14 +1,18 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-const repoName = "E-commerce-Final-project";
+export const REPO_NAME = "E-commerce-Final-project";
+
 
 export default defineConfig({
-  base: `/${repoName}/`, 
+  base: `/${REPO_NAME}/`, 
   plugins: [react()],
   resolve: {
     alias: {
-      "@": "/src",
+      "@": "/src", 
     },
+  },
+  build: {
+    chunkSizeWarningLimit: 2000,
   },
 });
