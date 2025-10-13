@@ -104,7 +104,7 @@ const SignUpForm: React.FC = () => {
   const buttonFont = isMobile ? "14px" : "16px";
   const linkFont = isMobile ? "12px" : "14px";
 
-  // Motion variants for slide from right (TypeScript-safe)
+
   const formVariants: Variants = {
     hidden: { opacity: 0, x: 100 },
     visible: {
@@ -112,7 +112,7 @@ const SignUpForm: React.FC = () => {
       x: 0,
       transition: {
         duration: 0.8,
-        ease: easeOut, // ✅ TypeScript-safe
+        ease: easeOut, 
       },
     },
   };
