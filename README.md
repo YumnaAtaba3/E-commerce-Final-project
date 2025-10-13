@@ -1,4 +1,3 @@
-```markdown
 # 🛍️ Key-Work Final Project — E-Commerce Website (Frontend Only)
 
 ## 📋 Project Overview
@@ -71,12 +70,9 @@ The coupon system allows users to:
 - Handle invalid or expired coupons gracefully.
 
 **Example:**
-```
 
 SAVE10 → 10% OFF
 FREESHIP → Free Shipping
-
-````
 
 ---
 
@@ -110,43 +106,21 @@ Follow these steps to set up and run the project:
 
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/<your-username>/ecommerce-project.git
-````
+git clone https://github.com/YumnaAtaba3/E-commerce-Final-project.git
 
-### 2️⃣ Navigate to the project folder
+2️⃣ Navigate to the project folder
+cd e-commerce-final-project
 
-```bash
-cd ecommerce-project
-```
-
-### 3️⃣ Install dependencies
-
-```bash
+3️⃣ Install dependencies
 npm install
-```
 
-### 4️⃣ Run the development server
-
-```bash
+4️⃣ Run the development server
 npm run dev
-```
 
-### 5️⃣ Open in browser
+5️⃣ Open in browser
 
-Visit [http://localhost:5173](http://localhost:5173) (or the port shown in your terminal).
+Visit http://localhost:5173
+ (or the port shown in your terminal).
 
----
-
-## 🚀 Summary
-
-This project demonstrates how to build a **complete frontend e-commerce experience** using modern React technologies.
-It focuses on scalability, performance, and an engaging user interface.
-
----
-
-### 👩‍💻 Developed by
-
-**Yumna Ataba**
-
-```
-
+👩‍💻 Developed by
+Yumna Ataba
