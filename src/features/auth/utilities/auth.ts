@@ -11,11 +11,7 @@ export function logoutHelper(fallbackUrl = appRoutes.auth.signUp) {
   }
 
   if (typeof window !== "undefined") {
-    const base =
-      window.location.hostname.includes("github.io")
-        ? "/E-commerce-Final-project/"
-        : import.meta.env.BASE_URL || "/";
-
-    window.location.href = `${base}${fallbackUrl.replace(/^\//, "")}`;
+     
+    window.location.href = `${fallbackUrl.replace(/^\//, "")}`;
   }
 }
