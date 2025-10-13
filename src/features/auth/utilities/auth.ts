@@ -1,7 +1,7 @@
 import { appRoutes } from "../../../routes";
 import { userStorage } from "../storage/userStorage";
 
-export function logoutHelper(fallbackUrl = appRoutes.auth.login) {
+export function logoutHelper(fallbackUrl = appRoutes.auth.signUp) {
   try {
     userStorage.remove();
     localStorage.removeItem("refreshToken");
@@ -11,6 +11,8 @@ export function logoutHelper(fallbackUrl = appRoutes.auth.login) {
   }
 
   if (typeof window !== "undefined") {
-    window.location.href = `/E-commerce-Final-project${fallbackUrl}`;
+
+    const base =document.querySelector("base")?.getAttribute("href") || "/";
+    window.location.href = `${base}${fallbackUrl.replace(/^\//, "")}`;
   }
 }

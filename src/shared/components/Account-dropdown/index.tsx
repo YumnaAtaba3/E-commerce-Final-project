@@ -54,7 +54,7 @@ const AccountDropdown: React.FC<AccountDropdownProps> = ({
     toast.success("Logged out successfully", {
       className:"toast-success"
     });
-    logoutHelper(appRoutes.auth.signUp);
+    logoutHelper(appRoutes.auth.login);
     onClose?.();
   };
 
