@@ -11,8 +11,11 @@ export function logoutHelper(fallbackUrl = appRoutes.auth.signUp) {
   }
 
   if (typeof window !== "undefined") {
+    const base =
+      window.location.hostname.includes("github.io")
+        ? "/E-commerce-Final-project/"
+        : import.meta.env.BASE_URL || "/";
 
-    const base =document.querySelector("base")?.getAttribute("href") || "/";
     window.location.href = `${base}${fallbackUrl.replace(/^\//, "")}`;
   }
 }
