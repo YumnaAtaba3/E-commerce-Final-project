@@ -1,3 +1,4 @@
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AppRouterProvider } from "./routes/provider";
@@ -14,11 +15,9 @@ function App() {
     <>
       <GlobalKeyboardListener />
 
-   
-      <AppRouterProvider>{open ? <SearchDialog /> : null}</AppRouterProvider>
-
+    
+      <AppRouterProvider>{open && <SearchDialog />}</AppRouterProvider>
       <FixedButton />
-
       <ToastContainer
         position="top-right"
         hideProgressBar

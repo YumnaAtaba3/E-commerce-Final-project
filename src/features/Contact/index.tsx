@@ -26,7 +26,7 @@ const Contact: React.FC = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // InfoCard animation from left
+
   const infoCardVariant: Variants = {
     hidden: { opacity: 0, x: -100 },
     visible: {
@@ -36,7 +36,7 @@ const Contact: React.FC = () => {
     },
   };
 
-  // ContactForm animation from bottom with scale
+
   const formVariant: Variants = {
     hidden: { opacity: 0, y: 50, scale: 0.95 },
     visible: {
