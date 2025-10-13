@@ -1,6 +1,5 @@
 import { userStorage } from "../storage/userStorage";
 
-export const REPO_NAME = "E-commerce-Final-project";
 
 export function logoutHelper(fallbackUrl = "/login") {
   try {
@@ -12,6 +11,6 @@ export function logoutHelper(fallbackUrl = "/login") {
   }
 
   if (typeof window !== "undefined") {
-    window.location.href = `/${REPO_NAME}${fallbackUrl}`;
+    window.location.href = `/#${fallbackUrl}`;
   }
 }

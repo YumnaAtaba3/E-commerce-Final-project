@@ -36,7 +36,7 @@ const MotionContainer = motion(Container);
 const MotionHeading = motion(Heading);
 const MotionSubHeading = motion(SubHeading);
 const MotionFieldsContainer = motion.div;
-const MotionButton = motion(Button); // ✅ motion-enabled MUI button
+const MotionButton = motion(Button); 
 
 const LoginForm: React.FC = () => {
   const { theme } = useTheme();

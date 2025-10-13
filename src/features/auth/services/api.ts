@@ -19,7 +19,7 @@ class AuthServices {
       payload
     );
 
-    // ✅ Store only the access token string
+  
     const token = response.data.access_token;
     if (token) userStorage.set(token);
 
@@ -27,7 +27,7 @@ class AuthServices {
   }
 
   async getProfile(_p0?: string): Promise<IUser> {
-    // ✅ Automatically use the token from userStorage
+ 
     const token = userStorage.get();
     if (!token) throw new Error("No access token found — please log in again.");
 

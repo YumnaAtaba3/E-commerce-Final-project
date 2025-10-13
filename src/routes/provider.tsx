@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { CircularProgress, Box } from "@mui/material";
 import { LayoutContainer } from "../shared/layouts/layout-container";
@@ -13,7 +13,6 @@ import { ProductsRoutes } from "../features/Products-page/routes";
 import { ProductDetailsRoutes } from "../features/Product-details-page/routes";
 import { WishlistRoutes } from "../features/Wish-list/routes";
 import { useTheme } from "../theme/ThemeProvider";
-import { REPO_NAME } from "../features/auth/utilities/auth";
 
 const NotFoundPage = lazy(() => import("../shared/pages/Not-found-page"));
 
@@ -24,37 +23,16 @@ export function AppRouterProvider({
 }) {
   const { theme } = useTheme();
 
-  const routes = [
-    {
-      path: "/",
-      element: (
-        <>
-          <LayoutContainer />
-          {children}
-        </>
-      ),
-      children: [
-        ...AboutRoutes,
-        ...CartRoutes,
-        ...ContactRoutes,
-        ...CheckOutRoutes,
-        ...HomepageRoutes,
-        ...ProductsRoutes,
-        ...ProductDetailsRoutes,
-        ...WishlistRoutes,
-        {
-          element: <AuthLayout />,
-          children: [...authRoutes],
-        },
-        { path: "*", element: <NotFoundPage /> },
-      ],
-    },
+  const allRoutes = [
+    ...AboutRoutes,
+    ...CartRoutes,
+    ...ContactRoutes,
+    ...CheckOutRoutes,
+    ...HomepageRoutes,
+    ...ProductsRoutes,
+    ...ProductDetailsRoutes,
+    ...WishlistRoutes,
   ];
-
-  
-  const router = createBrowserRouter(routes, {
-    basename: `/${REPO_NAME}`,
-  });
 
   return (
     <Suspense
@@ -70,7 +48,25 @@ export function AppRouterProvider({
         </Box>
       }
     >
-      <RouterProvider router={router} />
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<LayoutContainer />}>
+            {children}
+
+            {allRoutes.map((r) => (
+              <Route key={r.path} {...r} />
+            ))}
+
+            <Route element={<AuthLayout />}>
+              {authRoutes.map((r) => (
+                <Route key={r.path} {...r} />
+              ))}
+            </Route>
+
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+      </HashRouter>
     </Suspense>
   );
 }
