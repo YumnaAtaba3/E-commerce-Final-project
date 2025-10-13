@@ -16,7 +16,7 @@ const OurStory: React.FC<OurStoryProps> = ({ image, title, paragraphs }) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  // Animation variants for text and paragraphs
+
   const textVariants = {
     hidden: { opacity: 0, x: -60 },
     visible: {

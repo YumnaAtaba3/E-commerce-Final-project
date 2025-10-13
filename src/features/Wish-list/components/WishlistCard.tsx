@@ -49,7 +49,7 @@ const WishlistCard: React.FC<WishlistCardProps> = ({
     setTimeout(() => {
       removeFromWishlist(id);
       if (onDelete) onDelete(id);
-    }, 600); // Duration matches animation
+    }, 600); 
   };
 
   const handleAddToCart = () => {

@@ -12,13 +12,13 @@ interface FeatureCardProps {
 const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, text }) => {
   const { theme } = useTheme();
 
-  // Motion variant for entrance (typed correctly)
+ 
   const cardVariant: Variants = {
     hidden: { opacity: 0, y: 30 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: easeOut }, // ✅ use imported easeOut
+      transition: { duration: 0.6, ease: easeOut }, 
     },
   };
 

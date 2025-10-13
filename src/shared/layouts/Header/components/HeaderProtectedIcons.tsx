@@ -14,7 +14,7 @@ import { useLocation, Link as RouterLink } from "react-router-dom";
 import { appRoutes } from "../../../../routes";
 import AccountDropdown from "../../../components/Account-dropdown";
 
-// Ref now stores actual HTML element
+
 export interface HeaderProtectedIconsHandle {
   cartIcon: HTMLAnchorElement | null;
 }

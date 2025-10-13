@@ -100,12 +100,12 @@ const BillingForm = forwardRef<BillingFormRef>((_, ref) => {
                 onBlur={() => setFocusedIndex(null)}
                 error={Boolean(errors[field.name as keyof BillingFormValues])}
                 sx={{
-                  fontSize: { xs: "14px", md: "16px" }, // bigger font on desktop
+                  fontSize: { xs: "14px", md: "16px" }, 
                   fontFamily: "'Inter', sans-serif",
                   bgcolor: theme.bgColor,
                   color: theme.Text1,
-                  width: { xs: "100%", md: "400px" }, // responsive width
-                  height: { xs: 40, md: 50 }, // responsive height
+                  width: { xs: "100%", md: "400px" }, 
+                  height: { xs: 40, md: 50 },
                   "& .MuiOutlinedInput-notchedOutline": {
                     border: "1px solid transparent",
                   },

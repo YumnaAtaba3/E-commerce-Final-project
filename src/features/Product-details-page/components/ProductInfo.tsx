@@ -50,7 +50,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
   const justifyContent = isMobile || isTablet ? "center" : "flex-start";
   const containerWidth = isMobile ? "100%" : isTablet ? "80%" : "100%";
 
-  // ✅ Framer Motion variants (type-safe)
+
   const containerVariants: Variants = {
     hidden: {},
     visible: {
@@ -67,7 +67,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
       x: 0,
       transition: {
         duration: 0.5,
-        ease: "easeOut" as Easing, // ✅ fixed typing issue
+        ease: "easeOut" as Easing, 
       },
     },
   };

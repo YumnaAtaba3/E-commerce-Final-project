@@ -50,7 +50,7 @@ export function AppRouterProvider({
     },
   ];
 
-  // ✅ Add basename here
+  
   const router = createBrowserRouter(routes, {
     basename: "/e-commerce-final-project",
   });

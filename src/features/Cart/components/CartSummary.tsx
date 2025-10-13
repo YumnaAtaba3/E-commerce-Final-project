@@ -42,7 +42,7 @@ const CartSummary: React.FC<Props> = ({ subtotal, discount, isMobile }) => {
     navigate(appRoutes.checkout);
   };
 
-  // Framer Motion variants (TypeScript-safe)
+  
   const textVariant = (delay: number) => ({
     hidden: { opacity: 0, x: 30 },
     visible: {

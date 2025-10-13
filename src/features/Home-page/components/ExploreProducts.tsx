@@ -148,7 +148,7 @@ const ExploreProducts: React.FC = () => {
                 price={`$${p.price}`}
                 oldPrice={
                   p.oldPrice !== undefined ? `$${p.oldPrice}` : undefined
-                } // <-- convert to string
+                }
                 discount={p.discount}
                 rating={p.rating ?? 0}
                 img={p.images?.[0] ?? ""}
@@ -181,7 +181,7 @@ const ExploreProducts: React.FC = () => {
               "&:hover": { bgcolor: "#cc0000" },
             }}
             onClick={() => navigate("/products?withColors=true")}
-            animate={{ scale: [1, 1.1, 1] }} // grow and shrink
+            animate={{ scale: [1, 1.1, 1] }}
             transition={{
               duration: 1.2,
               repeat: Infinity,

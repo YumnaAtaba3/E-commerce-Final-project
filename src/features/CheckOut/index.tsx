@@ -17,7 +17,7 @@ const Checkout = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
 
-  // ✅ use the reactive state here instead of getState()
+  
   const cartItems = useCartStore((state) => state.cart);
   const clearCart = useCartStore((state) => state.clearCart);
 
@@ -35,7 +35,7 @@ const Checkout = () => {
       return;
     }
 
-    // ✅ cartItems already has latest data
+    
     if (cartItems.length === 0) {
       toast.error("Your cart is empty!", { autoClose: 2000 });
       return;
@@ -63,18 +63,18 @@ const Checkout = () => {
       date: new Date().toISOString(),
     };
 
-    // ✅ Set invoice BEFORE clearing
+    
     setInvoiceData(invoice);
     setInvoicePopupOpen(true);
 
-    // ✅ Clear stores AFTER invoice is shown
+  
     useCouponStore.getState().clearCoupon();
     clearCart();
 
     toast.success("Order placed successfully!", { autoClose: 2000 });
   };
 
-  // Animation variants
+  
   const billingVariant = {
     hidden: { opacity: 0, x: -50 },
     visible: { opacity: 1, x: 0, transition: { duration: 0.6 } },
@@ -140,7 +140,7 @@ const Checkout = () => {
         </Grid>
       </Box>
 
-      {/* 🧾 Invoice Popup */}
+      {/*  Invoice Popup */}
       <InvoicePopup
         open={invoicePopupOpen}
         onClose={() => {

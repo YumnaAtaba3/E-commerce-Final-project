@@ -251,7 +251,7 @@ const FlashSales: React.FC = () => {
           <Box textAlign="center" mt={4}>
             <motion.button
               onClick={() => navigate("/products?filter=discount")}
-              animate={{ scale: [1, 1.1, 1] }} // grow, shrink, return
+              animate={{ scale: [1, 1.1, 1] }}
               transition={{
                 duration: 1.2,
                 repeat: Infinity,

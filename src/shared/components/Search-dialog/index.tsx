@@ -8,7 +8,7 @@ import { useSearchDialog } from "./hooks/useSearchDialog";
 import { motion, type Variants, easeOut } from "framer-motion";
 import type { Product } from "../../../store/state";
 
-// Motion variants
+
 const containerVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {

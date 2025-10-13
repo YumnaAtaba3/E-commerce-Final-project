@@ -24,17 +24,17 @@ interface RelatedItemsProps {
   items: RelatedItem[];
 }
 
-// ✅ Typed variants
+
 const containerVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.15, // each child appears one after another
+      staggerChildren: 0.15,
     },
   },
 };
 
-// ✅ Fix typing for "ease"
+
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
@@ -42,7 +42,7 @@ const itemVariants: Variants = {
     y: 0,
     transition: {
       duration: 0.5,
-      ease: "easeOut" as Easing, // ✅ TypeScript-safe fix
+      ease: "easeOut" as Easing, 
     },
   },
 };

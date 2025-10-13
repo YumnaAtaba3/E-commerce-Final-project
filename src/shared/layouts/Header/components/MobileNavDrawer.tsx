@@ -13,7 +13,7 @@ const containerVariants: Variants = {
   hidden: {},
   visible: {
     transition: {
-      staggerChildren: 0.1, // each item appears one after another
+      staggerChildren: 0.1, 
     },
   },
 };

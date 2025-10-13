@@ -16,8 +16,8 @@ const DeliveryReturnCard: React.FC<Props> = ({
     sx={{
       border: "1px solid #ddd",
       borderRadius: 2,
-      width: isMobile ? 130 : 320, // ✅ Smaller overall width
-      height: isMobile ? "auto" : 150, // ✅ Auto height for flexibility
+      width: isMobile ? 130 : 320,
+      height: isMobile ? "auto" : 150, 
       display: "flex",
       flexDirection: "column",
       bgcolor: "#fff",

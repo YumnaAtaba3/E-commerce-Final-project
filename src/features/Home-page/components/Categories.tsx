@@ -71,7 +71,7 @@ const Categories: React.FC = () => {
     return { ...cat, image: localImage };
   });
 
-  // Motion variants for cards
+  
   const cardVariants: Variants = {
     hidden: (direction: number) => ({
       opacity: 0,

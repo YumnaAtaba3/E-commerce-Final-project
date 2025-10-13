@@ -50,7 +50,7 @@ export const useProductsQuery = (
   const offset = (page - 1) * limit;
 
   return useQuery<Product[], Error>({
-    queryKey: ["products", page, limit, categorySlug, retryIndex], // 👈 added here
+    queryKey: ["products", page, limit, categorySlug, retryIndex], 
     queryFn: async () => {
       const params: any = { limit, offset };
       if (categorySlug) params.categorySlug = categorySlug;

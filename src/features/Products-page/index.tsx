@@ -38,7 +38,7 @@ const ProductPage: React.FC = () => {
     pageTitle,
   } = useProductPage();
 
-  // Skeleton helpers
+  
   const skeletonArray = Array.from({ length: 8 }, (_, i) => i);
 
   return (

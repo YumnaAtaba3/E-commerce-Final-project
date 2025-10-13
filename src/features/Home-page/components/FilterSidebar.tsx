@@ -71,7 +71,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
     handleClose();
   };
 
-  // Framer Motion animation variants
+ 
   const listVariants: Variants = {
     hidden: {},
     visible: { transition: { staggerChildren: 0.1 } },

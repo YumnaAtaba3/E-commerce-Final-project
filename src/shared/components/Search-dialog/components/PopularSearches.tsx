@@ -18,20 +18,20 @@ const popularSearches = [
 const PopularSearches: React.FC<PopularSearchesProps> = ({ onClick }) => {
   const { theme } = useAppTheme();
 
-  // Container animation — staggered entrance
+ 
   const containerVariants: Variants = {
     hidden: {},
     visible: { transition: { staggerChildren: 0.08 } },
   };
 
-  // Each chip animation — smooth float-in
+
   const itemVariants: Variants = {
     hidden: { opacity: 0, y: 15, scale: 0.9 },
     visible: {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.4, ease: easeOut }, // ✅ typed easing
+      transition: { duration: 0.4, ease: easeOut },
     },
   };
 

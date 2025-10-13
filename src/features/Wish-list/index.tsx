@@ -94,7 +94,7 @@ const WishlistPage: React.FC = () => {
 
   const headingFont = isMobile ? 18 : isTablet ? 22 : 24;
 
-  // ✅ Typed and fixed Framer Motion variants
+ 
   const cardVariants: Variants = {
     hiddenLeft: { opacity: 0, x: -50 },
     hiddenRight: { opacity: 0, x: 50 },

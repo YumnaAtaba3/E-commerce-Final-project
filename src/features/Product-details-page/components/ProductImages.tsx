@@ -89,7 +89,7 @@ const ProductImages: React.FC<ProductImagesProps> = ({
       {/* Main Image with animation */}
       <AnimatePresence mode="wait">
         <motion.div
-          key={currentImage} // animate on image change
+          key={currentImage} 
           variants={mainImageVariants}
           initial="initial"
           animate="animate"
