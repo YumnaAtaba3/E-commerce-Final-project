@@ -14,7 +14,7 @@ function App() {
     <>
       <GlobalKeyboardListener />
 
-      {/* AppRouterProvider wraps all routes and layouts */}
+   
       <AppRouterProvider>{open ? <SearchDialog /> : null}</AppRouterProvider>
 
       <FixedButton />

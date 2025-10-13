@@ -10,7 +10,7 @@ export function logoutHelper(fallbackUrl = "/login") {
   }
 
   if (typeof window !== "undefined") {
-    // Use hash routing
-    window.location.href = `/#${fallbackUrl}`;
+
+    window.location.href = fallbackUrl;
   }
 }
