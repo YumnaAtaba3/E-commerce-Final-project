@@ -1,21 +1,14 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
 
-// https://vitejs.dev/config/
+const repoName = "E-commerce-Final-project";
+
 export default defineConfig({
+  base: `/${repoName}/`, 
   plugins: [react()],
-  base: '/e-commerce-final-project/',
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            return 'vendor';
-          }
-        }
-      }
+  resolve: {
+    alias: {
+      "@": "/src",
     },
-    chunkSizeWarningLimit: 2000 
-  }
+  },
 });
-
