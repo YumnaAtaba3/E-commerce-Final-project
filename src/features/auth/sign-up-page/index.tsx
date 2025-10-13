@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
- 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import {
   Box,
@@ -74,10 +74,11 @@ const SignUpForm: React.FC = () => {
     },
   });
 
-  const { isPending } = useSignUpMutation();
+  const { mutateAsync: signUp, isPending } = useSignUpMutation();
 
   const onSubmit = handleSubmit(async (values) => {
     try {
+      const user = await signUp(values);
       toast.success("Account created successfully!", { autoClose: 2000 });
 
       navigate(appRoutes.auth.login, {
