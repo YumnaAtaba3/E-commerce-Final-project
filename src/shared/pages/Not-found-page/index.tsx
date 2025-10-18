@@ -1,17 +1,13 @@
-
 import React from "react";
-import {
-  Button,
-  Container,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Button, Container, Typography, useMediaQuery } from "@mui/material";
 import { useTheme } from "../../../theme/ThemeProvider";
 import { appRoutes } from "../../../routes";
+import { useNavigate } from "react-router-dom";
 
 const NotFoundPage: React.FC = () => {
   const { theme } = useTheme();
   const isSmall = useMediaQuery("(max-width:768px)");
+  const navigate = useNavigate();
 
   return (
     <Container
@@ -49,7 +45,6 @@ const NotFoundPage: React.FC = () => {
         sx={{
           fontSize: isSmall ? 40 : 90,
           fontFamily: `'Roboto', Arial, sans-serif`,
-
           color: theme.Text1,
         }}
       >
@@ -65,12 +60,14 @@ const NotFoundPage: React.FC = () => {
           fontSize: isSmall ? 12 : 20,
         }}
       >
-        Your visited page not found. You may go home page.
+        The page you are looking for doesn’t exist.
+        <br />
+        You can go back to the home page.
       </Typography>
 
-      {/* Back Button */}
+      {/* Manual Back Button */}
       <Button
-        href={appRoutes.home}
+        onClick={() => navigate(appRoutes.home)}
         variant="contained"
         sx={{
           mt: 3,
@@ -80,7 +77,6 @@ const NotFoundPage: React.FC = () => {
           textTransform: "none",
           px: 5,
           py: 1.5,
-
           "&:hover": { bgcolor: theme.HoverButton },
         }}
       >
