@@ -1,17 +1,29 @@
+
 import fs from "fs";
 import path from "path";
 
 const filePath = path.resolve("dist/404.html");
 let html = fs.readFileSync(filePath, "utf8");
 
-// إذا لم يكن هناك وسم refresh أضفه تلقائيًا داخل <head>
-if (!html.includes('http-equiv="refresh"')) {
+
+html = html.replace(/<meta[^>]*http-equiv="refresh"[^>]*>/g, "");
+
+
+if (!html.includes("window.location.replace")) {
   html = html.replace(
     "<head>",
-    `<head>\n    <meta http-equiv="refresh" content="0; url=/E-commerce-Final-project/" />`
+    `<head>
+    <script type="text/javascript">
+     
+      const redirect = window.location.pathname.replace("/E-commerce-Final-project", "");
+      sessionStorage.setItem("redirect", redirect);
+     
+      window.location.replace("/E-commerce-Final-project/");
+    </script>`
   );
+
   fs.writeFileSync(filePath, html, "utf8");
-  console.log("✅ Added redirect meta tag to 404.html");
+  console.log("✅ Added smart redirect script to 404.html");
 } else {
-  console.log("ℹ️ Redirect already present in 404.html");
+  console.log("ℹ️ Redirect script already present in 404.html");
 }

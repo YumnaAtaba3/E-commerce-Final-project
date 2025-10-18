@@ -1,5 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { lazy, Suspense, useEffect } from "react";
 import { CircularProgress, Box } from "@mui/material";
 import { LayoutContainer } from "../shared/layouts/layout-container";
 import AuthLayout from "../shared/layouts/Auth-layout";
@@ -18,6 +18,21 @@ const NotFoundPage = lazy(() => import("../shared/pages/Not-found-page"));
 
 interface Props {
   children?: React.ReactNode | null;
+}
+
+
+function RedirectHandler() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const redirect = sessionStorage.getItem("redirect");
+    if (redirect) {
+      sessionStorage.removeItem("redirect");
+      navigate(redirect);
+    }
+  }, [navigate]);
+
+  return null;
 }
 
 export function AppRouterProvider({ children }: Props) {
@@ -49,24 +64,26 @@ export function AppRouterProvider({ children }: Props) {
       }
     >
       <BrowserRouter basename="/E-commerce-Final-project">
+      
+        <RedirectHandler />
+
         <Routes>
-          {/* Main layout wraps everything */}
           <Route path="/" element={<LayoutContainer />}>
             {children}
 
-            {/* Main routes */}
+           
             {allRoutes.map((r) => (
               <Route key={r.path} {...r} />
             ))}
 
-            {/* Auth routes inside AuthLayout */}
+           
             <Route element={<AuthLayout />}>
               {authRoutes.map((r) => (
                 <Route key={r.path} {...r} />
               ))}
             </Route>
 
-            {/* 404 fallback */}
+            
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
