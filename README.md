@@ -1,4 +1,4 @@
-# 🛍️ Key-Work Final Project — E-Commerce Website (Frontend Only)
+# 🛍️ Key-Work Final Project — E-Commerce Website 
 
 ## 📋 Project Overview
 A modern **frontend-only e-commerce website** built using React, focused on **UI/UX**, **state management**, and **frontend architecture**.  
@@ -9,7 +9,7 @@ The project simulates a full online shopping experience including product browsi
 
 ## 🗂️ Data Source
 All data is fetched from the **Platzi Fake Store API**:  
-🔗 [https://fakeapi.platzi.com/en](https://fakeapi.platzi.com/en)
+🔗 [//https:E-commerce-Final-project](https://yumnaataba3.github.io/E-commerce-Final-project)
 
 This mock API provides endpoints for:
 - Products (title, price, description, images)
